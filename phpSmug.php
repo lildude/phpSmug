@@ -347,7 +347,7 @@ class phpSmug {
 			$this->error_code = $this->parsed_response['code'];
             $this->error_msg = $this->parsed_response['message'];
 			$this->parsed_response = FALSE;
-			throw new Exception("SmugMug API Error for method {$command}: {$this->error_msg}", $this->parsed_response['code']);
+			throw new Exception("SmugMug API Error for method {$command}: {$this->error_msg}", $this->error_code);
 		} else {
 			$this->error_code = FALSE;
             $this->error_msg = FALSE;
