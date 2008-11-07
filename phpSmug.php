@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 2.0
+ * @version 2.0.1
  * @package phpSmug
  * @license LGPL {@link http://www.gnu.org/copyleft/lgpl.html}
  *
@@ -48,7 +48,7 @@ ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FI
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '2.0';
+	var $version = '2.0.1';
 	var $cache = FALSE;
 	//var $oauth_signature_method = 'PLAINTEXT';
 	
