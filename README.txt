@@ -1,5 +1,5 @@
-phpSmug 2.0 - PHP Wrapper for the SmugMug API
-=============================================
+phpSmug 2.0.1 - PHP Wrapper for the SmugMug API
+===============================================
 
 Written by Colin Seymour
 Project Homepage: http://phpSmug.com/
@@ -469,6 +469,12 @@ This document is also available online at `http://phpsmug.com/docs/'.
 
 Change History
 ==============
+
+   *
+
+
+        2.0.1 - 7 Nov '08 Resolved issue where error code was not passed to
+          Exception() line 350 (Ticket #1)
 
    * 2.0 - 30 Oct '08
 
