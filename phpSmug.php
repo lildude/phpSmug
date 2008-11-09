@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 2.0
+ * @version 2.0.1
  * @package phpSmug
  * @license LGPL {@link http://www.gnu.org/copyleft/lgpl.html}
  *
@@ -48,7 +48,7 @@ ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FI
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '2.0';
+	var $version = '2.0.1';
 	var $cache = FALSE;
 	//var $oauth_signature_method = 'PLAINTEXT';
 	
@@ -347,7 +347,7 @@ class phpSmug {
 			$this->error_code = $this->parsed_response['code'];
             $this->error_msg = $this->parsed_response['message'];
 			$this->parsed_response = FALSE;
-			throw new Exception("SmugMug API Error for method {$command}: {$this->error_msg}", $this->parsed_response['code']);
+			throw new Exception("SmugMug API Error for method {$command}: {$this->error_msg}", $this->error_code);
 		} else {
 			$this->error_code = FALSE;
             $this->error_msg = FALSE;
