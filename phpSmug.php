@@ -49,7 +49,7 @@ ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FI
  * we'll disable that level here to prevent any problems with E_STRICT aware applications
  * like Habari.  phpSmug itself however is E_STRICT compatible.
  **/
-ini_set('error_reporting', E_ALL^E_NOTICE);
+ini_set('error_reporting', E_ALL|E_NOTICE);
 
 /**
  * phpSmug - all of the phpSmug functionality is provided in this class
