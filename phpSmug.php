@@ -43,6 +43,15 @@ $path_delimiter = (strpos(__FILE__, ':') !== false) ? ';' : ':';
 ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FILE__) . '/PEAR');
 
 /**
+ * Set error reporting level.
+ * 
+ * As PEAR, which phpSmug relies on, is not yet obliged to pass E_STRICT levels of reporting,
+ * we'll disable that level here to prevent any problems with E_STRICT aware applications
+ * like Habari.  phpSmug itself however is E_STRICT compatible.
+ **/
+ini_set('error_reporting', E_ALL|E_NOTICE);
+
+/**
  * phpSmug - all of the phpSmug functionality is provided in this class
  *
  * @package phpSmug
@@ -50,6 +59,9 @@ ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FI
 class phpSmug {
 	var $version = '2.0.1';
 	var $cache = FALSE;
+	var $OAuthSecret;
+	var $SessionID;
+	var $loginType;
 	//var $oauth_signature_method = 'PLAINTEXT';
 	
 	/**
