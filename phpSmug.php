@@ -62,6 +62,9 @@ class phpSmug {
 	var $OAuthSecret;
 	var $SessionID;
 	var $loginType;
+	var $oauth_signature_method;
+	var $oauth_token_secret;
+	var $cache_expire;
 	//var $oauth_signature_method = 'PLAINTEXT';
 	
 	/**
