@@ -102,7 +102,7 @@ class phpSmug {
 
         // All calls to the API are done via the POST method using the PEAR::HTTP_Request package.
         require_once 'HTTP/Request.php';
-        $this->req =& new HTTP_Request();
+        $this->req = new HTTP_Request();
         $this->req->setMethod(HTTP_REQUEST_METHOD_POST);
 		$this->req->addHeader('User-Agent', "{$this->AppName} using phpSmug/{$this->version}");
     }
@@ -469,7 +469,7 @@ class phpSmug {
 			throw new Exception("File doesn't exist: {$args['File']}");
 		}
 
-		$upload_req =& new HTTP_Request();
+		$upload_req = new HTTP_Request();
         $upload_req->setMethod(HTTP_REQUEST_METHOD_PUT);
 		$upload_req->setHttpVer(HTTP_REQUEST_HTTP_VER_1_1);
 		$upload_req->clearPostData();
