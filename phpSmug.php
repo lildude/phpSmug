@@ -589,7 +589,6 @@ class phpSmug {
 			
 			// Only getRequestToken won't have a token when using OAuth
 			if ($method != 'auth.getRequestToken') {
-				//$oauth_params['oauth_token'] = $this->oauth_token;
 				$oauth_params = array_merge($oauth_params, array('oauth_token' => $this->oauth_token));	
 			}
 			$args = array_merge($args, $oauth_params);
