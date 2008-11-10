@@ -482,6 +482,12 @@ Change History
         * Resolved issue where error code was not passed to Exception() line
           350 (Ticket #1)
 
+   *
+
+
+        2.0.1 - 7 Nov '08 Resolved issue where error code was not passed to
+          Exception() line 350 (Ticket #1)
+
    * 2.0 - 30 Oct '08
 
 
