@@ -43,6 +43,16 @@ $path_delimiter = (strpos(__FILE__, ':') !== false) ? ';' : ':';
 ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FILE__) . '/PEAR');
 
 /**
+ * Forcing a level of logging that does NOT include E_STRICT.
+ * Unfortunately and PEAR and it's modules are not obliged to meet E_STRICT levels in
+ * PHP 5 yet as they still need to remain backwardly compatible with PHP 4. This is 
+ * likely to change when PEAR 2 is released.  Until then we force a lower log level
+ * just incase phpSmug is used within an application that uses E_STRICT.
+ * phpSmug.php itself is E_STRICT compliant, so it's only PEAR that's holding us back.
+ **/
+error_reporting(E_ALL | E_NOTICE);
+
+/**
  * phpSmug - all of the phpSmug functionality is provided in this class
  *
  * @package phpSmug
@@ -102,7 +112,7 @@ class phpSmug {
 
         // All calls to the API are done via the POST method using the PEAR::HTTP_Request package.
         require_once 'HTTP/Request.php';
-        $this->req =& new HTTP_Request();
+        $this->req = new HTTP_Request();
         $this->req->setMethod(HTTP_REQUEST_METHOD_POST);
 		$this->req->addHeader('User-Agent', "{$this->AppName} using phpSmug/{$this->version}");
     }
@@ -469,7 +479,7 @@ class phpSmug {
 			throw new Exception("File doesn't exist: {$args['File']}");
 		}
 
-		$upload_req =& new HTTP_Request();
+		$upload_req = new HTTP_Request();
         $upload_req->setMethod(HTTP_REQUEST_METHOD_PUT);
 		$upload_req->setHttpVer(HTTP_REQUEST_HTTP_VER_1_1);
 		$upload_req->clearPostData();
