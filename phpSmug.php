@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 2.0.1
+ * @version 2.0.1+
  * @package phpSmug
  * @license LGPL {@link http://www.gnu.org/copyleft/lgpl.html}
  *
@@ -60,7 +60,12 @@ error_reporting(E_ALL | E_NOTICE);
 class phpSmug {
 	var $version = '2.0.1';
 	var $cache = FALSE;
+	var $oauth_signature_method;
 	//var $oauth_signature_method = 'PLAINTEXT';
+	var $loginType;
+	var $cache_expire;
+	//var $SessionID; // Need to sort out the detection of this later so I can predefine it.
+	var $oauth_token_secret;
 	
 	/**
      * When your database cache table hits this many rows, a cleanup
