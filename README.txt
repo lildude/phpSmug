@@ -470,12 +470,6 @@ This document is also available online at `http://phpsmug.com/docs/'.
 Change History
 ==============
 
-   * 2.? - ?? ??? ??
-
-
-        * phpSmug now sets reporting level to something lower than E_STRICT as
-          PEAR is not obliged to be E_STRICT compliant.
-
    * 2.0.1 - 7 Nov '08
 
 
