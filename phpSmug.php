@@ -61,10 +61,7 @@ class phpSmug {
 	var $version = '2.0.1';
 	var $cache = FALSE;
 	var $oauth_signature_method;
-	//var $oauth_signature_method = 'PLAINTEXT';
-	var $loginType;
-	var $cache_expire;
-	//var $SessionID; // Need to sort out the detection of this later so I can predefine it.
+	var $cache_expire = 3600;
 	var $oauth_token_secret;
 	
 	/**
@@ -312,7 +309,7 @@ class phpSmug {
 			$proto = "https";
 		} else {
 			$proto = "http";
-			if ((is_null($this->SessionID)) && (!strpos($command, 'login.anonymously')) && !$this->OAuthSecret) {
+			if ((isset($this->SessionID) && is_null($this->SessionID)) && (!strpos($command, 'login.anonymously')) && !$this->OAuthSecret) {
 				throw new Exception('Not authenticated. No Session ID or OAuth Token.  Please login or provide an OAuth token.');
 			}
 		}
@@ -330,6 +327,8 @@ class phpSmug {
 													'SessionID' => $this->SessionID,
 													'Strict' => 0)
 									   );
+		} else {
+			$this->loginType = 'oauth';
 		}
 
         // Process arguments, including method and login data.
@@ -589,7 +588,7 @@ class phpSmug {
 			
 			// Only getRequestToken won't have a token when using OAuth
 			if ($method != 'auth.getRequestToken') {
-				$oauth_params = array_merge($oauth_params, array('oauth_token' => $this->oauth_token));	
+				$oauth_params['oauth_token'] = $this->oauth_token;
 			}
 			$args = array_merge($args, $oauth_params);
 		}
@@ -604,7 +603,7 @@ class phpSmug {
 			$this->setToken($output);
 		}
 
-		return (strstr($output, 'smugmug.')) ? NULL : $output;
+		return (is_string($output) && strstr($output, 'smugmug.')) ? NULL : $output;
 	}
 	
 	 /**
