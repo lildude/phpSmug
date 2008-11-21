@@ -157,18 +157,18 @@ class phpSmug {
 
         if ($this->cacheType == 'db') {
     		require_once 'DB.php';
-	        $phpSmugDB = DB::connect($args['dsn']);
-			if (PEAR::isError($phpSmugDB)) {
+	        $db = DB::connect($args['dsn']);
+			if (PEAR::isError($db)) {
 				$this->cacheType = FALSE;
-				return "CACHING DISABLED: {$phpSmugDB->getMessage()} ({$phpSmugDB->getCode()})";
+				return "CACHING DISABLED: {$db->getMessage()} ({$db->getCode()})";
 			}
-			$this->cache_db = $phpSmugDB;
+			$this->cache_db = $db;
             
             /*
              * If high performance is crucial, you can easily comment
              * out this query once you've created your database table.
              */
-            $phpSmugDB->query("
+            $db->query("
                 CREATE TABLE IF NOT EXISTS `$this->cache_table` (
                     `request` CHAR( 35 ) NOT NULL ,
                     `response` LONGTEXT NOT NULL ,
@@ -176,9 +176,9 @@ class phpSmug {
                     INDEX ( `request` )
                 ) TYPE = MYISAM");
 
-            if ($phpSmugDB->getOne("SELECT COUNT(*) FROM $this->cache_table") > $this->max_cache_rows) {
-                $phpSmugDB->query("DELETE FROM $this->cache_table WHERE expiration < DATE_SUB(NOW(), INTERVAL $this->cache_expire SECOND)");
-                $phpSmugDB->query('OPTIMIZE TABLE ' . $this->cache_table);
+            if ($db->getOne("SELECT COUNT(*) FROM $this->cache_table") > $this->max_cache_rows) {
+                $db->query("DELETE FROM $this->cache_table WHERE expiration < DATE_SUB(NOW(), INTERVAL $this->cache_expire SECOND)");
+                $db->query('OPTIMIZE TABLE ' . $this->cache_table);
             }
 
         } elseif ($this->cacheType ==  'fs') {
