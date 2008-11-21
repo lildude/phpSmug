@@ -59,7 +59,10 @@ error_reporting(E_ALL | E_NOTICE);
  **/
 class phpSmug {
 	var $version = '2.0.1';
-	var $cache = FALSE;
+	var $cacheType = FALSE;
+	var $SessionID;
+	var $loginType;
+	var $OAuthSecret;
 	var $oauth_signature_method;
 	var $cache_expire = 3600;
 	var $oauth_token_secret;
@@ -147,25 +150,25 @@ class phpSmug {
 	 **/
 	public function enableCache() {
 		$args = phpSmug::processArgs(func_get_args());
-		$this->cache = $args['type'];
+		$this->cacheType = $args['type'];
         
 		$this->cache_expire = (array_key_exists('cache_expire', $args)) ? $args['cache_expire'] : '3600';
 		$this->cache_table = (array_key_exists('table', $args)) ? $args['table'] : 'smugmug_cache';
 
-        if ($this->cache == 'db') {
+        if ($this->cacheType == 'db') {
     		require_once 'DB.php';
-	        $db =& DB::connect($args['dsn']);
-			if (PEAR::isError($db)) {
-				$this->cache = FALSE;
-				return "CACHING DISABLED: {$db->getMessage()} ({$db->getCode()})";
+	        $phpSmugDB = DB::connect($args['dsn']);
+			if (PEAR::isError($phpSmugDB)) {
+				$this->cacheType = FALSE;
+				return "CACHING DISABLED: {$phpSmugDB->getMessage()} ({$phpSmugDB->getCode()})";
 			}
-			$this->cache_db = $db;
+			$this->cache_db = $phpSmugDB;
             
             /*
              * If high performance is crucial, you can easily comment
              * out this query once you've created your database table.
              */
-            $db->query("
+            $phpSmugDB->query("
                 CREATE TABLE IF NOT EXISTS `$this->cache_table` (
                     `request` CHAR( 35 ) NOT NULL ,
                     `response` LONGTEXT NOT NULL ,
@@ -173,28 +176,31 @@ class phpSmug {
                     INDEX ( `request` )
                 ) TYPE = MYISAM");
 
-            if ($db->getOne("SELECT COUNT(*) FROM $this->cache_table") > $this->max_cache_rows) {
-                $db->query("DELETE FROM $this->cache_table WHERE expiration < DATE_SUB(NOW(), INTERVAL $this->cache_expire SECOND)");
-                $db->query('OPTIMIZE TABLE ' . $this->cache_table);
+            if ($phpSmugDB->getOne("SELECT COUNT(*) FROM $this->cache_table") > $this->max_cache_rows) {
+                $phpSmugDB->query("DELETE FROM $this->cache_table WHERE expiration < DATE_SUB(NOW(), INTERVAL $this->cache_expire SECOND)");
+                $phpSmugDB->query('OPTIMIZE TABLE ' . $this->cache_table);
             }
 
-        } elseif ($this->cache ==  'fs') {
+        } elseif ($this->cacheType ==  'fs') {
 			if (file_exists($args['cache_dir']) && (is_dir($args['cache_dir']))) {
-				$this->cache_dir = realpath($args['cache_dir']);
-				if (is_writeable($this->cache_dir)) {
-					$dir = @opendir($this->cache_dir);
+				$this->cache_dir = realpath($args['cache_dir']).'/phpSmug';
+				if (is_writeable(realpath($args['cache_dir']))) {
+					if (!is_dir($this->cache_dir)) {
+						mkdir($this->cache_dir, 0755);
+					}
+					$dir = opendir($this->cache_dir);
                 	while ($file = readdir($dir)) {
                     	if (substr($file, -2) == '.cache' && ((filemtime($this->cache_dir . '/' . $file) + $this->cache_expire) < time()) ) {
                         	unlink($this->cache_dir . '/' . $file);
                     	}
                 	}
 				} else {
-					$this->cache = FALSE;
-					return "CACHING DISABLED: Cache Directory \"{$this->cache_dir}\" is not writeable.";
+					$this->cacheType = FALSE;
+					return "CACHING DISABLED: Cache Directory \"".$args['cache_dir']."\" is not writeable.";
 				}
 			} else 	{
-				$this->cache = FALSE;
-				return "CACHING DISABLED: Cache Directory \"{$args['cache_dir']}\" doesn't exist, is a file or is not readable.";
+				$this->cacheType = FALSE;
+				return "CACHING DISABLED: Cache Directory \"".$args['cache_dir']."\" doesn't exist, is a file or is not readable.";
 			}
 		}
 		return TRUE;
@@ -214,12 +220,12 @@ class phpSmug {
 		$request['oauth_timestamp'] = ''; // --/
        	$reqhash = md5(serialize($request).$this->loginType);
 		$expire = (strpos($request['method'], 'login.with')) ? 21600 : $this->cache_expire;
-        if ($this->cache == 'db') {
+        if ($this->cacheType == 'db') {
             $result = $this->cache_db->getOne('SELECT response FROM ' . $this->cache_table . ' WHERE request = ? AND DATE_SUB(NOW(), INTERVAL ' . (int) $expire . ' SECOND) < expiration', $reqhash);
 			if (!empty($result)) {
                 return $result;
             }
-        } elseif ($this->cache == 'fs') {
+        } elseif ($this->cacheType == 'fs') {
             $file = $this->cache_dir . '/' . $reqhash . '.cache';
 			if (file_exists($file) && ((filemtime($file) + $expire) > time()) ) {
 					return file_get_contents($file);
@@ -242,7 +248,7 @@ class phpSmug {
 		$request['oauth_signature'] ='';  //    |-Unset OAuth info
 		$request['oauth_timestamp'] = ''; // --/
 		$reqhash = md5(serialize($request).$this->loginType);
-        if ($this->cache == 'db') {
+        if ($this->cacheType == 'db') {
             if ($this->cache_db->getOne("SELECT COUNT(*) FROM {$this->cache_table} WHERE request = '$reqhash'")) {
                 $sql = 'UPDATE ' . $this->cache_table . ' SET response = ?, expiration = ? WHERE request = ?';
 				$this->cache_db->query($sql, array($response, strftime('%Y-%m-%d %H:%M:%S'), $reqhash));
@@ -250,7 +256,7 @@ class phpSmug {
 				$sql = "INSERT INTO " . $this->cache_table . " (request, response, expiration) VALUES ('$reqhash', '" . strtr($response, "'", "\'") . "', '" . strftime("%Y-%m-%d %H:%M:%S") . "')"; 
 				$this->cache_db->query($sql);
             }
-        } elseif ($this->cache == 'fs') {
+        } elseif ($this->cacheType == 'fs') {
             $file = $this->cache_dir . '/' . $reqhash . '.cache';
             $fstream = fopen($file, 'w');
             $result = fwrite($fstream,$response);
@@ -271,20 +277,16 @@ class phpSmug {
 	 * @since 1.1.7
 	 **/
     public function clearCache() {
-   		if ($this->cache == 'db') {
+   		if ($this->cacheType == 'db') {
 	    	$result = $this->cache_db->query('TRUNCATE ' . $this->cache_table);
 	    	if (!empty($result)) {
 	        	return $result;
 	    	}
-	   	} elseif ($this->cache == 'fs') {
-	       	if ($dir = @opendir($this->cache_dir)) {
-	           	while ($file = readdir($dir)) {
-					if ($file == '.' || $file == '..') { 
-						continue;
-					} else {
-						$result = unlink($this->cache_dir . '/' . $file);
-					} 
-	           	}
+	   	} elseif ($this->cacheType == 'fs') {
+	       	if ($dir = opendir($this->cache_dir)) {
+				foreach (glob($this->cache_dir."/*.cache") as $filename) {
+					$result = unlink($filename);
+				}
 				return $result;
 	       	}
 	   	}
