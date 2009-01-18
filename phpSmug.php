@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 2.0.1+
+ * @version 2.0.1r38
  * @package phpSmug
  * @license LGPL {@link http://www.gnu.org/copyleft/lgpl.html}
  *
@@ -58,7 +58,7 @@ error_reporting(E_ALL | E_NOTICE);
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '2.0.1';
+	var $version = '2.0.1r38';
 	var $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
