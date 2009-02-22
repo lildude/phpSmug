@@ -6,11 +6,11 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 2.0.1r38
+ * @version 2.0.2
  * @package phpSmug
- * @license LGPL {@link http://www.gnu.org/copyleft/lgpl.html}
+ * @license LGPL 3 {@link http://www.gnu.org/copyleft/lgpl.html}
  *
- * Released under GNU Lesser General Public License ({@link http://www.gnu.org/copyleft/lgpl.html})
+ * Released under GNU Lesser General Public License Version 3({@link http://www.gnu.org/copyleft/lgpl.html})
  *
  * For more information about the class and upcoming tools and toys using it,
  * visit {@link http://phpsmug.com/}.
@@ -58,7 +58,7 @@ error_reporting(E_ALL | E_NOTICE);
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '2.0.1r38';
+	var $version = '2.0.2';
 	var $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
@@ -153,7 +153,7 @@ class phpSmug {
 		$this->cacheType = $args['type'];
         
 		$this->cache_expire = (array_key_exists('cache_expire', $args)) ? $args['cache_expire'] : '3600';
-		$this->cache_table = (array_key_exists('table', $args)) ? $args['table'] : 'smugmug_cache';
+		$this->cache_table  = (array_key_exists('table', $args)) ? $args['table'] : 'smugmug_cache';
 
         if ($this->cacheType == 'db') {
     		require_once 'DB.php';
@@ -214,9 +214,9 @@ class phpSmug {
 	 * @param array $request Request to the SmugMug created by one of the later functions in phpSmug.
 	 **/
     private function getCached($request) {
-		$request['SessionID'] = ''; // Unset SessionID
-		$request['oauth_nonce'] = '';     // --\
-		$request['oauth_signature'] ='';  //    |-Unset OAuth info
+		$request['SessionID']       = ''; // Unset SessionID
+		$request['oauth_nonce']     = '';     // --\
+		$request['oauth_signature'] = '';  //    |-Unset OAuth info
 		$request['oauth_timestamp'] = ''; // --/
        	$reqhash = md5(serialize($request).$this->loginType);
 		$expire = (strpos($request['method'], 'login.with')) ? 21600 : $this->cache_expire;
@@ -243,9 +243,9 @@ class phpSmug {
 	 * @param string $response Response from a successful request() method call.
 	 **/
     private function cache($request, $response) {
-		$request['SessionID'] = ''; // Unset SessionID
-		$request['oauth_nonce'] = '';     // --\
-		$request['oauth_signature'] ='';  //    |-Unset OAuth info
+		$request['SessionID']       = ''; // Unset SessionID
+		$request['oauth_nonce']     = '';     // --\
+		$request['oauth_signature'] = '';  //    |-Unset OAuth info
 		$request['oauth_timestamp'] = ''; // --/
 		$reqhash = md5(serialize($request).$this->loginType);
         if ($this->cacheType == 'db') {
@@ -283,7 +283,8 @@ class phpSmug {
 	        	return $result;
 	    	}
 	   	} elseif ($this->cacheType == 'fs') {
-	       	if ($dir = opendir($this->cache_dir)) {
+            $dir = opendir($this->cache_dir);
+	       	if ($dir) {
 				foreach (glob($this->cache_dir."/*.cache") as $filename) {
 					$result = unlink($filename);
 				}
@@ -580,12 +581,12 @@ class phpSmug {
 		if ($this->OAuthSecret) {
 			$sig = $this->generate_signature($method, $args);
 			$oauth_params = array (
-				'oauth_version' => '1.0',
-				'oauth_nonce' => $this->oauth_nonce,
-				'oauth_timestamp' => $this->oauth_timestamp,
-				'oauth_consumer_key' => $this->APIKey,
-				'oauth_signature_method' => $this->oauth_signature_method,
-				'oauth_signature' => $sig
+				'oauth_version'             => '1.0',
+				'oauth_nonce'               => $this->oauth_nonce,
+				'oauth_timestamp'           => $this->oauth_timestamp,
+				'oauth_consumer_key'        => $this->APIKey,
+				'oauth_signature_method'    => $this->oauth_signature_method,
+				'oauth_signature'           => $sig
 				);
 			
 			// Only getRequestToken won't have a token when using OAuth
@@ -667,11 +668,11 @@ class phpSmug {
 			$endpoint = ($apicall == 'Upload') ? 'http://api.smugmug.com/'.$apiargs['FileName'] : 'http://api.smugmug.com/services/api/php/'.$this->APIVer.'/';
 			$method = ($apicall == 'Upload') ? 'PUT' : 'POST';
 			$params = array (
-				'oauth_version' => '1.0',
-				'oauth_nonce' => $this->oauth_nonce,
-				'oauth_timestamp' => $this->oauth_timestamp,
-				'oauth_consumer_key' => $this->APIKey,
-				'oauth_signature_method' => $this->oauth_signature_method
+				'oauth_version'             => '1.0',
+				'oauth_nonce'               => $this->oauth_nonce,
+				'oauth_timestamp'           => $this->oauth_timestamp,
+				'oauth_consumer_key'        => $this->APIKey,
+				'oauth_signature_method'    => $this->oauth_signature_method
 				);
 			if ($apicall != 'Upload') $params = array_merge($params, array('method' => $apicall));
 			$params = (!empty($this->oauth_token)) ? array_merge($params, array('oauth_token' => $this->oauth_token)) : $params;

@@ -1,4 +1,4 @@
-phpSmug 2.0.1 - PHP Wrapper for the SmugMug API
+phpSmug 2.0.2 - PHP Wrapper for the SmugMug API
 ===============================================
 
 Written by Colin Seymour
@@ -470,17 +470,22 @@ This document is also available online at `http://phpsmug.com/docs/'.
 Change History
 ==============
 
+   * 2.0.2 - 22 Feb '09
+
+
+        * Tidied up code so phpSmug.php is E_STRICT compliant and doesn't
+          report any notice messages.
+
+        * Force error log level to be lower than E_STRICT due to limitation of
+          PEAR modules (See notes in Ticket #2).
+
+        * Resolved over-zealous clearCache() function (Ticket #3).
+
    * 2.0.1 - 7 Nov '08
 
 
         * Resolved issue where error code was not passed to Exception() line
           350 (Ticket #1)
-
-   *
-
-
-        2.0.1 - 7 Nov '08 Resolved issue where error code was not passed to
-          Exception() line 350 (Ticket #1)
 
    * 2.0 - 30 Oct '08
 
