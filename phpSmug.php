@@ -575,8 +575,8 @@ class phpSmug {
 				$args = array_merge($args, $arg);
 			} else {
 				$exp = explode('=', $arg, 2);
-				$args[$exp[0]] = $exp[1];
-			}
+                $args[$exp[0]] = $exp[1];
+            }
 		}
 		if ($this->OAuthSecret) {
 			$sig = $this->generate_signature($method, $args);
@@ -595,7 +595,6 @@ class phpSmug {
 			}
 			$args = array_merge($args, $oauth_params);
 		}
-
 		$this->request($method, $args);
 		// pop off the "stat" and "method" parts of the array
 		if (is_array($this->parsed_response)) $output = array_pop($this->parsed_response);
