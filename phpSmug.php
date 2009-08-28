@@ -368,6 +368,7 @@ class phpSmug {
 		} else {
 			$this->error_code = FALSE;
             $this->error_msg = FALSE;
+            $this->mode = $this->parsed_response['mode'];
             $this->cache($args, $this->response);
 		}
 		return $this->response;
@@ -596,9 +597,9 @@ class phpSmug {
 			$args = array_merge($args, $oauth_params);
 		}
 		$this->request($method, $args);
-		// pop off the "stat" and "method" parts of the array
-		if (is_array($this->parsed_response)) $output = array_pop($this->parsed_response);
-		
+
+		// pop off the "stat", "mode" and "method" parts of the array as we don't need them anymore.
+        if (is_array($this->parsed_response)) $output = array_pop($this->parsed_response);
 		$output = (count($output) == '1' && is_array($output)) ? array_shift($output) : $output;
 		/* Automatically set token if calling getRequestToken */
 		if ($method == 'auth.getRequestToken') {
