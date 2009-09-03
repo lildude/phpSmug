@@ -66,6 +66,8 @@ class phpSmug {
 	var $oauth_signature_method;
 	var $cache_expire = 3600;
 	var $oauth_token_secret;
+        var $oauth_token;
+        var $mode;
 	
 	/**
      * When your database cache table hits this many rows, a cleanup
