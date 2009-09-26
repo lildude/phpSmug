@@ -15,9 +15,9 @@
  * For more information about the class and upcoming tools and toys using it,
  * visit {@link http://phpsmug.com/}.
  *
- *     For installation and usage instructions, open the README.txt file 
- *	   packaged with this class. If you don't have a copy, you can refer to the 
- * 	   documentation at:
+ * For installation and usage instructions, open the README.txt file 
+ * packaged with this class. If you don't have a copy, you can refer to the
+ * documentation at:
  * 
  *          {@link http://phpsmug.com/docs/}
  * 
@@ -44,7 +44,7 @@ ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FI
 
 /**
  * Forcing a level of logging that does NOT include E_STRICT.
- * Unfortunately and PEAR and it's modules are not obliged to meet E_STRICT levels in
+ * Unfortunately PEAR and it's modules are not obliged to meet E_STRICT levels in
  * PHP 5 yet as they still need to remain backwardly compatible with PHP 4. This is 
  * likely to change when PEAR 2 is released.  Until then we force a lower log level
  * just incase phpSmug is used within an application that uses E_STRICT.
@@ -66,8 +66,8 @@ class phpSmug {
 	var $oauth_signature_method;
 	var $cache_expire = 3600;
 	var $oauth_token_secret;
-        var $oauth_token;
-        var $mode;
+	var $oauth_token;
+	var $mode;
 	
 	/**
      * When your database cache table hits this many rows, a cleanup
@@ -104,7 +104,8 @@ class phpSmug {
 	 * @param string $AppName (Optional) Name and version information of your application in the form "AppName/version (URI)" e.g. "My Cool App/1.0 (http://my.url.com)".  This isn't obligatory, but it helps SmugMug diagnose any problems users of your application may encounter.
 	 * @param string $APIVer (Optional) API endpoint you wish to use. Defaults to 1.2.0
 	 **/
-	function __construct() {
+	function __construct()
+	{
 		$args = phpSmug::processArgs(func_get_args());
         $this->APIKey = $args['APIKey'];
 		$this->APIVer = (array_key_exists('APIVer', $args)) ? $args['APIVer'] : '1.2.0';
@@ -133,7 +134,8 @@ class phpSmug {
 	 * @param mixed $var Any string, object or array you want to display
 	 * @static
 	 **/
-	static function debug($var) {
+	static function debug($var)
+	{
 		echo '<pre>Debug:';
 		if (is_array($var) || is_object($var)) { print_r($var); } else { echo $var; }
 		echo '</pre>';	
@@ -150,7 +152,8 @@ class phpSmug {
 	 * @param integer $cache_expire Cache timeout in seconds. This defaults to 3600 seconds (1 hour) if not specified.
 	 * @param string $table If using type "db", this is the database table name that will be used.  Defaults to "smugmug_cache".
 	 **/
-	public function enableCache() {
+	public function enableCache()
+	{
 		$args = phpSmug::processArgs(func_get_args());
 		$this->cacheType = $args['type'];
         
@@ -215,7 +218,8 @@ class phpSmug {
 	 * @return string|FALSE Unparsed serialized PHP, or FALSE
 	 * @param array $request Request to the SmugMug created by one of the later functions in phpSmug.
 	 **/
-    private function getCached($request) {
+    private function getCached($request)
+	{
 		$request['SessionID']       = ''; // Unset SessionID
 		$request['oauth_nonce']     = '';     // --\
 		$request['oauth_signature'] = '';  //    |-Unset OAuth info
@@ -244,7 +248,8 @@ class phpSmug {
 	 * @param array $request Request to the SmugMug created by one of the later functions in phpSmug.
 	 * @param string $response Response from a successful request() method call.
 	 **/
-    private function cache($request, $response) {
+    private function cache($request, $response)
+	{
 		$request['SessionID']       = ''; // Unset SessionID
 		$request['oauth_nonce']     = '';     // --\
 		$request['oauth_signature'] = '';  //    |-Unset OAuth info
@@ -278,7 +283,8 @@ class phpSmug {
 	 * @return string|FALSE
 	 * @since 1.1.7
 	 **/
-    public function clearCache() {
+    public function clearCache()
+	{
    		if ($this->cacheType == 'db') {
 	    	$result = $this->cache_db->query('TRUNCATE ' . $this->cache_table);
 	    	if (!empty($result)) {
@@ -307,7 +313,8 @@ class phpSmug {
 	 * @param array $args optional Array of arguments that form the API call
 	 * @param boolean $nocache Set whether the call should be cached or not. This isn't actually used, so may be deprecated in the future.
 	 **/
-	private function request($command, $args = array(), $nocache = FALSE) {
+	private function request($command, $args = array(), $nocache = FALSE)
+	{
 		$this->req->clearPostData();
         
 		if ((strpos($command, 'login.with')) || ((strpos($command, 'auth.get')) && $this->oauth_signature_method == 'PLAINTEXT')) {
@@ -388,7 +395,8 @@ class phpSmug {
 	 * @param string $server Proxy server
 	 * @param integer $port Proxy server port
 	 **/
-    public function setProxy() {
+    public function setProxy()
+	{
 		$args = phpSmug::processArgs(func_get_args());
         $this->req->setProxy($args['server'], $args['port']);
     }
@@ -412,7 +420,8 @@ class phpSmug {
 	 * @param string $id Token ID returned by auth_getAccessToken()
 	 * @param string $Secret Token secret returned by auth_getAccessToken()
 	 **/
-	public function setToken() {
+	public function setToken()
+	{
 		 $args = phpSmug::processArgs(func_get_args());
 		 $this->oauth_token = $args['id'];
 		 $this->oauth_token_secret = $args['Secret'];
@@ -435,7 +444,8 @@ class phpSmug {
 	 * @param string $PasswordHash The user's password hash obtained from a previous login using EmailAddress/Password
 	 * @uses request
 	 **/
-	public function login() {
+	public function login()
+	{
 		if (func_get_args()) {
 			$args = phpSmug::processArgs(func_get_args());
 			if (array_key_exists('EmailAddress', $args)) {
@@ -472,14 +482,17 @@ class phpSmug {
 	 * @uses request
 	 * @link http://wiki.smugmug.com/display/SmugMug/Uploading 
 	 **/
-	public function images_upload() {
+	public function images_upload()
+	{
 		$args = phpSmug::processArgs(func_get_args());
-		if (!$args['File']) {
+		if (!array_key_exists('File', $args)) {
 			throw new Exception('No upload file specified.');
 		}
 		
 		// Set FileName, if one isn't provided in the method call
-		if (!$args['FileName']) $args['FileName'] = basename($args['File']);
+		if (!array_key_exists('FileName', $args)) {
+			$args['FileName'] = basename($args['File']);
+		}
 		// OAuth Stuff
 		if ($this->OAuthSecret) {
 			$sig = $this->generate_signature('Upload', array('FileName' => $args['FileName']));
@@ -528,7 +541,7 @@ class phpSmug {
 		(isset($args['Longitude'])) ? $upload_req->addHeader('X-Smug-Longitude', $args['Longitude']) : false;
 		(isset($args['Altitude'])) ? $upload_req->addHeader('X-Smug-Altitude', $args['Altitude']) : false;
 
-		$upload_req->setURL('http://api.smugmug.com/'.$args['FileName']);
+		$upload_req->setURL('http://upload.smugmug.com/'.$args['FileName']);
 		$upload_req->setBody($data);
 
         //Send Requests - HTTP::Request doesn't raise Exceptions, so we must
@@ -555,7 +568,7 @@ class phpSmug {
 			$this->error_code = $this->parsed_response['code'];
             $this->error_msg = $this->parsed_response['message'];
 			$this->parsed_response = FALSE;
-			throw new Exception("SmugMug API Error for method {$command}: {$this->error_msg}", $this->error_code);
+			throw new Exception("SmugMug API Error for method image_upload: {$this->error_msg}", $this->error_code);
 		} else {
 			$this->error_code = FALSE;
             $this->error_msg = FALSE;
@@ -574,7 +587,8 @@ class phpSmug {
 	 * @param string $method The SmugMug method you want to call, but with "." replaced by "_"
 	 * @param mixed $arguments The params to be passed to the relevant API method. See SmugMug API docs for more details.
 	 **/
-	public function __call($method, $arguments) {
+	public function __call($method, $arguments)
+	{
 		$method = strtr($method, '_', '.');
 		$args = array();
 		foreach ($arguments as $arg) {
@@ -623,7 +637,8 @@ class phpSmug {
 	  * @param string $Access The required level of access. Defaults to "Public"
 	  * @param string $Permissions The required permissions.  Defaults to "Read"
 	  **/
-	 public function authorize() {
+	 public function authorize()
+	{
 		 $args = phpSmug::processArgs(func_get_args());
 		 $perms = (array_key_exists('Permissions', $args)) ? $args['Permissions'] : 'Public';
 		 $access = (array_key_exists('Access', $args)) ? $args['Access'] : 'Read';
@@ -641,23 +656,25 @@ class phpSmug {
 	  * @return string
 	  * @param string $string The string requiring encoding
 	  **/
-	 private static function urlencodeRFC3986($string) {
+	 private static function urlencodeRFC3986($string)
+	 {
 		return str_replace('%7E', '~', rawurlencode($string));
 	 }
 
 	 /**
-	   * Method that generates the OAuth signature
-	   *
-	   * In order for this method to correctly generate a signature, setToken()
-	   * MUST be called to set the token and token secret within the instance of
-	   * phpSmug.
-	   *
-	   * @return string
-	   * @access private
-	   * @param string $apicall The API method.
-	   * @param mixed $apiargs The arguments passed to the API method.
-	   **/
-	  private function generate_signature($apicall, $apiargs = NULL) {
+	  * Method that generates the OAuth signature
+	  *
+	  * In order for this method to correctly generate a signature, setToken()
+	  * MUST be called to set the token and token secret within the instance of
+	  * phpSmug.
+	  *
+	  * @return string
+	  * @access private
+	  * @param string $apicall The API method.
+	  * @param mixed $apiargs The arguments passed to the API method.
+	  **/
+	 private function generate_signature($apicall, $apiargs = NULL)
+	 {
 		$this->oauth_timestamp = time();
 		$this->oauth_nonce = md5(time() . mt_rand());
 
@@ -671,7 +688,7 @@ class phpSmug {
 		} else {
 			$this->oauth_signature_method = 'HMAC-SHA1';
 			$encKey = phpSmug::urlencodeRFC3986($this->OAuthSecret) . '&' . phpSmug::urlencodeRFC3986($this->oauth_token_secret);
-			$endpoint = ($apicall == 'Upload') ? 'http://api.smugmug.com/'.$apiargs['FileName'] : 'http://api.smugmug.com/services/api/php/'.$this->APIVer.'/';
+			$endpoint = ($apicall == 'Upload') ? 'http://upload.smugmug.com/'.$apiargs['FileName'] : 'http://api.smugmug.com/services/api/php/'.$this->APIVer.'/';
 			$method = ($apicall == 'Upload') ? 'PUT' : 'POST';
 			$params = array (
 				'oauth_version'             => '1.0',
@@ -707,25 +724,26 @@ class phpSmug {
 		}
 	 }
 	  
-	  /**
-	   * Process arguments passed to method
-	   *
-	   * @static
-	   * @return array
-	   * @param array Arguments taken from a function by func_get_args()
-	   * @access private
-	   **/
-	  private static function processArgs($arguments) {
-		   	$args = array();
-			foreach ($arguments as $arg) {
-				if (is_array($arg)) {
-					$args = array_merge($args, $arg);
-				} else {
-					$exp = explode('=', $arg, 2);
-					$args[$exp[0]] = $exp[1];
-				}
+	 /**
+	  * Process arguments passed to method
+	  *
+	  * @static
+	  * @return array
+	  * @param array Arguments taken from a function by func_get_args()
+	  * @access private
+	  **/
+	 private static function processArgs($arguments)
+	 {
+		$args = array();
+		foreach ($arguments as $arg) {
+			if (is_array($arg)) {
+				$args = array_merge($args, $arg);
+			} else {
+				$exp = explode('=', $arg, 2);
+				$args[$exp[0]] = $exp[1];
 			}
-			return $args;
+		}
+		return $args;
 	  }
 	   
 }
