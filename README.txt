@@ -1,5 +1,5 @@
-phpSmug 2.0.3 - PHP Wrapper for the SmugMug API
-===============================================
+phpSmug 2.1 - PHP Wrapper for the SmugMug API
+=============================================
 
 Written by Colin Seymour
 Project Homepage: http://phpSmug.com/
@@ -467,7 +467,7 @@ dedicated site at `http://phpsmug.com/'.
 If you encounter any problems with phpSmug, please check the list of known
 issues with phpSmug and the API itself at `http://phpsmug.com/bugs'.  If your
 issue is not there, please leave a comment on the revision page at
-`http://phpSmug.com/phpSmug-2.0.3'.
+`http://phpSmug.com/phpSmug-2.1'.
 
 If you are using phpSmug and wish to let the world know, drop me a line via the
 contact form at `http://phpsmug.com/about' and I'll add a link and brief
@@ -481,7 +481,7 @@ This document is also available online at `http://phpsmug.com/docs'.
 Change History
 ==============
 
-   * 2.0.3 - 27 Sep '09
+   * 2.1 - 27 Sep '09
 
 
         * Changed image_upload method to upload to upload.smugmug.com instead
