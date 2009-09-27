@@ -1,4 +1,4 @@
-phpSmug 2.0.2 - PHP Wrapper for the SmugMug API
+phpSmug 2.0.3 - PHP Wrapper for the SmugMug API
 ===============================================
 
 Written by Colin Seymour
@@ -26,8 +26,8 @@ functions.
 
 
 
-What's New
-==========
+What's New in phpSmug 2.0
+=========================
 
 For those who've used phpSmug before, things have changed with phpSmug 2.0 and
 hopefully it's for the good and won't be too much trouble to adapt your
@@ -178,7 +178,7 @@ To call a method, remove the "smugmug." part of the name and replace any
 fullstops with underscores. For example, instead of `smugmug.images.get', you
 would call `images_get()'.
 
-Remember: *ALL* function names and arugments *ARE* case sensitive.
+Remember: *ALL* function names and arguments *ARE* case sensitive.
 
 There is no need to pass the `SessionID' or `oauth_token*' arguments to the
 various methods as phpSmug will automatically pass these, where applicable,
@@ -224,7 +224,7 @@ phpSmug allows you to implement either method in your application.
      To login using a UserID and password hash (obtained from a previous
      Email/Password login):
 
-          $f->login("UserID=<value>", "Hash=<value>");
+          $f->login("UserID=<value>", "PasswordHash=<value>");
 
      Both methods will use HTTPS/SSL to ensure your username and password
      information is encrypted.
@@ -430,6 +430,13 @@ Other Notes
      It is recommended that you configure your application to catch exceptions
      from phpSmug.
 
+   * SmugMug occasionally puts the SmugMug site into read-only mode in order to
+     carry out maintenance.  SmugMug's mode is now stored in the mode object
+     variable (eg `$f->mode' for easy checking of SmugMug's status.  Note, this
+     is not set for `login()' methods as the API doesn't return the mode for
+     logins because you can't login when SmugMug is in read-only mode.  If
+     SmugMug is not in read-only mode, this variable is empty.
+
 
 
 
@@ -458,17 +465,36 @@ Keep up to date on developments and enhancements to phpSmug on it's new
 dedicated site at `http://phpsmug.com/'.
 
 If you encounter any problems with phpSmug, please check the list of known
-issues with phpSmug and the API itself at `http://phpsmug.com/bugs/'.  If your
+issues with phpSmug and the API itself at `http://phpsmug.com/bugs'.  If your
 issue is not there, please leave a comment on the revision page at
-`http://phpSmug.com/phpSmug-2.0.1/'.
+`http://phpSmug.com/phpSmug-2.0.3'.
+
+If you are using phpSmug and wish to let the world know, drop me a line via the
+contact form at `http://phpsmug.com/about' and I'll add a link and brief
+description to the sidebar on `http://phpsmug.com/'.
 
 Oh, and by all means, please feel free to show your appreciation for phpSmug by
-buying me a beer or two (see the sidebar at `http://phpsmug.com').
+buying me a beer or two (see the sidebar at `http://phpsmug.com/').
 
-This document is also available online at `http://phpsmug.com/docs/'.
+This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 2.0.3 - 27 Sep '09
+
+
+        * Changed image_upload method to upload to upload.smugmug.com instead
+          of api.smugmug.com. SmugMug made changes to enforce the use of
+          upload.smugmug.com as uploading to api.smugmug.com was causing
+          problems. (Ticket #5)
+
+        * Resolved issue with recaching of cached data (Ticket #4).
+
+        * SmugMug's mode (ie read-only etc) is now stored in $obj->mode for
+          easy checking of SmugMug's status.
+
+        * Corrected "login with hash" example in the README file.
 
    * 2.0.2 - 22 Feb '09
 
