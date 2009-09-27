@@ -40,8 +40,8 @@ $path_delimiter = (strpos(__FILE__, ':') !== false) ? ';' : ':';
  * to), swap the two elements around the $path_delimiter variable.  If you don't have
  * the PEAR packages installed, you can leave this like it is and move on.
  **/
-//ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FILE__) . '/PEAR');
-ini_set('include_path', dirname(__FILE__) . '/PEAR' . $path_delimiter . ini_get('include_path')  );
+ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FILE__) . '/PEAR');
+
 /**
  * Forcing a level of logging that does NOT include E_STRICT.
  * Unfortunately PEAR and it's modules are not obliged to meet E_STRICT levels in
