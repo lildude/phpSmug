@@ -493,6 +493,10 @@ class phpSmug {
 		if (!array_key_exists('FileName', $args)) {
 			$args['FileName'] = basename($args['File']);
 		}
+
+		// Ensure the FileName is phpSmug::urlencodeRFC3986 encoded - caters for stange chars and spaces
+		$args['FileName'] = phpSmug::urlencodeRFC3986($args['FileName']);
+
 		// OAuth Stuff
 		if ($this->OAuthSecret) {
 			$sig = $this->generate_signature('Upload', array('FileName' => $args['FileName']));
