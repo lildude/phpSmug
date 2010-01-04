@@ -465,6 +465,33 @@ class phpSmug {
 		$this->SessionID = $this->parsed_response['Login']['Session']['id'];
 		return $this->parsed_response ? $this->parsed_response['Login'] : FALSE;
 	}
+
+	/**
+	 * Catch login_* methods and direct them to the single login() method.
+	 *
+	 * This prevents these methods being passed to __call() and the resulting
+	 * cryptic and tough troubleshooting that would ensue for users who don't use
+	 * the login() method. Now they use it, even if they don't know about it.
+	 *
+	 * @access public
+	 * @uses login
+	 */
+	public function login_anonymously()
+	{
+		return $this->login();
+	}
+
+	public function login_withHash()
+	{
+		$args = phpSmug::processArgs(func_get_args());
+		return $this->login($args);
+	}
+
+	public function login_withPassword($args)
+	{
+		$args = phpSmug::processArgs(func_get_args());
+		return $this->login($args);
+	}
 	
 	/**
 	 * 	I break away from the standard API here as recommended by SmugMug at
@@ -594,15 +621,8 @@ class phpSmug {
 	public function __call($method, $arguments)
 	{
 		$method = strtr($method, '_', '.');
-		$args = array();
-		foreach ($arguments as $arg) {
-			if (is_array($arg)) {
-				$args = array_merge($args, $arg);
-			} else {
-				$exp = explode('=', $arg, 2);
-                $args[$exp[0]] = $exp[1];
-            }
-		}
+		$args = phpSmug::processArgs($arguments);
+
 		if ($this->OAuthSecret) {
 			$sig = $this->generate_signature($method, $args);
 			$oauth_params = array (
