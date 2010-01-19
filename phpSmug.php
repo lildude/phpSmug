@@ -251,25 +251,27 @@ class phpSmug {
     private function cache($request, $response)
 	{
 		$request['SessionID']       = ''; // Unset SessionID
-		$request['oauth_nonce']     = '';     // --\
-		$request['oauth_signature'] = '';  //    |-Unset OAuth info
+		$request['oauth_nonce']     = ''; // --\
+		$request['oauth_signature'] = ''; //    |-Unset OAuth info
 		$request['oauth_timestamp'] = ''; // --/
-		$reqhash = md5(serialize($request).$this->loginType);
-        if ($this->cacheType == 'db') {
-            if ($this->cache_db->getOne("SELECT COUNT(*) FROM {$this->cache_table} WHERE request = '$reqhash'")) {
-                $sql = 'UPDATE ' . $this->cache_table . ' SET response = ?, expiration = ? WHERE request = ?';
-				$this->cache_db->query($sql, array($response, strftime('%Y-%m-%d %H:%M:%S'), $reqhash));
-            } else {
-				$sql = "INSERT INTO " . $this->cache_table . " (request, response, expiration) VALUES ('$reqhash', '" . strtr($response, "'", "\'") . "', '" . strftime("%Y-%m-%d %H:%M:%S") . "')"; 
-				$this->cache_db->query($sql);
-            }
-        } elseif ($this->cacheType == 'fs') {
-            $file = $this->cache_dir . '/' . $reqhash . '.cache';
-            $fstream = fopen($file, 'w');
-            $result = fwrite($fstream,$response);
-            fclose($fstream);
-            return $result;
-        }
+		if (! strpos($request['method'], '.auth.')) {
+			$reqhash = md5(serialize($request).$this->loginType);
+			if ($this->cacheType == 'db') {
+				if ($this->cache_db->getOne("SELECT COUNT(*) FROM {$this->cache_table} WHERE request = '$reqhash'")) {
+					$sql = 'UPDATE ' . $this->cache_table . ' SET response = ?, expiration = ? WHERE request = ?';
+					$this->cache_db->query($sql, array($response, strftime('%Y-%m-%d %H:%M:%S'), $reqhash));
+				} else {
+					$sql = "INSERT INTO " . $this->cache_table . " (request, response, expiration) VALUES ('$reqhash', '" . strtr($response, "'", "\'") . "', '" . strftime("%Y-%m-%d %H:%M:%S") . "')";
+					$this->cache_db->query($sql);
+				}
+			} elseif ($this->cacheType == 'fs') {
+				$file = $this->cache_dir . '/' . $reqhash . '.cache';
+				$fstream = fopen($file, 'w');
+				$result = fwrite($fstream,$response);
+				fclose($fstream);
+				return $result;
+			}
+		}
         return FALSE;
     }
 
