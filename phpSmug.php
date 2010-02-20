@@ -605,7 +605,6 @@ class phpSmug {
 		} else {
 			$this->error_code = FALSE;
             $this->error_msg = FALSE;
-            $this->cache($args, $this->response);
 		}
 		return $this->parsed_response ? $this->parsed_response['Image'] : FALSE;
 	}
