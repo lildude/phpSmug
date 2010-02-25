@@ -188,7 +188,7 @@ class phpSmug {
 
         } elseif ($this->cacheType ==  'fs') {
 			if (file_exists($args['cache_dir']) && (is_dir($args['cache_dir']))) {
-				$this->cache_dir = realpath($args['cache_dir']).'/phpSmug';
+				$this->cache_dir = realpath($args['cache_dir']).'/phpSmug/';
 				if (is_writeable(realpath($args['cache_dir']))) {
 					if (!is_dir($this->cache_dir)) {
 						mkdir($this->cache_dir, 0755);
@@ -282,26 +282,31 @@ class phpSmug {
 	 * to ensure the changes are reflected by your application immediately.
 	 *
 	 * @access public
+	 * @param boolean $delete Set to TRUE to delete the cache after clearing it
 	 * @return string|TRUE
 	 * @since 1.1.7
 	 **/
-    public function clearCache()
+    public function clearCache( $delete = FALSE )
 	{
    		if ($this->cacheType == 'db') {
-	    	$result = $this->cache_db->query('TRUNCATE ' . $this->cache_table);
-	    	if (!empty($result)) {
-	        	return $result;
-	    	}
+			if ($delete) {
+				$result = $this->cache_db->query('DROP TABLE ' . $this->cache_table);
+			} else {
+				$result = $this->cache_db->query('TRUNCATE ' . $this->cache_table);
+			}
 	   	} elseif ($this->cacheType == 'fs') {
             $dir = opendir($this->cache_dir);
 	       	if ($dir) {
 				foreach (glob($this->cache_dir."/*.cache") as $filename) {
 					$result = unlink($filename);
 				}
-				return $result;
 	       	}
+			closedir($dir);
+			if ($delete) {
+				$result = rmdir($this->cache_dir);
+			}
 	   	}
-		return TRUE;
+		return (bool) $result;
 	}
 
 	/**
