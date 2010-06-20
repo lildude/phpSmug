@@ -649,7 +649,12 @@ class phpSmug {
 		$this->request($method, $args);
 
 		// pop off the "stat", "mode" and "method" parts of the array as we don't need them anymore.
+		// BUG: API 1.2.1 and lower: the results are different if the response only has 1 element.  We shouldn't array_shift() lower down.
+		//      However, I need to consider what to do to fix this: either go the route of making the response similar to what we do now
+		//      and thus don't break anything when people upgrade, or change the response so it's consistent with what the API says the user
+		//      will get back, which WILL break people's apps who don't use the 1.2.2 API endpoint.
         if (is_array($this->parsed_response)) $output = array_pop($this->parsed_response);
+		//if (is_array($this->parsed_response)) $output = $this->parsed_response;
 		$output = (count($output) == '1' && is_array($output)) ? array_shift($output) : $output;
 		/* Automatically set token if calling getRequestToken */
 		if ($method == 'auth.getRequestToken') {
