@@ -655,6 +655,7 @@ class phpSmug {
 		//      will get back, which WILL break people's apps who don't use the 1.2.2 API endpoint.
         if (is_array($this->parsed_response)) $output = array_pop($this->parsed_response);
 		//if (is_array($this->parsed_response)) $output = $this->parsed_response;
+		// I'm really not sure why I shift this array if it only contains one element.
 		$output = (count($output) == '1' && is_array($output)) ? array_shift($output) : $output;
 		/* Automatically set token if calling getRequestToken */
 		if ($method == 'auth.getRequestToken') {
