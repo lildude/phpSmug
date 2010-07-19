@@ -324,7 +324,7 @@ class phpSmug {
 	{
 		$this->req->clearPostData();
         
-		if ((strpos($command, 'login.with')) || ((strpos($command, 'auth.get')) && $this->oauth_signature_method == 'PLAINTEXT')) {
+		if ((strpos($command, 'login.with')) || ($this->oauth_signature_method == 'PLAINTEXT')) {
 			$proto = "https";
 		} else {
 			$proto = "http";
@@ -579,7 +579,9 @@ class phpSmug {
 		(isset($args['Longitude'])) ? $upload_req->addHeader('X-Smug-Longitude', $args['Longitude']) : false;
 		(isset($args['Altitude'])) ? $upload_req->addHeader('X-Smug-Altitude', $args['Altitude']) : false;
 
-		$upload_req->setURL('http://upload.smugmug.com/'.$args['FileName']);
+		$proto = ($this->oauth_signature_method == 'PLAINTEXT') ? 'https' : 'http';
+		$upload_req->setURL($proto . '://upload.smugmug.com/'.$args['FileName']);
+
 		$upload_req->setBody($data);
 
         //Send Requests - HTTP::Request doesn't raise Exceptions, so we must
