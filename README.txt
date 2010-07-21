@@ -18,7 +18,7 @@ Dan Coulter in phpFlickr (http://www.phpflickr.com) .
 
                                    *WARNING*
 
-phpSmug 2.0 is *NOT* a drop in replacement for phpSmug 1.0.x of 1.1.x.
+phpSmug 2.0 is *NOT* a drop in replacement for phpSmug 1.0.x or 1.1.x.
 Please ensure you read this document for details on how phpSmug 2.x now
 functions.
 
