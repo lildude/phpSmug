@@ -484,7 +484,7 @@ Change History
    * 2.2 - 21 Jul '10
 
 
-        * https if forced for all calls that use OAuth with the PLAINTEXT
+        * https is forced for all calls that use OAuth with the PLAINTEXT
           signature method. WARNING: Uploads are however rejected by the API if
           you use PLAINTEXT (which is NOT the default).
 
