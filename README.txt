@@ -1,4 +1,4 @@
-phpSmug 2.1 - PHP Wrapper for the SmugMug API
+phpSmug 2.2 - PHP Wrapper for the SmugMug API
 =============================================
 
 Written by Colin Seymour
@@ -480,6 +480,33 @@ This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 2.2 - 21 Jul '10
+
+
+        * https if forced for all calls that use OAuth with the PLAINTEXT
+          signature method. WARNING: Uploads are however rejected by the API if
+          you use PLAINTEXT (which is NOT the default).
+
+        * Failed upload responses and smugmug.auth.* method responses are no
+          longer cached.
+
+        * Upload filenames are now encoded to ensure spaces and non-ascii
+          characters are correctly handled.
+
+        * images_upload() now honours any earlier setProxy() calls so uploads
+          can occur through that proxy.
+
+        * clearCache() now takes a boolean argument to state whether you want
+          the cache location to be removed when the cache is cleared. Default
+          is FALSE, ie the cache location will NOT be removed
+
+        * Added methods to handle calling of the various login.* methods
+          offered by the API when using these instead of the single login()
+          method offered by phpSmug. (Ticket #6)
+
+        * For my own benefit, I've now implemented a full PHPUnit test suite
+          that checks all functionality of phpSmug.
 
    * 2.1 - 27 Sep '09
 
