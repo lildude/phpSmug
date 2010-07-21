@@ -405,7 +405,9 @@ class phpSmug {
     public function setProxy()
 	{
 		$args = phpSmug::processArgs(func_get_args());
-        $this->req->setProxy($args['server'], $args['port']);
+		$this->proxy['server'] = $args['server'];
+		$this->proxy['port'] = $args['port'];
+		$this->req->setProxy($args['server'], $args['port']);
     }
 
 	/**
@@ -547,8 +549,13 @@ class phpSmug {
 		$upload_req = new HTTP_Request();
         $upload_req->setMethod(HTTP_REQUEST_METHOD_PUT);
 		$upload_req->setHttpVer(HTTP_REQUEST_HTTP_VER_1_1);
-		$upload_req->clearPostData();
 		
+		// Set the proxy if one has been set earlier
+		if (isset($this->proxy) && is_array($this->proxy)) {
+			$upload_req->setProxy($this->proxy['server'], $this->proxy['port']);
+		}
+		$upload_req->clearPostData();
+
 		$upload_req->addHeader('User-Agent', "{$this->AppName} using phpSmug/{$this->version}");
 		$upload_req->addHeader('Content-MD5', md5_file($args['File']));
 		$upload_req->addHeader('Connection', 'keep-alive');
@@ -658,7 +665,7 @@ class phpSmug {
         if (is_array($this->parsed_response)) $output = array_pop($this->parsed_response);
 		//if (is_array($this->parsed_response)) $output = $this->parsed_response;
 		// I'm really not sure why I shift this array if it only contains one element.
-		$output = (count($output) == '1' && is_array($output)) ? array_shift($output) : $output;
+		//$output = (count($output) == '1' && is_array($output)) ? array_shift($output) : $output;
 		/* Automatically set token if calling getRequestToken */
 		if ($method == 'auth.getRequestToken') {
 			$this->setToken($output);
