@@ -41,6 +41,8 @@ $path_delimiter = (strpos(__FILE__, ':') !== false) ? ';' : ':';
  * the PEAR packages installed, you can leave this like it is and move on.
  **/
 ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FILE__) . '/PEAR');
+//ini_set( 'include_path', dirname( __FILE__ ) . '/PEAR' . $path_delimiter . ini_get( 'include_path' ) );
+
 
 /**
  * Forcing a level of logging that does NOT include E_STRICT.
@@ -50,7 +52,7 @@ ini_set('include_path', ini_get('include_path') . $path_delimiter . dirname(__FI
  * just incase phpSmug is used within an application that uses E_STRICT.
  * phpSmug.php itself is E_STRICT compliant, so it's only PEAR that's holding us back.
  **/
-error_reporting(E_ALL | E_NOTICE);
+error_reporting(E_STRICT);
 
 /**
  * phpSmug - all of the phpSmug functionality is provided in this class
@@ -68,6 +70,16 @@ class phpSmug {
 	var $oauth_token_secret;
 	var $oauth_token;
 	var $mode;
+
+	/**
+	 * phpZenfolio uses the HTTP::Request2 module for communication with Zenfolio.
+	 * This PEAR module supports 3 adapters: socket (default), curl and mock.
+	 * This option allows application developers to easily over-ride this and
+	 * select their own adapter.
+	 *
+	 * @var string
+	 **/
+	var $adapter = 'socket';
 	
 	/**
      * When your database cache table hits this many rows, a cleanup
@@ -119,10 +131,16 @@ class phpSmug {
 		$this->AppName = (array_key_exists('AppName', $args)) ?  $args['AppName'] : 'Unknown Application';
 
         // All calls to the API are done via the POST method using the PEAR::HTTP_Request package.
+		/*
         require_once 'HTTP/Request.php';
         $this->req = new HTTP_Request();
         $this->req->setMethod(HTTP_REQUEST_METHOD_POST);
-		$this->req->addHeader('User-Agent', "{$this->AppName} using phpSmug/{$this->version}");
+		$this->req->addHeader('User-Agent', "{$this->AppName} using phpSmug/{$this->version}");*/
+		require_once 'HTTP/Request2.php';
+		$this->req = new HTTP_Request2();
+		$this->req->setConfig( array( 'adapter' => $this->adapter, 'follow_redirects' => TRUE, 'max_redirects' => 3 ) );
+        $this->req->setMethod( HTTP_Request2::METHOD_POST );
+		$this->req->setHeader( 'User-Agent', "{$this->AppName} using phpSmug/{$this->version}" );
     }
 	
 	/**
@@ -321,9 +339,7 @@ class phpSmug {
 	 * @param boolean $nocache Set whether the call should be cached or not. This isn't actually used, so may be deprecated in the future.
 	 **/
 	private function request($command, $args = array(), $nocache = FALSE)
-	{
-		$this->req->clearPostData();
-        
+	{        
 		if ((strpos($command, 'login.with')) || ($this->oauth_signature_method == 'PLAINTEXT')) {
 			$proto = "https";
 		} else {
@@ -356,23 +372,22 @@ class phpSmug {
 
         if (!($this->response = $this->getCached($args)) || $nocache) {
             foreach ($args as $key => $data) {
-                $this->req->addPostData($key, $data, FALSE);
+                $this->req->addPostParameter($key, $data);
             }
-            
-            //Send Requests - HTTP::Request doesn't raise Exceptions, so we must
-			$response = $this->req->sendRequest();
-			if(!PEAR::isError($response) && ($this->req->getResponseCode() == 200)) {
-				$this->response = $this->req->getResponseBody();
-				$this->cache($args, $this->response);
-			} else {
-				if ($this->req->getResponseCode() && $this->req->getResponseCode() != 200) {
-					$msg = 'Request failed. HTTP Reason: '.$this->req->getResponseReason();
-					$code = $this->req->getResponseCode();
+            //Send Requests 
+			try {
+				$response = $this->req->send();
+				if ( 200 == $response->getStatus() ) {
+					$this->response = $response->getBody();
+					$this->cache( $args, $this->response );
 				} else {
-					$msg = 'Request failed: '.$response->getMessage();
-					$code = $response->getCode();
+					$msg = 'Request failed. HTTP Reason: '.$this->req->getReasonPhrase();
+					$code = $this->req->getStatus();
+					throw new Exception( $msg, $code );
 				}
-				throw new Exception($msg, $code);
+			}
+			catch ( HTTP_Request2_Exception $e ) {
+				throw new Exception( $e );
 			}
 		}
 		// TODO: Cater for SmugMug being in read-only mode better.  At the moment we throw and exception and don't allow things to continue.
@@ -407,7 +422,12 @@ class phpSmug {
 		$args = phpSmug::processArgs(func_get_args());
 		$this->proxy['server'] = $args['server'];
 		$this->proxy['port'] = $args['port'];
-		$this->req->setProxy($args['server'], $args['port']);
+		$this->proxy['user'] = $args['user'];
+		$this->proxy['password'] = $args['password'];
+		$this->req->setConfig(array('proxy_host' => $args['server'],
+							        'proxy_port' => $args['port'],
+									'proxy_user' => $args['user'],
+									'proxy_password' => $args['password']));
     }
 
 	/**
@@ -546,24 +566,26 @@ class phpSmug {
 			throw new Exception("File doesn't exist: {$args['File']}");
 		}
 
-		$upload_req = new HTTP_Request();
-        $upload_req->setMethod(HTTP_REQUEST_METHOD_PUT);
-		$upload_req->setHttpVer(HTTP_REQUEST_HTTP_VER_1_1);
+		$upload_req = new HTTP_Request2();
+        $upload_req->setMethod(HTTP_Request2::METHOD_PUT);
+		$upload_req->setConfig('protocol_version', '1.1');
 		
 		// Set the proxy if one has been set earlier
 		if (isset($this->proxy) && is_array($this->proxy)) {
-			$upload_req->setProxy($this->proxy['server'], $this->proxy['port']);
+			$upload_req->setConfig(array('proxy_host' => $this->proxy['server'],
+							             'proxy_port' => $this->proxy['port'],
+									     'proxy_user' => $this->proxy['user'],
+									     'proxy_password' => $this->proxy['password']));
 		}
-		$upload_req->clearPostData();
 
-		$upload_req->addHeader('User-Agent', "{$this->AppName} using phpSmug/{$this->version}");
-		$upload_req->addHeader('Content-MD5', md5_file($args['File']));
-		$upload_req->addHeader('Connection', 'keep-alive');
+		$upload_req->setHeader( array( 'User-Agent' => "{$this->AppName} using phpSmug/{$this->version}",
+									   'Content-MD5' => md5_file($args['File']),
+									   'Connection' => 'keep-alive') );
 
 		if ($this->loginType == 'authd') { 
-			$upload_req->addHeader('X-Smug-SessionID', $this->SessionID);
+			$upload_req->setHeader('X-Smug-SessionID', $this->SessionID);
 		} else {
-			$upload_req->addHeader('Authorization', 'OAuth realm="http://api.smugmug.com/",
+			$upload_req->setHeader('Authorization', 'OAuth realm="http://api.smugmug.com/",
 				oauth_consumer_key="'.$this->APIKey.'",
 				oauth_token="'.$this->oauth_token.'",
 				oauth_signature_method="'.$this->oauth_signature_method.'",
@@ -573,37 +595,38 @@ class phpSmug {
 				oauth_nonce="'.$this->oauth_nonce.'"');
 		}
 			
-		$upload_req->addHeader('X-Smug-Version', $this->APIVer);
-		$upload_req->addHeader('X-Smug-ResponseType', 'PHP');
-		$upload_req->addHeader('X-Smug-AlbumID', $args['AlbumID']);
-		$upload_req->addHeader('X-Smug-Filename', basename($args['FileName'])); // This is actually optional, but we may as well use what we're given
+		$upload_req->setHeader(array( 'X-Smug-Version' => $this->APIVer,
+									  'X-Smug-ResponseType' => 'PHP',
+									  'X-Smug-AlbumID' => $args['AlbumID'],
+									  'X-Smug-Filename'=> basename($args['FileName']))); // This is actually optional, but we may as well use what we're given
 		
 		/* Optional Headers */
-		(isset($args['ImageID'])) ? $upload_req->addHeader('X-Smug-ImageID', $args['ImageID']) : false;
-		(isset($args['Caption'])) ? $upload_req->addHeader('X-Smug-Caption', $args['Caption']) : false;
-		(isset($args['Keywords'])) ? $upload_req->addHeader('X-Smug-Keywords', $args['Keywords']) : false;
-		(isset($args['Latitude'])) ? $upload_req->addHeader('X-Smug-Latitude', $args['Latitude']) : false;
-		(isset($args['Longitude'])) ? $upload_req->addHeader('X-Smug-Longitude', $args['Longitude']) : false;
-		(isset($args['Altitude'])) ? $upload_req->addHeader('X-Smug-Altitude', $args['Altitude']) : false;
+		(isset($args['ImageID'])) ? $upload_req->setHeader('X-Smug-ImageID', $args['ImageID']) : false;
+		(isset($args['Caption'])) ? $upload_req->setHeader('X-Smug-Caption', $args['Caption']) : false;
+		(isset($args['Keywords'])) ? $upload_req->setHeader('X-Smug-Keywords', $args['Keywords']) : false;
+		(isset($args['Latitude'])) ? $upload_req->setHeader('X-Smug-Latitude', $args['Latitude']) : false;
+		(isset($args['Longitude'])) ? $upload_req->setHeader('X-Smug-Longitude', $args['Longitude']) : false;
+		(isset($args['Altitude'])) ? $upload_req->setHeader('X-Smug-Altitude', $args['Altitude']) : false;
 
 		$proto = ($this->oauth_signature_method == 'PLAINTEXT') ? 'https' : 'http';
 		$upload_req->setURL($proto . '://upload.smugmug.com/'.$args['FileName']);
 
 		$upload_req->setBody($data);
 
-        //Send Requests - HTTP::Request doesn't raise Exceptions, so we must
-		$response = $upload_req->sendRequest();
-		if(!PEAR::isError($response) && ($upload_req->getResponseCode() == 200)) {
-			$this->response = $upload_req->getResponseBody();
-		} else {
-			if ($upload_req->getResponseCode() && $upload_req->getResponseCode() != 200) {
-				$msg = 'Upload failed. HTTP Reason: '.$upload_req->getResponseReason();
-				$code = $upload_req->getResponseCode();
+        //Send Requests 
+		try {
+			$response = $upload_req->send();
+			if ( 200 == $response->getStatus() ) {
+				$this->response = $response->getBody();
+				$this->cache( $args, $this->response );
 			} else {
-				$msg = 'Upload failed: '.$response->getMessage();
-				$code = $response->getCode();
+				$msg = 'Upload failed. HTTP Reason: '.$this->req->getReasonPhrase();
+				$code = $upload_req->getStatus();
+				throw new Exception( $msg, $code );
 			}
-			throw new Exception($msg, $code);
+		}
+		catch ( HTTP_Request2_Exception $e ) {
+			throw new Exception( $e );
 		}
 		
 		// For some reason the return string is formatted with \n and extra space chars.  Remove these.
