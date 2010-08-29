@@ -37,7 +37,7 @@
  * @package    HTTP_Request2
  * @author     Alexey Borzov <avb@php.net>
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Curl.php,v 1.9 2009/04/03 21:32:48 avb Exp $
+ * @version    SVN: $Id: Curl.php 291118 2009-11-21 17:58:23Z avb $
  * @link       http://pear.php.net/package/HTTP_Request2
  */
 
@@ -52,7 +52,7 @@ require_once 'HTTP/Request2/Adapter.php';
  * @category    HTTP
  * @package     HTTP_Request2
  * @author      Alexey Borzov <avb@php.net>
- * @version     Release: 0.4.0
+ * @version     Release: 0.5.2
  */
 class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
 {
@@ -139,6 +139,9 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
         $this->lastInfo = curl_getinfo($ch);
         curl_close($ch);
 
+        $response = $this->response;
+        unset($this->request, $this->requestBody, $this->response);
+
         if (!empty($e)) {
             throw $e;
         } elseif (!empty($errorMessage)) {
@@ -146,9 +149,9 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
         }
 
         if (0 < $this->lastInfo['size_download']) {
-            $this->request->setLastEvent('receivedBody', $this->response);
+            $request->setLastEvent('receivedBody', $response);
         }
-        return $this->response;
+        return $response;
     }
 
    /**
@@ -172,12 +175,9 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-            // setup callbacks
-            CURLOPT_READFUNCTION   => array($this, 'callbackReadBody'),
+            // setup write callbacks
             CURLOPT_HEADERFUNCTION => array($this, 'callbackWriteHeader'),
             CURLOPT_WRITEFUNCTION  => array($this, 'callbackWriteBody'),
-            // disallow redirects
-            CURLOPT_FOLLOWLOCATION => false,
             // buffer size
             CURLOPT_BUFFERSIZE     => $this->request->getConfig('buffer_size'),
             // connection timeout
@@ -187,6 +187,22 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
             // request url
             CURLOPT_URL            => $this->request->getUrl()->getUrl()
         ));
+
+        // set up redirects
+        if (!$this->request->getConfig('follow_redirects')) {
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        } else {
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, $this->request->getConfig('max_redirects'));
+            // limit redirects to http(s), works in 5.2.10+
+            if (defined('CURLOPT_REDIR_PROTOCOLS')) {
+                curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+            }
+            // works sometime after 5.3.0, http://bugs.php.net/bug.php?id=49571
+            if ($this->request->getConfig('strict_redirects') && defined('CURLOPT_POSTREDIR ')) {
+                curl_setopt($ch, CURLOPT_POSTREDIR, 3);
+            }
+        }
 
         // request timeout
         if ($timeout = $this->request->getConfig('timeout')) {
@@ -209,6 +225,9 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
                 break;
             case HTTP_Request2::METHOD_POST:
                 curl_setopt($ch, CURLOPT_POST, true);
+                break;
+            case HTTP_Request2::METHOD_HEAD:
+                curl_setopt($ch, CURLOPT_NOBODY, true);
                 break;
             default:
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->request->getMethod());
@@ -271,6 +290,9 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
         }
 
         $this->calculateRequestLength($headers);
+        if (isset($headers['content-length'])) {
+            $this->workaroundPhpBug47204($ch, $headers);
+        }
 
         // set headers not having special keys
         $headersFmt = array();
@@ -284,12 +306,49 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
     }
 
    /**
+    * Workaround for PHP bug #47204 that prevents rewinding request body
+    *
+    * The workaround consists of reading the entire request body into memory
+    * and setting it as CURLOPT_POSTFIELDS, so it isn't recommended for large
+    * file uploads, use Socket adapter instead.
+    *
+    * @param    resource    cURL handle
+    * @param    array       Request headers
+    */
+    protected function workaroundPhpBug47204($ch, &$headers)
+    {
+        // no redirects, no digest auth -> probably no rewind needed
+        if (!$this->request->getConfig('follow_redirects')
+            && (!($auth = $this->request->getAuth())
+                || HTTP_Request2::AUTH_DIGEST != $auth['scheme'])
+        ) {
+            curl_setopt($ch, CURLOPT_READFUNCTION, array($this, 'callbackReadBody'));
+
+        // rewind may be needed, read the whole body into memory
+        } else {
+            if ($this->requestBody instanceof HTTP_Request2_MultipartBody) {
+                $this->requestBody = $this->requestBody->__toString();
+
+            } elseif (is_resource($this->requestBody)) {
+                $fp = $this->requestBody;
+                $this->requestBody = '';
+                while (!feof($fp)) {
+                    $this->requestBody .= fread($fp, 16384);
+                }
+            }
+            // curl hangs up if content-length is present
+            unset($headers['content-length']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
+        }
+    }
+
+   /**
     * Callback function called by cURL for reading the request body
     *
     * @param    resource    cURL handle
     * @param    resource    file descriptor (not used)
     * @param    integer     maximum length of data to return
-    * @return   string      part of the request body, up to $length bytes 
+    * @return   string      part of the request body, up to $length bytes
     */
     protected function callbackReadBody($ch, $fd, $length)
     {
@@ -336,6 +395,14 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
                     'sentHeaders', curl_getinfo($ch, CURLINFO_HEADER_OUT)
                 );
             }
+            $upload = curl_getinfo($ch, CURLINFO_SIZE_UPLOAD);
+            // if body wasn't read by a callback, send event with total body size
+            if ($upload > $this->position) {
+                $this->request->setLastEvent(
+                    'sentBodyPart', $upload - $this->position
+                );
+                $this->position = $upload;
+            }
             $this->eventSentHeaders = true;
             // we'll need a new response object
             if ($this->eventReceivedHeaders) {
@@ -351,6 +418,17 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
                 // don't bother with 100-Continue responses (bug #15785)
                 if (200 <= $this->response->getStatus()) {
                     $this->request->setLastEvent('receivedHeaders', $this->response);
+                }
+                // for versions lower than 5.2.10, check the redirection URL protocol
+                if ($this->request->getConfig('follow_redirects') && !defined('CURLOPT_REDIR_PROTOCOLS')
+                    && $this->response->isRedirect()
+                ) {
+                    $redirectUrl = new Net_URL2($this->response->getHeader('location'));
+                    if ($redirectUrl->isAbsolute()
+                        && !in_array($redirectUrl->getScheme(), array('http', 'https'))
+                    ) {
+                        return -1;
+                    }
                 }
                 $this->eventReceivedHeaders = true;
             }
@@ -368,7 +446,7 @@ class HTTP_Request2_Adapter_Curl extends HTTP_Request2_Adapter
     */
     protected function callbackWriteBody($ch, $string)
     {
-        // cURL calls WRITEFUNCTION callback without calling HEADERFUNCTION if 
+        // cURL calls WRITEFUNCTION callback without calling HEADERFUNCTION if
         // response doesn't start with proper HTTP status line (see bug #15716)
         if (empty($this->response)) {
             throw new HTTP_Request2_Exception("Malformed response: {$string}");

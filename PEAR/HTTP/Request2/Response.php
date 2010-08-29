@@ -37,13 +37,13 @@
  * @package    HTTP_Request2
  * @author     Alexey Borzov <avb@php.net>
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Response.php,v 1.3 2009/01/06 21:30:39 avb Exp $
+ * @version    SVN: $Id: Response.php 290520 2009-11-11 20:09:42Z avb $
  * @link       http://pear.php.net/package/HTTP_Request2
  */
 
 /**
  * Exception class for HTTP_Request2 package
- */ 
+ */
 require_once 'HTTP/Request2/Exception.php';
 
 /**
@@ -58,11 +58,11 @@ require_once 'HTTP/Request2/Exception.php';
  *     $headerLine = read_header_line();
  *     $response->parseHeaderLine($headerLine);
  * } while ($headerLine != '');
- * 
+ *
  * while ($chunk = read_body()) {
  *     $response->appendBody($chunk);
  * }
- * 
+ *
  * var_dump($response->getHeader(), $response->getCookies(), $response->getBody());
  * </code>
  *
@@ -70,7 +70,7 @@ require_once 'HTTP/Request2/Exception.php';
  * @category   HTTP
  * @package    HTTP_Request2
  * @author     Alexey Borzov <avb@php.net>
- * @version    Release: 0.4.0
+ * @version    Release: 0.5.2
  * @link       http://tools.ietf.org/html/rfc2616#section-6
  */
 class HTTP_Request2_Response
@@ -164,7 +164,7 @@ class HTTP_Request2_Response
         305 => 'Use Proxy',
         307 => 'Temporary Redirect',
 
-        // 4xx: Client Error - The request contains bad syntax or cannot be 
+        // 4xx: Client Error - The request contains bad syntax or cannot be
         // fulfilled
         400 => 'Bad Request',
         401 => 'Unauthorized',
@@ -222,7 +222,7 @@ class HTTP_Request2_Response
    /**
     * Parses the line from HTTP response filling $headers array
     *
-    * The method should be called after reading the line from socket or receiving 
+    * The method should be called after reading the line from socket or receiving
     * it into cURL callback. Passing an empty string here indicates the end of
     * response headers and triggers additional processing, so be sure to pass an
     * empty string in the end.
@@ -264,7 +264,7 @@ class HTTP_Request2_Response
             }
             $this->lastHeader = $name;
 
-        // string 
+        // continuation of a previous header
         } elseif (preg_match('!^\s+(.+)$!', $headerLine, $m) && $this->lastHeader) {
             if (!is_array($this->headers[$this->lastHeader])) {
                 $this->headers[$this->lastHeader] .= ' ' . trim($m[1]);
@@ -273,13 +273,13 @@ class HTTP_Request2_Response
                 $this->headers[$this->lastHeader][$key] .= ' ' . trim($m[1]);
             }
         }
-    } 
+    }
 
    /**
     * Parses a Set-Cookie header to fill $cookies array
     *
     * @param    string    value of Set-Cookie header
-    * @link     http://cgi.netscape.com/newsref/std/cookie_spec.html
+    * @link     http://web.archive.org/web/20080331104521/http://cgi.netscape.com/newsref/std/cookie_spec.html
     */
     protected function parseCookie($cookieString)
     {
@@ -336,7 +336,7 @@ class HTTP_Request2_Response
 
    /**
     * Returns the status code
-    * @return   integer 
+    * @return   integer
     */
     public function getStatus()
     {
@@ -350,6 +350,16 @@ class HTTP_Request2_Response
     public function getReasonPhrase()
     {
         return $this->reasonPhrase;
+    }
+
+   /**
+    * Whether response is a redirect that can be automatically handled by HTTP_Request2
+    * @return   bool
+    */
+    public function isRedirect()
+    {
+        return in_array($this->code, array(300, 301, 302, 303, 307))
+               && isset($this->headers['location']);
     }
 
    /**
@@ -388,22 +398,43 @@ class HTTP_Request2_Response
     */
     public function getBody()
     {
-        if ($this->bodyEncoded) {
-            switch (strtolower($this->getHeader('content-encoding'))) {
-                case 'gzip':
-                    return self::decodeGzip($this->body);
-                case 'deflate':
-                    return self::decodeDeflate($this->body);
+        if (!$this->bodyEncoded ||
+            !in_array(strtolower($this->getHeader('content-encoding')), array('gzip', 'deflate'))
+        ) {
+            return $this->body;
+
+        } else {
+            if (extension_loaded('mbstring') && (2 & ini_get('mbstring.func_overload'))) {
+                $oldEncoding = mb_internal_encoding();
+                mb_internal_encoding('iso-8859-1');
             }
+
+            try {
+                switch (strtolower($this->getHeader('content-encoding'))) {
+                    case 'gzip':
+                        $decoded = self::decodeGzip($this->body);
+                        break;
+                    case 'deflate':
+                        $decoded = self::decodeDeflate($this->body);
+                }
+            } catch (Exception $e) {
+            }
+
+            if (!empty($oldEncoding)) {
+                mb_internal_encoding($oldEncoding);
+            }
+            if (!empty($e)) {
+                throw $e;
+            }
+            return $decoded;
         }
-        return $this->body;
     }
 
    /**
     * Get the HTTP version of the response
     *
     * @return   string
-    */ 
+    */
     public function getVersion()
     {
         return $this->version;

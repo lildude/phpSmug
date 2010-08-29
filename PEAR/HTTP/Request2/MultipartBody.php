@@ -37,7 +37,7 @@
  * @package    HTTP_Request2
  * @author     Alexey Borzov <avb@php.net>
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: MultipartBody.php,v 1.4 2009/01/07 19:28:22 avb Exp $
+ * @version    SVN: $Id: MultipartBody.php 290192 2009-11-03 21:29:32Z avb $
  * @link       http://pear.php.net/package/HTTP_Request2
  */
 
@@ -50,7 +50,7 @@
  * @category   HTTP
  * @package    HTTP_Request2
  * @author     Alexey Borzov <avb@php.net>
- * @version    Release: 0.4.0
+ * @version    Release: 0.5.2
  * @link       http://tools.ietf.org/html/rfc1867
  */
 class HTTP_Request2_MultipartBody
@@ -152,7 +152,7 @@ class HTTP_Request2_MultipartBody
     public function getBoundary()
     {
         if (empty($this->_boundary)) {
-            $this->_boundary = 'PEAR-HTTP_Request2-' . md5(microtime());
+            $this->_boundary = '--' . md5('PEAR-HTTP_Request2-' . microtime());
         }
         return $this->_boundary;
     }
@@ -172,7 +172,7 @@ class HTTP_Request2_MultipartBody
         while ($length > 0 && $this->_pos[0] <= $paramCount + $uploadCount) {
             $oldLength = $length;
             if ($this->_pos[0] < $paramCount) {
-                $param = sprintf($this->_headerParam, $boundary, 
+                $param = sprintf($this->_headerParam, $boundary,
                                  $this->_params[$this->_pos[0]][0]) .
                          $this->_params[$this->_pos[0]][1] . "\r\n";
                 $ret    .= substr($param, $this->_pos[1], $length);

@@ -375,7 +375,7 @@ class phpSmug {
 				throw new Exception($msg, $code);
 			}
 		}
-
+		// TODO: Cater for SmugMug being in read-only mode better.  At the moment we throw and exception and don't allow things to continue.
 		$this->parsed_response = unserialize($this->response);
 		if ($this->parsed_response['stat'] == 'fail') {
 			$this->error_code = $this->parsed_response['code'];
