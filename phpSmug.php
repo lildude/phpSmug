@@ -770,7 +770,8 @@ class phpSmug {
 			if ($apicall != 'Upload') $params = (!empty($apiargs)) ? array_merge($params, $apiargs) : $params;
 		    $keys = array_map(array('phpSmug', 'urlencodeRFC3986'), array_keys($params));
 		    $values = array_map(array('phpSmug', 'urlencodeRFC3986'), array_values($params));
-		    $params = array_combine($keys, $values);
+			// BUG: The API now expects FALSE to be a 0 value and not a blank.  No notification of this change :-(
+			$params = array_combine($keys, $values);
 		    // Sort by keys (natsort)
 		    uksort($params, 'strnatcmp');
 			$pairs = array();
