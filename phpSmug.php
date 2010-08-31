@@ -422,11 +422,11 @@ class phpSmug {
 		$args = phpSmug::processArgs(func_get_args());
 		$this->proxy['server'] = $args['server'];
 		$this->proxy['port'] = $args['port'];
-		$this->proxy['user'] = $args['user'];
+		$this->proxy['username'] = $args['username'];
 		$this->proxy['password'] = $args['password'];
 		$this->req->setConfig(array('proxy_host' => $args['server'],
 							        'proxy_port' => $args['port'],
-									'proxy_user' => $args['user'],
+									'proxy_user' => $args['username'],
 									'proxy_password' => $args['password']));
     }
 
@@ -574,7 +574,7 @@ class phpSmug {
 		if (isset($this->proxy) && is_array($this->proxy)) {
 			$upload_req->setConfig(array('proxy_host' => $this->proxy['server'],
 							             'proxy_port' => $this->proxy['port'],
-									     'proxy_user' => $this->proxy['user'],
+									     'proxy_user' => $this->proxy['username'],
 									     'proxy_password' => $this->proxy['password']));
 		}
 
