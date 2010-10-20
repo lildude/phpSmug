@@ -112,7 +112,7 @@ class phpSmug {
 		// All calls to the API are done via POST using my own constructed httpRequest class
 		$this->req = new httpRequest();
 		$this->req->setConfig( array( 'adapter' => $this->adapter, 'follow_redirects' => TRUE, 'max_redirects' => 3, 'ssl_verify_peer' => FALSE, 'ssl_verify_host' => FALSE, 'connect_timeout' => 60 ) );
-		$this->req->setHeader( 'User-Agent', "{$this->AppName} using phpSmug/{$this->version}" );
+		$this->req->setHeader( array( 'User-Agent' => "{$this->AppName} using phpSmug/{$this->version}", 'Content-Type' => 'application/x-www-form-urlencoded' ) );
     }
 	
 	/**
@@ -381,45 +381,13 @@ class phpSmug {
         ksort( $args );
 
         if ( !( $this->response = $this->getCached( $args ) ) ) {
-            /*foreach ( $args as $key => $data ) {
-                $this->req->addPostParameter( $key, $data );
-            }
-            //Send Requests 
-			try {
-				$response = $this->req->send();
-				if ( 200 == $response->getStatus() ) {
-					$this->response = $response->getBody();
-					$this->cache( $args, $this->response );
-				} else {
-					$msg = 'Request failed. HTTP Reason: '.$this->req->getReasonPhrase();
-					$code = $this->req->getStatus();
-					throw new Exception( $msg, $code );
-				}
-			}
-			catch ( HTTP_Request2_Exception $e ) {
-				throw new Exception( $e );
-			}*/
-			$this->req->setBody( $args );
+  			$this->req->setPostData( $args );
 			$this->req->execute();
 			$this->response = $this->req->getBody();
 			$this->cache( $args, $this->response );
 		}
 		// TODO: Cater for SmugMug being in read-only mode better.  At the moment we throw and exception and don't allow things to continue.
 		$this->parsed_response = unserialize($this->response);
-		/*if ($this->parsed_response['stat'] == 'fail') {
-			$this->error_code = $this->parsed_response['code'];
-            $this->error_msg = $this->parsed_response['message'];
-			$this->parsed_response = FALSE;
-			throw new Exception("SmugMug API Error for method {$command}: {$this->error_msg}", $this->error_code);
-		} else {
-			$this->error_code = FALSE;
-            $this->error_msg = FALSE;
-
-			// The login calls don't return the mode because you can't login if SmugMug is in read-only mode.
-			if (isset($this->parsed_response['mode'])) {
-				$this->mode = $this->parsed_response['mode'];
-			}
-		}*/
 		if ( $this->parsed_response['stat'] == 'fail' ) {
 			$this->error_code = $this->parsed_response['code'];
             $this->error_msg = $this->parsed_response['message'];
@@ -1114,6 +1082,24 @@ class httpRequest
 	}
 
 	/**
+	 * set postdata
+	 *
+	 * @access	public
+	 * @param	mixed	$name
+	 * @param	string	$value
+	 * @return	void
+	 */
+	public function setPostData( $name, $value = null )
+	{
+		if ( is_array( $name ) ) {
+			$this->postdata = array_merge( $this->postdata, $name );
+		}
+		else {
+			$this->postdata[$name] = $value;
+		}
+	}
+
+	/**
 	 * Return the response body. Raises a warning and returns if the request wasn't executed yet.
 	 *
 	 * @return mixed
@@ -1163,9 +1149,10 @@ class httpRequest
 		$this->url = $this->mergeQueryParams( $this->url, $this->params );
 
 		if ( $this->method === 'POST' ) {
-			if ( !isset( $this->headers['Content-Type'] ) || ( $this->headers['Content-Type'] == 'application/json' ) ) {
-				// Just being careful
-				$this->setHeader( array( 'Content-Type' => 'application/json' ) );
+			if ( !isset( $this->headers['Content-Type'] ) ) {
+				$this->setHeader( array( 'Content-Type' => 'application/x-www-form-urlencoded' ) );
+			}
+			if ( $this->headers['Content-Type'] == 'application/x-www-form-urlencoded' || $this->headers['Content-Type'] == 'application/json' ) {
 				if( $this->body != '' && count( $this->postdata ) > 0 ) {
 					$this->body .= '&';
 				}
