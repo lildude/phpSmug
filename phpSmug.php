@@ -1076,7 +1076,7 @@ class httpRequest
 	 */
 	public function setBody( $body )
 	{
-		if ( $this->method === 'POST' || $this->method === 'PUT' ) {
+		if ( $this->method === 'POST' ) {
 			$this->body = $body;
 		}
 	}
@@ -1239,6 +1239,10 @@ class CurlRequestProcessor implements PhpZenfoRequestProcessor
 		if ( $method === 'POST' ) {
 			$options[CURLOPT_POST] = TRUE; // POST mode.
 			$options[CURLOPT_POSTFIELDS] = $body;
+		}
+		else if ( $method === 'PUT' ) {
+			$options[CURLOPT_CUSTOMREQUEST] = 'PUT'; // PUT mode
+			$options[CURLOPT_POSTFIELDS] = $body; // The file to put
 		}
 		else {
 			$options[CURLOPT_CRLF] = TRUE; // Convert UNIX newlines to \r\n
