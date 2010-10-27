@@ -458,6 +458,18 @@ class phpSmug {
 		 $this->oauth_token = $args['id'];
 		 $this->oauth_token_secret = $args['Secret'];
 	}
+
+	/**
+	 * Set the adapter.  Allowed options are 'curl' or 'socket'. Default is 'curl'
+	 */
+	public function setAdapter( $adapter )
+	{
+		$adapter = strtolower( $adapter );
+		if ( $adapter == 'curl' || $adapter == 'socket' ) {
+			$this->adapter = $adapter;
+			$this->req->setAdapter( $adapter );
+		}
+	}
 	 
 	/**
 	 * Single login function for all non-OAuth logins.
@@ -544,6 +556,7 @@ class phpSmug {
 	 * @uses	request
 	 * @link	http://wiki.smugmug.com/display/SmugMug/Uploading
 	 * @return	array|false
+	 * @todo Add support for multiple asynchronous uploads
 	 **/
 	public function images_upload()
 	{
@@ -1076,7 +1089,7 @@ class httpRequest
 	 */
 	public function setBody( $body )
 	{
-		if ( $this->method === 'POST' ) {
+		if ( $this->method === 'POST' || $this->method === 'PUT' ) {
 			$this->body = $body;
 		}
 	}
@@ -1391,7 +1404,7 @@ class SocketRequestProcessor implements PhpZenfoRequestProcessor
 		$request = array_merge( $request, $merged_headers );
 		$request[] = '';
 
-		if ( $method === 'POST' ) {
+		if ( $method === 'POST' || $method === 'PUT' ) {
 			$request[] = $body;
 		}
 
