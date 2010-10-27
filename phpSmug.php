@@ -1076,7 +1076,7 @@ class httpRequest
 	 */
 	public function setBody( $body )
 	{
-		if ( $this->method === 'POST' ) {
+		if ( $this->method === 'POST' || $this->method === 'PUT' ) {
 			$this->body = $body;
 		}
 	}
