@@ -42,7 +42,7 @@ class PhpSmugException extends Exception {}
  **/
 class phpSmug {
 	var $version = '3.0';
-	var $cacheType = FALSE;
+	private $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
 	var $OAuthSecret;
