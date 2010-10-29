@@ -705,7 +705,7 @@ class phpSmug {
 			$args = array_merge( $args, $oauth_params );
 		}
 		$this->request( $method, $args );
-
+		$output = '';
 		// pop off the "stat", "mode" and "method" parts of the array as we don't need them anymore.
 		// BUG: API 1.2.1 and lower: the results are different if the response only has 1 element.  We shouldn't array_shift() lower down.
 		//      However, I need to consider what to do to fix this: either go the route of making the response similar to what we do now
@@ -797,7 +797,7 @@ class phpSmug {
 			if ( $apicall != 'Upload' ) $params = ( !empty( $apiargs ) ) ? array_merge( $params, $apiargs ) : $params;
 		    $keys = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_keys( $params ) );
 		    $values = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_values( $params ) );
-			// BUG: The API now expects FALSE to be a 0 value and not a blank.  No notification of this change :-(
+			// BUG: The API now expects FALSE to be a value and not a blank.  No notification of this change :-(
 			$params = array_combine( $keys, $values );
 		    // Sort by keys (natsort)
 		    uksort( $params, 'strnatcmp' );
@@ -806,10 +806,10 @@ class phpSmug {
 			  if ( is_array( $value ) ) {
 			    natsort( $value );
 			    foreach ( $value as $v2 ) {
-					$pairs[] = "$key=$v2";
+					$pairs[] = ( $v2 == '' ) ? "$key=0" : "$key=$v2";
 			    }
 			  } else {
-			    $pairs[] = "$key=$value";
+			    $pairs[] = ( $value == '' )? "$key=0" : "$key=$value";
 			  }
 			}
 
@@ -1424,7 +1424,7 @@ class SocketRequestProcessor implements PhpZenfoRequestProcessor
 
 		fclose( $fp );
 
-		list( $header, $body ) = explode( "\r\n\r\n", $in );
+		list( $header, $body ) = explode( "\r\n\r\n", $in, 2 );
 
 		// to make the following REs match $ correctly and thus not break parse_url
 		$header = str_replace( "\r\n", "\n", $header );
