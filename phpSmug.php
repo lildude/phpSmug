@@ -25,9 +25,9 @@
  **/
 
 /**
- * Set the error level.  I set this low to ensure there are no errors in phpZenfolio
+ * Set the error level.  I set this low to ensure there are no errors in phpSmug
  **/
-error_reporting( E_NOTICE );
+error_reporting( E_ALL, E_STRICT );
 
 /**
  * We define our own exception so application developers can differentiate these
@@ -705,7 +705,7 @@ class phpSmug {
 			$args = array_merge( $args, $oauth_params );
 		}
 		$this->request( $method, $args );
-		$output = '';
+
 		// pop off the "stat", "mode" and "method" parts of the array as we don't need them anymore.
 		// BUG: API 1.2.1 and lower: the results are different if the response only has 1 element.  We shouldn't array_shift() lower down.
 		//      However, I need to consider what to do to fix this: either go the route of making the response similar to what we do now
