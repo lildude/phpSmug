@@ -1402,11 +1402,11 @@ class SocketRequestProcessor implements PhpZenfoRequestProcessor
 			throw new HttpRequestException( 'Error writing to socket.' );
 		}
 
-		$in = '';
-
+		/*$in = '';
 		while ( ! feof( $fp ) ) {
 			$in .= fgets( $fp, 4096 );
-		}
+		}*/
+		$in = stream_get_contents( $fp );
 
 		fclose( $fp );
 
