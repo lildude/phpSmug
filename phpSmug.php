@@ -590,7 +590,7 @@ class phpSmug {
 		// Create a new object as we still need the other request object
 		$upload_req = new httpRequest();
         $upload_req->setMethod( 'PUT' );
-		$upload_req->setConfig( array( 'adapter' => $this->adapter, 'follow_redirects' => TRUE, 'max_redirects' => 3, 'ssl_verify_peer' => FALSE, 'ssl_verify_host' => FALSE, 'connect_timeout' => 60, 'protocol_version' => '1.1' ) );
+		$upload_req->setConfig( array( 'adapter' => $this->adapter, 'follow_redirects' => TRUE, 'max_redirects' => 3, 'ssl_verify_peer' => FALSE, 'ssl_verify_host' => FALSE, 'connect_timeout' => 60 ) );
 		
 		// Set the proxy if one has been set earlier
 		if (isset($this->proxy) && is_array($this->proxy)) {
@@ -876,7 +876,7 @@ class httpRequest
     */
     protected $config = array(
 		'adapter'			=> 'curl',
-        'connect_timeout'   => 10,
+        'connect_timeout'   => 60,
         'timeout'           => 0,
         'buffer_size'       => 16384,
 
