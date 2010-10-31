@@ -838,14 +838,14 @@ class phpSmug {
  * I've included them in this file.
  *
  * The code below has been taken from the Habari project - http://habariproject.org
- * and modified to suit the needs of phpZenfolio.
+ * and modified to suit the needs of phpSmug.
  *
  * The original source is distributed under the Apache License Version 2.0
  */
 
 class HttpRequestException extends Exception {}
 
-interface PhpZenfoRequestProcessor
+interface PhpRequestProcessor
 {
 	public function execute( $method, $url, $headers, $body, $config );
 	public function getBody();
@@ -867,7 +867,7 @@ class httpRequest
 	private $response_body = '';
 	private $response_headers = '';
 
-	private $user_agent = "Unknown application using phpZenfolio/1.0";
+	private $user_agent = "Unknown application using phpSmug/3.0";
 
 	/**
     * Adapter Configuration parameters
@@ -1193,7 +1193,7 @@ class httpRequest
 
  
 
-class CurlRequestProcessor implements PhpZenfoRequestProcessor
+class CurlRequestProcessor implements PhpRequestProcessor
 {
 	private $response_body = '';
 	private $response_headers = '';
@@ -1313,7 +1313,7 @@ class CurlRequestProcessor implements PhpZenfoRequestProcessor
 
  
 
-class SocketRequestProcessor implements PhpZenfoRequestProcessor
+class SocketRequestProcessor implements PhpRequestProcessor
 {
 	private $response_body = '';
 	private $response_headers = '';
