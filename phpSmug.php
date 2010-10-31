@@ -876,7 +876,7 @@ class httpRequest
     */
     protected $config = array(
 		'adapter'			=> 'curl',
-        'connect_timeout'   => 60,
+        'connect_timeout'   => 10,
         'timeout'           => 0,
         'buffer_size'       => 16384,
 
