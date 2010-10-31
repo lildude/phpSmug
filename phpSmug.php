@@ -1402,10 +1402,6 @@ class SocketRequestProcessor implements PhpRequestProcessor
 			throw new HttpRequestException( 'Error writing to socket.' );
 		}
 
-		/*$in = '';
-		while ( ! feof( $fp ) ) {
-			$in .= fgets( $fp, 4096 );
-		}*/
 		$in = stream_get_contents( $fp );
 
 		fclose( $fp );
@@ -1430,6 +1426,11 @@ class SocketRequestProcessor implements PhpRequestProcessor
 				throw new HttpRequestException( 'Redirection response without Location: header.' );
 			}
 		}
+
+		if ( preg_match( '|^Transfer-Encoding:.*chunked.*|mi', $header ) ) {
+			$body = $this->_unchunk( $body );
+		}
+
 		return array( $header, $body );
 	}
 
@@ -1447,6 +1448,28 @@ class SocketRequestProcessor implements PhpRequestProcessor
 			return 'Request has not executed yet.';
 		}
 		return $this->response_headers;
+	}
+
+	private function _unchunk( $body )
+	{
+		/* see <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html> */
+		$result = '';
+		$chunk_size = 0;
+
+		do {
+			$chunk = explode( "\r\n", $body, 2 );
+			list( $chunk_size_str, )= explode( ';', $chunk[0], 2 );
+			$chunk_size = hexdec( $chunk_size_str );
+
+			if ( $chunk_size > 0 ) {
+				$result .= mb_substr( $chunk[1], 0, $chunk_size );
+				$body = mb_substr( $chunk[1], $chunk_size+1 );
+			}
+		}
+		while ( $chunk_size > 0 );
+		// this ignores trailing header fields
+
+		return $result;
 	}
 }
 
