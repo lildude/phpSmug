@@ -52,6 +52,7 @@ class phpSmug {
 	var $oauth_token_secret;
 	var $oauth_token;
 	var $mode;
+	private $req;
 	private $adapter = 'curl';
 	
 	/**
@@ -350,7 +351,7 @@ class phpSmug {
 	 * @return	string		Serialized PHP response from SmugMug, or an error.
 	 **/
 	private function request( $command, $args = array() )
-	{        
+	{		
 		if ( ( strpos( $command, 'login.with' ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) ) {
 			$proto = "https";
 		} else {
@@ -428,7 +429,7 @@ class phpSmug {
 		$this->proxy['password'] = ( isset( $args['password'] ) ) ? $args['password'] : '';
 		$this->proxy['auth_scheme'] = ( isset( $args['auth_scheme'] ) ) ? $args['auth_scheme'] : 'basic';
 		$this->req->setConfig( array( 'proxy_host' => $this->proxy['server'],
-							          'proxy_port' => $this->proxy['port'],
+									  'proxy_port' => $this->proxy['port'],
 									  'proxy_user' => $this->proxy['username'],
 									  'proxy_password' => $this->proxy['password'],
 									  'proxy_auth_scheme' => $this->proxy['auth_scheme'] ) );
@@ -690,6 +691,7 @@ class phpSmug {
 			}
 			$args = array_merge( $args, $oauth_params );
 		}
+
 		$this->request( $method, $args );
 
 		// pop off the "stat", "mode" and "method" parts of the array as we don't need them anymore.
@@ -795,7 +797,7 @@ class phpSmug {
 					$pairs[] = ( $v2 == '' ) ? "$key=0" : "$key=$v2";
 			    }
 			  } else {
-			    $pairs[] = ( $value == '' )? "$key=0" : "$key=$value";
+					$pairs[] = ( $value == '' )? "$key=0" : "$key=$value";
 			  }
 			}
 
@@ -1091,7 +1093,8 @@ class httpRequest
 	public function setPostData( $name, $value = null )
 	{
 		if ( is_array( $name ) ) {
-			$this->postdata = array_merge( $this->postdata, $name );
+			//$this->postdata = array_merge( $this->postdata, $name );
+			$this->postdata = $name;
 		}
 		else {
 			$this->postdata[$name] = $value;
@@ -1122,15 +1125,15 @@ class httpRequest
 	{
 		$this->prepare();
 		$result = $this->processor->execute( $this->method, $this->url, $this->headers, $this->body, $this->config );
-
+		$this->body = ''; // We need to do this as we reuse the same object for performance. Once we've executed, the body is useless anyway due to the changing params
 		if ( $result ) {
 			$this->response_headers = $this->processor->getHeaders();
 			$this->response_body = $this->processor->getBody();
-			$this->executed = TRUE;
-			return TRUE;
+			$this->executed = true;
+			return true;
 		}
 		else {
-			$this->executed = FALSE;
+			$this->executed = false;
 			return $result;
 		}
 	}
