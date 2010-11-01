@@ -316,6 +316,7 @@ class phpSmug {
 	 **/
     public function clearCache( $delete = FALSE )
 	{
+		$result = FALSE;
    		if ( $this->cacheType == 'db' ) {
 			if ( $delete ) {
 				$result = $this->cache_db->exec( 'DROP TABLE ' . $this->cache_table );
