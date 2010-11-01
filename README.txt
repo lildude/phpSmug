@@ -1,97 +1,48 @@
-phpSmug 2.2 - PHP Wrapper for the SmugMug API
+phpSmug 3.0 - PHP Wrapper for the SmugMug API
 =============================================
 
 Written by Colin Seymour
 Project Homepage: http://phpSmug.com/
 
-Released under GNU Lesser General Public License
-(http://www.gnu.org/copyleft/lgpl.html)
+phpSmug is a PHP wrapper class for the SmugMug API and is based on work done by
+Dan Coulter in phpFlickr (http://www.phpflickr.com) .
+
+Released under GNU General Public License version 3
+(http://www.gnu.org/licenses/gpl.html)
+
+Copyright (C) 2008 Colin Seymour
+
+     This file is part of phpSmug.
+
+     phpSmug is free software: you can redistribute it and/or modify it under
+     the terms of the GNU General Public License as published by the Free
+     Software Foundation, either version 3 of the License, or (at your option)
+     any later version.
+
+     phpSmug is distributed in the hope that it will be useful, but WITHOUT ANY
+     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+     FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+     details.
+
+     You should have received a copy of the GNU General Public License along
+     with phpSmug.  If not, see <http://www.gnu.org/licenses/>.
 
 For more information about the class and upcoming tools and applications using
 phpSmug, visit `http://phpsmug.com/'.
 
-phpSmug is a PHP wrapper class for the SmugMug API and is based on work done by
-Dan Coulter in phpFlickr (http://www.phpflickr.com) .
-
-
-********************************************************************************
-
-                                   *WARNING*
-
-phpSmug 2.0 is *NOT* a drop in replacement for phpSmug 1.0.x or 1.1.x.
-Please ensure you read this document for details on how phpSmug 2.x now
-functions.
-
-********************************************************************************
+Please help support the maintenance and development of phpSmug by making a
+donation (http://phpsmug.com/donate).
 
 
 
-What's New in phpSmug 2.0
+What's New in phpSmug 3.0
 =========================
 
-For those who've used phpSmug before, things have changed with phpSmug 2.0 and
-hopefully it's for the good and won't be too much trouble to adapt your
-applications for.
-
-If you've not used phpSmug before, you can skip this section and move onto the
-*Note Installation:: section below.
-
-   * Method Arguments:
-
-     The general functionality is the same, however the method of passing
-     arguments to methods has changed.
-
-     Now when you pass arguments to a method, you need to pass them either as a
-     series of strings, for example:
-
-          $f->images_getInfo("ImageID=<value>", "ImageKey=<value>");
-
-     ... or as an array ...
-
-          $f->images_getInfo(array("ImageID" => "<value>", "ImageKey" => "<value>"));
-
-     This is a deliberate design decision to keep things consistent and is
-     actually due to work I've done to ease the development and maintenance of
-     phpSmug.
-
-     You'll see phpSmug 2.0 is considerably smaller than previous versions.
-     This is because phpSmug now uses PHP 5's `__call()' method to dynamically
-     create the API calls for methods that are not explicitly declared.
-
-     As a result of this, phpSmug 2.0 and later will definitely NOT work with
-     PHP4.
-
-     It also has the added bonus in that you no longer need to have empty
-     arguments in your method calls: you only need to pass what's required or
-     what you need.
-
-   * SmugMug API Endpoint Compatibility
-
-     phpSmug 2.0 defaults to using the only stable endpoint provided by
-     SmugMug: the 1.2.0 endpoint.  However, it is fully functional with the
-     later endpoint revisions, unless otherwise documented.
-
-     To use a later version of the endpoint, just set the version when
-     instantiating the instance using `APIver'.
-
-   * All `smugmug.login.*' Methods Handled by a Single `login()' Method
-
-     To simplfy things even further, I've consolidated all the
-     `smugmug.login.*' API methods into a single `login()' method.
-
-     phpSmug will determine which API method you wish to use from the arguments
-     passed when calling the method. If not arguments are passed, phpSmug will
-     login anonymously.
-
-   * phpSmug now throws exceptions on error
-
-     In order to take full advantage of PHP5 functionality and make phpSmug
-     behave more like a proper PHP class, I've removed the "die_on_error"
-     functionality and instead turned to using exceptions. It's up to you as
-     the application developer to catch the exceptions and turn it into
-     something useful for your users.  All the examples supplied with phpSmug
-     now catch the exceptions.
-
+Removed dependency on PEAR.  PEAR only needed if database caching required.
+Fixed ticket #7 License is now GPLv3 instead of LGPL Better code formatting and
+layout Now throw PhpSmugException, HttpRequestException and
+CurlRequestProcessorException or SocketRequestProcessorException depending on
+connection type.
 
 
 
@@ -424,6 +375,14 @@ Other Notes
      All your calls will then pass through the specified proxy on the specified
      port.
 
+     If your proxy server requires a username and password, the add those
+     options to the `setProxy()' method arguments too.
+
+     For example:
+
+          $f = new phpSmug("APIKey=<value>");
+          $f->setProxy("server=<proxy_server>", "port=<value>", "user=<proxy_username>", "password=<proxy_password>");
+
    * If phpSmug encounters an error, or SmugMug returns a "Fail" response, an
      exception will be thrown and your application will stop executing.
 
@@ -480,6 +439,11 @@ This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 3.0 - ?? Nov '10
+
+
+        *
 
    * 2.2 - 21 Jul '10
 
