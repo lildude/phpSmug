@@ -25,12 +25,6 @@
  **/
 
 /**
- * Set the error level.  I set this low to ensure there are no errors in phpSmug.
- * Can't use E_STRICT when using MDB2 as most of PEAR isn't E_STRICT compliant yet.
- **/
-error_reporting( E_ALL );
-
-/**
  * We define our own exception so application developers can differentiate these
  * from other exceptions.
  */
