@@ -848,7 +848,7 @@ class phpSmug {
 
 class HttpRequestException extends Exception {}
 
-interface PhpRequestProcessor
+interface PhpSmugRequestProcessor
 {
 	public function execute( $method, $url, $headers, $body, $config );
 	public function getBody();
@@ -916,10 +916,10 @@ class httpRequest
 		// can't use curl's followlocation in safe_mode with open_basedir, so fallback to socket for now
 		if ( function_exists( 'curl_init' ) && ( $this->config['adapter'] == 'curl' )
 			 && ! ( ini_get( 'safe_mode' ) && ini_get( 'open_basedir' ) ) ) {
-			$this->processor = new CurlRequestProcessor;
+			$this->processor = new PhpSmugCurlRequestProcessor;
 		}
 		else {
-			$this->processor = new SocketRequestProcessor();
+			$this->processor = new PhpSmugSocketRequestProcessor();
 		}
 	}
 
@@ -1033,7 +1033,7 @@ class httpRequest
 		$adapter = strtolower( $adapter );
 		if ( $adapter == 'curl' || $adapter == 'socket' ) {
 			$this->config['adapter'] = $adapter;
-			$this->processor = ( $adapter == 'curl' ) ? new CurlRequestProcessor() : new SocketRequestProcessor();
+			$this->processor = ( $adapter == 'curl' ) ? new PhpSmugCurlRequestProcessor() : new PhpSmugSocketRequestProcessor();
 		}
 	}
 
@@ -1197,7 +1197,7 @@ class httpRequest
 
  
 
-class CurlRequestProcessor implements PhpRequestProcessor
+class PhpSmugCurlRequestProcessor implements PhpSmugRequestProcessor
 {
 	private $response_body = '';
 	private $response_headers = '';
@@ -1317,7 +1317,7 @@ class CurlRequestProcessor implements PhpRequestProcessor
 
  
 
-class SocketRequestProcessor implements PhpRequestProcessor
+class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 {
 	private $response_body = '';
 	private $response_headers = '';
