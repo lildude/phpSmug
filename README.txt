@@ -38,12 +38,56 @@ donation (http://phpsmug.com/donate).
 What's New in phpSmug 3.0
 =========================
 
-Removed dependency on PEAR.  PEAR only needed if database caching required.
-Fixed ticket #7 License is now GPLv3 instead of LGPL Better code formatting and
-layout Now throw PhpSmugException, HttpRequestException and
-CurlRequestProcessorException or SocketRequestProcessorException depending on
-connection type.
+phpSmug 3.0 is the next major release of phpSmug and features a few significant
+changes which functionality-wise is not much different from earlier releases,
+however there are some notable changes:
 
+   * phpSmug now no longer depends on PEAR.  PEAR is only needed if you choose
+     to use database based caching.  Basic file caching and communication with
+     the SmugMug API endpoints are taken care of by the phpSmug code itself.
+     As phpSmug no longer depends on PEAR, no PEAR modules are supplied with
+     phpSmug.
+
+   * Database caching is now done using the MDB2 PEAR module and a
+     corresponding database module of your choice.  You will need to install
+     these yourself.
+
+   * The removal of the dependency on PEAR now gives developers the opportunity
+     to select a preferred transport mechanisms, or adapters: Curl or sockets.
+     phpSmug defaults to using Curl, but will gracefully fallback to sockets in
+     the event Curl isn't available.
+
+   * phpSmug is now licensed under the GPLv3 instead of the LGPL.
+
+   * The underlying phpSmug code is now better formatted, documented and laid
+     out making it easier to follow.
+
+   * More specific exceptions are thrown so developers can easily identify
+     which part of the code is throwing the exception. The exceptions now
+     thrown are PhpSmugException, HttpRequestException and
+     CurlRequestProcessorException or SocketRequestProcessorException.
+
+
+
+Requirements
+============
+
+phpSmug is written in PHP and utilises functionality supplied with PHP 5.2 and
+later and optionally PEAR.
+
+From a PHP perspective, the only requirement is PHP 5.2 compiled with GD and
+optionally, curl support enabled.
+
+If you wish to use a database for caching, you will also need the following
+PEAR packages:
+
+   * MDB2 2.5.0b3 (http://pear.php.net/package/MDB2) or later.
+
+   * The corresponding MDB2_Driver_*
+     (http://pear.php.net/search.php?q=MDB2_Driver&in=packages&setPerPage=20)
+     for the database you wish to use.
+
+Please consult the above links for details on installing the PEAR modules.
 
 
 
@@ -53,7 +97,6 @@ Installation
 Copy the files from the installation package into a folder on your server.
 They need to be readable by your web server.  You can put them into an include
 folder defined in your php.ini file, if you like, though it's not required.
-
 
 
 
@@ -108,11 +151,13 @@ endpoint and authentication mechanism you wish to use:
 Arguments to all phpSmug methods must be provided as a series of strings or an
 associative array. For example:
 
-Strings:
+Arguments as strings:
 
-     $f = new phpSmug("APIKey=12345678", "AppName=My Cool App/1.0 (http://app.com)", "APIVer=1.2.2");
+     $f = new phpSmug("APIKey=12345678",
+     	"AppName=My Cool App/1.0 (http://app.com)",
+     	"APIVer=1.2.2");
 
-Associative Array:
+Arguments as an associative array:
 
      $f = new phpSmug(array("APIKey" => "12345678",
      	"AppName" => "My Cool App/1.0 (http://app.com)",
@@ -141,7 +186,6 @@ recommended by SmugMug at `http://wiki.smugmug.net/display/SmugMug/Uploading'
 
 HTTP PUT has been chosen as it's quicker, easier to use and more reliable than
 the other methods.
-
 
 
 
@@ -210,7 +254,7 @@ phpSmug allows you to implement either method in your application.
      redirection or for the user to click (it also takes care of passing the
      OAuth token too):
 
-          echo '<a href="'.$f->authorize("Access=[Public|Full]", "Permissions=[Read|Add|Modify]");.'">Authorize</a>';
+          echo '<a href="'.$f->authorize("Access=[Public|Full]", "Permissions=[Read|Add|Modify]").'">Authorize</a>';
 
      "Public" and "Read" are the default options for Access and Permissions
      respectively, so you can leave them out if you only need these permissions.
@@ -246,7 +290,6 @@ phpSmug allows you to implement either method in your application.
 
 
 
-
 Caching
 =======
 
@@ -264,14 +307,23 @@ To enable caching, use the `enableCache()' function.
 The `enableCache()' function takes 4 arguments:
 
 
-   * `type' - Required This is "db" for database or "fs" for filesystem.
+   * `type' - Required
+     This is "db" for database or "fs" for filesystem.
 
 
 
-   * `dsn' - Required for type=db This a PEAR::DB DSN connection string, for
-     example:
+   * `dsn' - Required for type=db
+     This a PEAR::MDB2 DSN connection string, for example:
 
           mysql://user:password@server/database
+
+     phpSmug uses the MDB2 PEAR module to interact with the database if you use
+     database based caching.  phpSmug does *NOT* supply the necessary PEAR
+     modules.  If you with to use a database for caching, you will need to
+     download and install PEAR, the MDB2 PEAR module and the corresponding
+     database driver yourself.  See MDB2 Manual
+     (http://pear.php.net/manual/en/package.database.mdb2.intro.php) for
+     details.
 
 
 
@@ -316,9 +368,18 @@ The `enableCache()' function takes 4 arguments:
 
      If the table does not exist, phpSmug will attempt to create it.
 
+Each of the caching methods can be enabled as follows:
+
+Filesystem based cache:
+
+     $f->enableCache("type=fs", "cache_dir=/tmp", "cache_expire=86400" );
+
+Database based cache:
+
+     $f->enableCache("type=db", "dsn=mysql://USERNAME:PASSWORD_database", "cache_expire=86400");
+
 If you have caching enabled, and you make changes, it's a good idea to call
 `clearCache()' to refresh the cache so your changes are reflected immediately.
-
 
 
 
@@ -351,7 +412,6 @@ API documentation page.
 
 
 
-
 Replacing Photos
 ================
 
@@ -360,9 +420,19 @@ specify the ImageID of the image you wish to replace.
 
 
 
-
 Other Notes
 ===========
+
+   * By default, phpSmug will attempt to use Curl to communicate with the
+     SmugMug API endpoint if it's available.  If not, it'll revert to using
+     sockets based communication using `fsockopen()'.  If you wish to force the
+     use of sockets, you can do so using the phpSmug supplied `setAdapter()'
+     right after instantiating your instance:
+
+          $f = new phpSmug("APIKey=<value>");
+          $f->setAdapter("socket");
+
+     Valid arguments are "curl" (default) and "socket".
 
    * Some people will need to use phpSmug from behind a proxy server.  You can
      use the `setProxy()' method to set the appropriate proxy settings.
@@ -375,16 +445,25 @@ Other Notes
      All your calls will then pass through the specified proxy on the specified
      port.
 
-     If your proxy server requires a username and password, the add those
+     If your proxy server requires a username and password, then add those
      options to the `setProxy()' method arguments too.
 
      For example:
 
           $f = new phpSmug("APIKey=<value>");
-          $f->setProxy("server=<proxy_server>", "port=<value>", "user=<proxy_username>", "password=<proxy_password>");
+          $f->setProxy("server=<proxy_server>",
+              "port=<value>",
+              "username=<proxy_username>",
+              "password=<proxy_password>");
+
+     Note: Proxy support is currently only available when using the default
+     "curl" adapter.
 
    * If phpSmug encounters an error, or SmugMug returns a "Fail" response, an
-     exception will be thrown and your application will stop executing.
+     exception will be thrown and your application will stop executing. If
+     there is a problem with communicating with the endpoint, a
+     HttpRequestException will be thrown.  If an error is detected elsewhere, a
+     PhpSmugException will be thrown.
 
      It is recommended that you configure your application to catch exceptions
      from phpSmug.
@@ -395,7 +474,6 @@ Other Notes
      is not set for `login()' methods as the API doesn't return the mode for
      logins because you can't login when SmugMug is in read-only mode.  If
      SmugMug is not in read-only mode, this variable is empty.
-
 
 
 
@@ -417,7 +495,6 @@ You can see the anonymous and OAuth login examples in action at
 `http://phpsmug.com/examples'.
 
 
-
 And that's all folks.
 
 Keep up to date on developments and enhancements to phpSmug on it's new
@@ -426,14 +503,14 @@ dedicated site at `http://phpsmug.com/'.
 If you encounter any problems with phpSmug, please check the list of known
 issues with phpSmug and the API itself at `http://phpsmug.com/bugs'.  If your
 issue is not there, please leave a comment on the revision page at
-`http://phpSmug.com/phpSmug-2.1'.
+`http://phpSmug.com/phpSmug-3.0'.
 
 If you are using phpSmug and wish to let the world know, drop me a line via the
 contact form at `http://phpsmug.com/about' and I'll add a link and brief
 description to the sidebar on `http://phpsmug.com/'.
 
-Oh, and by all means, please feel free to show your appreciation for phpSmug by
-buying me a beer or two (see the sidebar at `http://phpsmug.com/').
+If you use and find phpSmug useful, please help support its maintenance and
+development by making a donation (http://phpsmug.com/donate).
 
 This document is also available online at `http://phpsmug.com/docs'.
 
@@ -443,7 +520,16 @@ Change History
    * 3.0 - ?? Nov '10
 
 
-        *
+        * The setProxy() method now allows you to set a proxy username and
+          password.
+
+        * OAuth token setting now works correctly again (Ticket #7).
+
+        * phpSmug no longer depends on PEAR so no longer ships any PEAR modules.
+
+        * phpSmug is now 100% PHP 5 E_STRICT compliant (Ticket #2).
+
+        * phpSmug is now licensed under the GPLv3 license.
 
    * 2.2 - 21 Jul '10
 
