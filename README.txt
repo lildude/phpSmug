@@ -517,7 +517,7 @@ This document is also available online at `http://phpsmug.com/docs'.
 Change History
 ==============
 
-   * 3.0 - ?? Nov '10
+   * 3.0 - 13 Nov '10
 
 
         * The setProxy() method now allows you to set a proxy username and
