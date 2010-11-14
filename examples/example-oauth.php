@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with phpSmug.  If not, see <http://www.gnu.org/licenses/>.
  */
- ?>
+if (session_id() == "") { @session_start(); }
+?>
 <html>
 <head>
 	<title>phpSmug OAuth Login Example</title>
@@ -57,10 +58,7 @@ try {
 	// Perform the 3 step OAuth Authorisation process.
 	// NOTE: This is a very simplified example that does NOT store the final token. 
 	// You will need to ensure your application does.
-	
-	if ( session_id() == "" ) { @session_start(); }
-
-	if ( ! $_SESSION['SmugGalReqToken'] ) {
+	if ( ! isset( $_SESSION['SmugGalReqToken'] ) ) {
 		// Step 1: Get a Request Token
 		$d = $f->auth_getRequestToken();
 		$_SESSION['SmugGalReqToken'] = serialize( $d );
@@ -75,7 +73,7 @@ try {
 		session_unregister( 'SmugGalReqToken' );
 
 		// Step 3: Use the Request token obtained in step 1 to get an access token
-		$f->setToken( "id={$reqToken['id']}", "Secret={$reqToken['Secret']}" );
+		$f->setToken("id={$reqToken['Token']['id']}", "Secret={$reqToken['Token']['Secret']}");
 		$token = $f->auth_getAccessToken();	// The results of this call is what your application needs to store.
 		
 		// Set the Access token for use by phpSmug.   
