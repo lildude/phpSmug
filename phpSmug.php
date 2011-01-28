@@ -891,7 +891,7 @@ class httpRequest
     */
     protected $config = array(
 		'adapter'			=> 'curl',
-        'connect_timeout'   => 10,
+        'connect_timeout'   => 5,
         'timeout'           => 0,
         'buffer_size'       => 16384,
 
@@ -927,11 +927,11 @@ class httpRequest
 
 		// can't use curl's followlocation in safe_mode with open_basedir, so fallback to socket for now
 		if ( function_exists( 'curl_init' ) && ( $this->config['adapter'] == 'curl' )
-			 && ! ( ini_get( 'safe_mode' ) && ini_get( 'open_basedir' ) ) ) {
+			 && ! ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) ) {
 			$this->processor = new PhpSmugCurlRequestProcessor;
 		}
 		else {
-			$this->processor = new PhpSmugSocketRequestProcessor();
+			$this->processor = new PhpSmugSocketRequestProcessor;
 		}
 	}
 
@@ -1045,7 +1045,6 @@ class httpRequest
 		$adapter = strtolower( $adapter );
 		if ( $adapter == 'curl' || $adapter == 'socket' ) {
 			$this->config['adapter'] = $adapter;
-			$this->processor = ( $adapter == 'curl' ) ? new PhpSmugCurlRequestProcessor() : new PhpSmugSocketRequestProcessor();
 		}
 	}
 
