@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 3.0
+ * @version 3.1
  * @package phpSmug
  * @license GPL 3 {@link http://www.gnu.org/copyleft/gpl.html}
  * @copyright Copyright (c) 2008 Colin Seymour
@@ -54,7 +54,7 @@ class PhpSmugException extends Exception {}
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '3.0';
+	var $version = '3.1';
 	private $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
@@ -107,13 +107,13 @@ class phpSmug {
 	 *					This isn't obligatory, but it helps SmugMug diagnose any
 	 *					problems users of your application may encounter.
 	 * @param	string	$APIVer (Optional) API endpoint you wish to use.
-	 *					Defaults to 1.2.0
+	 *					Defaults to 1.2.2
 	 **/
 	function __construct()
 	{
 		$args = phpSmug::processArgs( func_get_args() );
         $this->APIKey = $args['APIKey'];
-		$this->APIVer = ( array_key_exists( 'APIVer', $args ) ) ? $args['APIVer'] : '1.2.0';
+		$this->APIVer = ( array_key_exists( 'APIVer', $args ) ) ? $args['APIVer'] : '1.2.2';
 		if ( array_key_exists( 'OAuthSecret', $args ) ) {
 			$this->OAuthSecret = $args['OAuthSecret'];
 			// Force 1.2.2 endpoint as OAuth is being used
