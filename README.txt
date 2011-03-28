@@ -494,7 +494,7 @@ This document is also available online at `http://phpsmug.com/docs'.
 Change History
 ==============
 
-   * 3.1 - ## Apr '11
+   * 3.1 - 28 Mar '11
 
 
         * phpSmug now defaults to using the 1.2.2 API endpoint. All earlier
