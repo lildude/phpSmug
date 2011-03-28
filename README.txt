@@ -1,4 +1,4 @@
-phpSmug 3.0 - PHP Wrapper for the SmugMug API
+phpSmug 3.1 - PHP Wrapper for the SmugMug API
 =============================================
 
 Written by Colin Seymour
@@ -35,37 +35,14 @@ donation (http://phpsmug.com/donate).
 
 
 
-What's New in phpSmug 3.0
+What's New in phpSmug 3.1
 =========================
 
-phpSmug 3.0 is the next major release of phpSmug and features a few significant
-changes which functionality-wise is not much different from earlier releases,
-however there are some notable changes:
-
-   * phpSmug now no longer depends on PEAR.  PEAR is only needed if you choose
-     to use database based caching.  Basic file caching and communication with
-     the SmugMug API endpoints are taken care of by the phpSmug code itself.
-     As phpSmug no longer depends on PEAR, no PEAR modules are supplied with
-     phpSmug.
-
-   * Database caching is now done using the MDB2 PEAR module and a
-     corresponding database module of your choice.  You will need to install
-     these yourself.
-
-   * The removal of the dependency on PEAR now gives developers the opportunity
-     to select a preferred transport mechanisms, or adapters: Curl or sockets.
-     phpSmug defaults to using Curl, but will gracefully fallback to sockets in
-     the event Curl isn't available.
-
-   * phpSmug is now licensed under the GPLv3 instead of the LGPL.
-
-   * The underlying phpSmug code is now better formatted, documented and laid
-     out making it easier to follow.
-
-   * More specific exceptions are thrown so developers can easily identify
-     which part of the code is throwing the exception. The exceptions now
-     thrown are PhpSmugException, HttpRequestException and
-     CurlRequestProcessorException or SocketRequestProcessorException.
+phpSmug 3.1 is the next minor release of phpSmug and features a few "behind the
+scenes" changes and fixed which do not change the functionality.  The only
+thing that may appear to change functionality is the default API endpoint is
+now 1.2.2 instead of 1.2.0. All earlier endpoints are still available, but
+technically deprecated by SmugMug.
 
 
 
@@ -516,6 +493,19 @@ This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 3.1 - ## Apr '11
+
+
+        * phpSmug now defaults to using the 1.2.2 API endpoint. All earlier
+          endpoints are still available, but technically deprecated by SmugMug.
+
+        * Removed erroneous re-instantiation of processor when setting adapter.
+
+        * Corrected check for safe_dir OR open_basedir so fails over to socket
+          connection correctly
+
+        * Improved connection settings
 
    * 3.0 - 13 Nov '10
 
