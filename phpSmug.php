@@ -656,7 +656,7 @@ class phpSmug {
 		// For some reason the return string is formatted with \n and extra space chars.  Remove these.
 		$replace = array( '\n', '\t', '  ' );
 		$this->response = str_replace( $replace, '', $this->response );
-		$this->parsed_response = unserialize( $this->response );
+		$this->parsed_response = unserialize( trim( $this->response ) );
 		
 		if ( $this->parsed_response['stat'] == 'fail' ) {
 			$this->error_code = $this->parsed_response['code'];
