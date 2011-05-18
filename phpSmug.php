@@ -903,7 +903,7 @@ class httpRequest
 
 		// TODO: These don't apply to SocketRequestProcessor yet
         'ssl_verify_peer'   => FALSE,
-        'ssl_verify_host'   => FALSE,
+        'ssl_verify_host'   => 1, // 1 = check CN of ssl cert, 2 = check and verify @see http://php.net/curl_setopt
         'ssl_cafile'        => NULL,
         'ssl_capath'        => NULL,
         'ssl_local_cert'    => NULL,
