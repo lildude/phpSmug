@@ -366,7 +366,7 @@ class phpSmug {
 	 **/
 	private function request( $command, $args = array() )
 	{		
-		if ( ( strpos( $command, 'login.with' ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) ) {
+		if ( ( strpos( $command, 'login.with' ) || ( strpos( $command, 'checkAccessToken' ) ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) ) {
 			$proto = "https";
 		} else {
 			$proto = "http";
