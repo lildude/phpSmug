@@ -1269,13 +1269,13 @@ class PhpSmugCurlRequestProcessor implements PhpSmugRequestProcessor
 		}
 
 		// set proxy, if needed
-        if ( $host = $config['proxy_host'] ) {
-            if ( ! ( $port = $config['proxy_port'] ) ) {
+        if ( $config['proxy_host'] ) {
+            if ( ! $config['proxy_port'] ) {
                 throw new HttpRequestException( 'Proxy port not provided' );
             }
-            curl_setopt( $ch, CURLOPT_PROXY, $host . ':' . $port );
-            if ( $user = $config['proxy_user'] ) {
-                curl_setopt( $ch, CURLOPT_PROXYUSERPWD, $user . ':' . $config['proxy_password'] );
+            $options[CURLOPT_PROXY] = $config['proxy_host'] . ':' . $config['proxy_port'];
+            if ( $config['proxy_user'] ) {
+                $options[CURLOPT_PROXYUSERPWD] = $config['proxy_user'] . ':' . $config['proxy_password'];
                 switch ( strtolower( $config['proxy_auth_scheme'] ) ) {
                     case 'basic':
                         curl_setopt( $ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC );
