@@ -1341,222 +1341,100 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 	private $executed = FALSE;
 	private $redir_count = 0;
 	
-	public function __construct ( ) {		
+	public function __construct ( ) 
+	{		
 		// see if we can follow Location: headers
 		if ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) {
 			$this->can_followlocation = false;
 		}	
 	}
 		
-	/* Old method
-	public function execute( $method, $url, $headers, $body, $config )
-	{
-		$result = $this->_request( $method, $url, $headers, $body, $config );
-
-		if ( $result ) {
-			list( $response_headers, $response_body ) = $result;
-			$this->response_headers = $response_headers;
-			$this->response_body = $response_body;
-			$this->executed = TRUE;
-
-			return TRUE;
+	public function execute ( $method, $url, $headers, $body, $config ) 
+	{	
+		$merged_headers = array();
+		foreach ( $headers as $k => $v ) {
+			$merged_headers[] = $k . ': '. $v;
 		}
-		else {
-			// TODO: Create unit test to test this
-			return $result;
-		}
-	}
-	
-	/* New method Coming soon */
-	public function execute ( $method, $url, $headers, $body, $config ) {	
-			$merged_headers = array();
-			foreach ( $headers as $k => $v ) {
-				$merged_headers[] = $k . ': '. $v;
-			}
-			
-			// parse out the URL so we can refer to individual pieces
-			$urlbits = parse_url( $url );
-			
-			// set up the options we'll use when creating the request's context
-			$options = array(
-				'http' => array(
-					'method' => $method,
-					'header' => implode( "\n", $merged_headers ),
-					'timeout' => $config['timeout'],
-					'follow_location' => $this->can_followlocation,		// 5.3.4+, should be ignored by others
-					'max_redirects' => $config['max_redirects'],
 
-					// and now for our ssl-specific portions, which will be ignored for non-HTTPS requests
-					'verify_peer' => $config['ssl_verify_peer'],
-					//'verify_host' => $config['ssl_verify_host'],	// there doesn't appear to be an equiv of this for sockets - the host is matched by default and you can't just turn that off, only substitute other hostnames
-					'cafile' => $config['ssl_cafile'],
-					'capath' => $config['ssl_capath'],
-					'local_cert' => $config['ssl_local_cert'],
-					'passphrase' => $config['ssl_passphrase'],
-				),
-			);
-			
-			if ( $method == 'POST' ) {
-				$options['http']['content'] = $body;
-			}
-			
-			
-			if ( $config['proxy_host'] != '' ) {
-				$proxy = $config['proxy_host'] . ':' . $config['proxy_port'];
-				
-				if ( $config['proxy_user'] != '' ) {
-					$proxy = $config['proxy_user'] . ':' . $config['proxy_password'] . '@' . $proxy;
-				}
-				
-				$options['http']['proxy'] = 'tcp://' . $proxy;
-			}
-
-			// create the context
-			$context = stream_context_create( $options );
-			
-			// perform the actual request - we use fopen so stream_get_meta_data works
-			$fh = @fopen( $url, 'r', false, $context );
-			
-			if ( $fh === false ) {
-				throw new Exception( _t( 'Unable to connect to %s', array( $url_pieces['host'] ) ) );
-			}
-			
-			// read in all the contents -- this is the same as file_get_contents, only for a specific stream handle
-			$body = stream_get_contents( $fh );
-			
-			// get meta data
-			$meta = stream_get_meta_data( $fh );
-			
-			// close the connection before we do anything else
-			fclose( $fh );
-			
-			// did we timeout?
-			if ( $meta['timed_out'] == true ) {
-				throw new RemoteRequest_Timeout( 'Request timed out' );
-			}
-			
-			
-			// $meta['wrapper_data'] should be a list of the headers, the same as is loaded into $http_response_header
-			$headers = array();
-			foreach ( $meta['wrapper_data'] as $header ) {
-				
-				// break the header up into field and value
-				$pieces = explode( ': ', $header, 2 );
-				
-				if ( count( $pieces ) > 1 ) {
-					// if the header was a key: value format, store it keyed in the array
-					$headers[ $pieces[0] ] = $pieces[1];
-				}
-				else {
-					// some headers (like the HTTP version in use) aren't keyed, so just store it keyed as itself
-					$headers[ $pieces[0] ] = $pieces[0];
-				}
-				
-			}
-			
-			$this->response_headers = $headers;
-			$this->response_body = $body;
-			$this->executed = true;
-			
-			return true;
-			
-		}
-	/* */
-
-	private function _request( $method, $url, $headers, $body, $config )
-	{
-		$_errno = 0;
-		$_errstr = '';
+		// parse out the URL so we can refer to individual pieces
 		$urlbits = parse_url( $url );
 
-		if ( !isset( $urlbits['port'] ) || $urlbits['port'] == 0 ) {
-			if ( $urlbits['scheme'] == 'https' ) {
-				$urlbits['port'] = 443;
-				$transport = 'ssl';
-			}
-			else {
-				$urlbits['port'] = 80;
-				$transport = 'tcp';
-			}
+		// set up the options we'll use when creating the request's context
+		$options = array(
+			'http' => array(
+				'method' => $method,
+				'header' => implode( "\n", $merged_headers ),
+				'timeout' => $config['timeout'],
+				'follow_location' => $this->can_followlocation,		// 5.3.4+, should be ignored by others
+				'max_redirects' => $config['max_redirects'],
+
+				// and now for our ssl-specific portions, which will be ignored for non-HTTPS requests
+				'verify_peer' => $config['ssl_verify_peer'],
+				//'verify_host' => $config['ssl_verify_host'],	// there doesn't appear to be an equiv of this for sockets - the host is matched by default and you can't just turn that off, only substitute other hostnames
+				'cafile' => $config['ssl_cafile'],
+				'capath' => $config['ssl_capath'],
+				'local_cert' => $config['ssl_local_cert'],
+				'passphrase' => $config['ssl_passphrase'],
+			),
+		);
+
+		if ( $method == 'POST' ) {
+			$options['http']['content'] = $body;
 		}
 
 		if ( $config['proxy_host'] != '' ) {
-			// TODO: Finish the implementation of proxy support for socket connections. Until then, only curl has proxy support.
-			throw new HttpRequestException( 'The "socket" adapter type does NOT currently support connecting via a proxy. Please use the "curl" adapter type.', -1 );
-			$fp = @fsockopen( $transport . '://' . $config['proxy_host'], $config['proxy_port'], $_errno, $_errstr, $config['connect_timeout'] );
-		} else {
-			$fp = @fsockopen( $transport . '://' . $urlbits['host'], $urlbits['port'], $_errno, $_errstr, $config['connect_timeout'] );
+			$proxy = $config['proxy_host'] . ':' . $config['proxy_port'];
+			if ( $config['proxy_user'] != '' ) {
+				$proxy = $config['proxy_user'] . ':' . $config['proxy_password'] . '@' . $proxy;
+			}
+			$options['http']['proxy'] = 'tcp://' . $proxy;
 		}
 
-		if ( $fp === FALSE ) {
-			throw new HttpRequestException( sprintf( '%s: Error %d: %s while connecting to %s:%d', __CLASS__, $_errno, $_errstr, $urlbits['host'], $urlbits['port'] ), $_errno );
+		// create the context
+		$context = stream_context_create( $options );
+
+		// perform the actual request - we use fopen so stream_get_meta_data works
+		$fh = @fopen( $url, 'r', false, $context );
+		if ( $fh === false ) {
+			throw new Exception( _t( 'Unable to connect to %s', array( $url_pieces['host'] ) ) );
 		}
 
-		stream_set_timeout( $fp, $config['timeout'] );
+		// read in all the contents -- this is the same as file_get_contents, only for a specific stream handle
+		$body = stream_get_contents( $fh );
+		// get meta data
+		$meta = stream_get_meta_data( $fh );
 
-		// fix headers
-		$headers['Host'] = $urlbits['host'];
-		$headers['Connection'] = 'close';
+		// close the connection before we do anything else
+		fclose( $fh );
 
-		// merge headers into a list
-		$merged_headers = array();
-		foreach ( $headers as $k => $v ) {
-			$merged_headers[] = $k . ': ' . $v;
+		// did we timeout?
+		if ( $meta['timed_out'] == true ) {
+			throw new RemoteRequest_Timeout( 'Request timed out' );
 		}
 
-		// build the request
-		$request = array();
-		$resource = $urlbits['path'];
-		if ( isset( $urlbits['query'] ) ) {
-			$resource .= '?' . $urlbits['query'];
-		}
+		// $meta['wrapper_data'] should be a list of the headers, the same as is loaded into $http_response_header
+		$headers = array();
+		foreach ( $meta['wrapper_data'] as $header ) {
 
-		$request[] = "{$method} {$resource} HTTP/1.1";
-		$request = array_merge( $request, $merged_headers );
-		$request[] = '';
+			// break the header up into field and value
+			$pieces = explode( ': ', $header, 2 );
 
-		if ( $method === 'POST' || $method === 'PUT' ) {
-			$request[] = $body;
-		}
-
-		$request[] = '';
-
-		$out = implode( "\r\n", $request );
-
-		if ( ! fwrite( $fp, $out, strlen( $out ) ) ) {
-			throw new HttpRequestException( 'Error writing to socket.' );
-		}
-
-		$in = stream_get_contents( $fp );
-
-		fclose( $fp );
-
-		list( $header, $body ) = explode( "\r\n\r\n", $in, 2 );
-
-		// to make the following REs match $ correctly and thus not break parse_url
-		$header = str_replace( "\r\n", "\n", $header );
-
-		preg_match( '#^HTTP/1\.[01] ([1-5][0-9][0-9]) ?(.*)#', $header, $status_matches );
-
-		if ( ( $status_matches[1] == '301' || $status_matches[1] == '302' ) && $config['follow_redirects'] ) {
-			if ( preg_match( '|^Location: (.+)$|mi', $header, $location_matches ) ) {
-				$redirect_url = $location_matches[1];
-				$this->redir_count++;
-				if ( $this->redir_count > $this->config['max_redirects'] ) {
-					throw new HttpRequestException( 'Maximum number of redirections exceeded.' );
-				}
-				return $this->_request( $method, $redirect_url, $headers, $body, $config );
+			if ( count( $pieces ) > 1 ) {
+				// if the header was a key: value format, store it keyed in the array
+				$headers[ $pieces[0] ] = $pieces[1];
 			}
 			else {
-				throw new HttpRequestException( 'Redirection response without Location: header.' );
+				// some headers (like the HTTP version in use) aren't keyed, so just store it keyed as itself
+				$headers[ $pieces[0] ] = $pieces[0];
 			}
+
 		}
 
-		if ( preg_match( '|^Transfer-Encoding:.*chunked.*|mi', $header ) ) {
-			$body = $this->_unchunk( $body );
-		}
+		$this->response_headers = $headers;
+		$this->response_body = $body;
+		$this->executed = true;
 
-		return array( $header, $body );
+		return true;
 	}
 
 	public function getBody()
