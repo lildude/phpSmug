@@ -113,12 +113,13 @@ class phpSmug {
 	{
 		$args = phpSmug::processArgs( func_get_args() );
         $this->APIKey = $args['APIKey'];
-		$this->APIVer = ( array_key_exists( 'APIVer', $args ) ) ? $args['APIVer'] : '1.2.2';
 		if ( array_key_exists( 'OAuthSecret', $args ) ) {
 			$this->OAuthSecret = $args['OAuthSecret'];
 			// Force 1.2.2 endpoint as OAuth is being used
 			$this->APIVer = '1.2.2';
 		}
+		// Over ride the above if an APIVer is provided.  This is only needed to keep support for 1.2.1 and lower APIs.
+		$this->APIVer = ( array_key_exists( 'APIVer', $args ) ) ? $args['APIVer'] : '1.2.2';
 
 		// Set the Application Name
 		$this->AppName = ( array_key_exists( 'AppName', $args ) ) ?  $args['AppName'] : 'Unknown Application';
