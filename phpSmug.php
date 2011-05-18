@@ -1343,6 +1343,7 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 	private $response_headers = '';
 	private $executed = FALSE;
 	private $redir_count = 0;
+	private $can_followlocation = true;
 	
 	public function __construct ( ) 
 	{		
