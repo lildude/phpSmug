@@ -890,7 +890,7 @@ class httpRequest
     * @see  setConfig()
     */
     protected $config = array(
-		'adapter'			=> 'curl',
+		'adapter'			=> 'socket',
         'connect_timeout'   => 5,
         'timeout'           => 0,
         'buffer_size'       => 16384,
@@ -1045,6 +1045,12 @@ class httpRequest
 		$adapter = strtolower( $adapter );
 		if ( $adapter == 'curl' || $adapter == 'socket' ) {
 			$this->config['adapter'] = $adapter;
+			// We need to reset the processor too.  This is quite crude and messy.
+			if ( $adapter == 'curl' && ! stripos( get_class( $this->processor ), $adapter ) ) {
+				$this->processor = new PhpSmugCurlRequestProcessor;
+			} else {
+				$this->processor = new PhpSmugSocketRequestProcessor;
+			}
 		}
 	}
 
