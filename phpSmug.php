@@ -1334,6 +1334,14 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 	private $response_headers = '';
 	private $executed = FALSE;
 	private $redir_count = 0;
+	
+	public function __construct ( ) {		
+		// see if we can follow Location: headers
+		if ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) {
+			$this->can_followlocation = false;
+		}	
+	}
+		
 	/* Old method
 	public function execute( $method, $url, $headers, $body, $config )
 	{
