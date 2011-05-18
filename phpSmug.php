@@ -882,7 +882,7 @@ class httpRequest
 	private $response_body = '';
 	private $response_headers = '';
 
-	private $user_agent = "Unknown application using phpSmug/3.0";
+	private $user_agent = "Unknown application using phpSmug/3.1";
 
 	/**
     * Adapter Configuration parameters
