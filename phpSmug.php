@@ -890,7 +890,7 @@ class httpRequest
     * @see  setConfig()
     */
     protected $config = array(
-		'adapter'			=> 'socket',
+		'adapter'			=> 'curl',
         'connect_timeout'   => 5,
         'timeout'           => 0,
         'buffer_size'       => 16384,
@@ -903,7 +903,7 @@ class httpRequest
 
 		// TODO: These don't apply to SocketRequestProcessor yet
         'ssl_verify_peer'   => FALSE,
-        'ssl_verify_host'   => 1, // 1 = check CN of ssl cert, 2 = check and verify @see http://php.net/curl_setopt
+        'ssl_verify_host'   => 2, // 1 = check CN of ssl cert, 2 = check and verify @see http://php.net/curl_setopt
         'ssl_cafile'        => NULL,
         'ssl_capath'        => NULL,
         'ssl_local_cert'    => NULL,
@@ -1045,10 +1045,12 @@ class httpRequest
 		$adapter = strtolower( $adapter );
 		if ( $adapter == 'curl' || $adapter == 'socket' ) {
 			$this->config['adapter'] = $adapter;
-			// We need to reset the processor too.  This is quite crude and messy.
-			if ( $adapter == 'curl' && ! stripos( get_class( $this->processor ), $adapter ) ) {
+			// We need to reset the processor too.  This is quite crude and messy, but we need to do it.
+			if ( function_exists( 'curl_init' ) && ( $this->config['adapter'] == 'curl' )
+				 && ! ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) ) {
 				$this->processor = new PhpSmugCurlRequestProcessor;
-			} else {
+			}
+			else {
 				$this->processor = new PhpSmugSocketRequestProcessor;
 			}
 		}
