@@ -64,10 +64,9 @@ class phpSmug {
 	var $oauth_token_secret;
 	var $oauth_token;
 	var $mode;
-	var $secure = false;
+	private $secure = false;
 	private $req;
 	private $adapter = 'curl';
-	private $endpoint;
 	
 	/**
      * When your database cache table hits this many rows, a cleanup
@@ -367,18 +366,17 @@ class phpSmug {
 	 * @return	string		Serialized PHP response from SmugMug, or an error.
 	 **/
 	private function request( $command, $args = array() )
-	{		
-		if ( ( strpos( $command, 'login.with' ) || strpos( $command, 'Token' ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) ) {
-			$proto = "https";
+	{
+		if ( ( strpos( $command, 'login.with' ) || strpos( $command, 'Token' ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) || $this->secure ) {
+			$endpoint = "https://secure.smugmug.com/services/api/php/{$this->APIVer}/";
 		} else {
-			$proto = "http";
+			$endpoint = "http://api.smugmug.com/services/api/php/{$this->APIVer}/";
 			if ( ( isset( $this->SessionID ) && is_null( $this->SessionID ) ) && ( !strpos( $command, 'login.anonymously' ) ) && !$this->OAuthSecret ) {
 				throw new PhpSmugException( 'Not authenticated. No Session ID or OAuth Token.  Please login or provide an OAuth token.' );
 			}
 		}
 		
-		$this->endpoint = "$proto://api.smugmug.com/services/api/php/{$this->APIVer}/";
-		$this->req->setURL( $this->endpoint );
+		$this->req->setURL( $endpoint );
 		
         if ( substr( $command,0,8 ) != 'smugmug.' ) {
             $command = 'smugmug.' . $command;
@@ -560,7 +558,7 @@ class phpSmug {
 	
 	/**
 	 * I break away from the standard API here as recommended by SmugMug at
-	 * {@link http://wiki.smugmug.com/display/SmugMug/smugmug.images.upload+1.2.0}.
+	 * {@link http://wiki.smugmug.net/display/API/Uploading}.
 	 *
 	 * I've chosen to go with the HTTP PUT method as it is quicker, simpler
 	 * and more reliable than using the API or POST methods.
@@ -573,7 +571,7 @@ class phpSmug {
 	 * @param	mixed		$arguments (Optional) Additional arguments. See
 	 *						SmugMug API documentation.
 	 * @uses	request
-	 * @link	http://wiki.smugmug.com/display/SmugMug/Uploading
+	 * @link	http://wiki.smugmug.net/display/API/Uploading
 	 * @return	array|false
 	 * @todo Add support for multiple asynchronous uploads
 	 **/
@@ -690,7 +688,7 @@ class phpSmug {
 	{
 		$method = strtr( $method, '_', '.' );
 		$args = phpSmug::processArgs( $arguments );
-
+	
 		if ( $this->OAuthSecret ) {
 			$sig = $this->generate_signature( $method, $args );
 			$oauth_params = array (
@@ -742,7 +740,7 @@ class phpSmug {
 		 $args = phpSmug::processArgs( func_get_args() );
 		 $perms = ( array_key_exists( 'Permissions', $args ) ) ? $args['Permissions'] : 'Public';
 		 $access = ( array_key_exists( 'Access', $args ) ) ? $args['Access'] : 'Read';
- 		 return "http://api.smugmug.com/services/oauth/authorize.mg?Access=$access&Permissions=$perms&oauth_token={$this->oauth_token}";
+ 		 return "https://secure.smugmug.com/services/oauth/authorize.mg?Access=$access&Permissions=$perms&oauth_token={$this->oauth_token}";
 	 }
 	 
 
@@ -788,7 +786,15 @@ class phpSmug {
 		} else {
 			$this->oauth_signature_method = 'HMAC-SHA1';
 			$encKey = phpSmug::urlencodeRFC3986( $this->OAuthSecret ) . '&' . phpSmug::urlencodeRFC3986( $this->oauth_token_secret );
-			$endpoint = ( $apicall == 'Upload' ) ? 'http://upload.smugmug.com/'.$apiargs['FileName'] : $this->endpoint;
+			
+			if ( strpos( $apicall, 'Token' ) || $this->secure ) {
+				$endpoint = "https://secure.smugmug.com/services/api/php/{$this->APIVer}/";
+			} else if ( $apicall == 'Upload' ) {
+				$endpoint = 'http://upload.smugmug.com/'.$apiargs['FileName'];	// TODO: Can we do secure uploads too?
+			} else {
+				$endpoint = "http://api.smugmug.com/services/api/php/{$this->APIVer}/";
+			}
+			
 			$method = ( $apicall == 'Upload' ) ? 'PUT' : 'POST';
 			$params = array (
 				'oauth_version'             => '1.0',
