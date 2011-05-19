@@ -969,15 +969,6 @@ class httpRequest
         if ( is_array( $config ) ) {
             foreach ( $config as $name => $value ) {
                 $this->setConfig( $name, $value );
-				if ( $name == 'adapter' ) {
-					if ( function_exists( 'curl_init' ) && ( $value == 'curl' )
-						 && ! ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) ) {
-						$this->processor = new PhpSmugCurlRequestProcessor;
-					}
-					else {
-						$this->processor = new PhpSmugSocketRequestProcessor;
-					}
-				}
             }
 
         } else {
