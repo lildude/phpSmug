@@ -618,7 +618,7 @@ class phpSmug {
 		$upload_req->setConfig( array( 'adapter' => $this->adapter, 'follow_redirects' => TRUE, 'max_redirects' => 3, 'ssl_verify_peer' => FALSE, 'ssl_verify_host' => FALSE, 'connect_timeout' => 60 ) );
 		
 		// Set the proxy if one has been set earlier
-		if (isset($this->proxy) && is_array($this->proxy)) {
+		if ( isset( $this->proxy ) && is_array( $this->proxy ) ) {
 			$upload_req->setConfig(array('proxy_host' => $this->proxy['server'],
 							             'proxy_port' => $this->proxy['port'],
 									     'proxy_user' => $this->proxy['user'],
@@ -655,13 +655,14 @@ class phpSmug {
 		( isset( $args['Longitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Longitude', $args['Longitude'] ) : false;
 		( isset( $args['Altitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Altitude', $args['Altitude'] ) : false;
 
-		$proto = ( $this->oauth_signature_method == 'PLAINTEXT' ) ? 'https' : 'http';
+		$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
 		$upload_req->setURL( $proto . '://upload.smugmug.com/'.$args['FileName'] );
 
 		$upload_req->setBody( $data );
 
         //Send Requests 
 		$upload_req->execute();
+		
 		$this->response = $upload_req->getBody();
 		
 		// For some reason the return string is formatted with \n and extra space chars.  Remove these.
@@ -799,7 +800,8 @@ class phpSmug {
 			if ( strpos( $apicall, 'Token' ) || $this->secure ) {
 				$endpoint = "https://secure.smugmug.com/services/api/php/{$this->APIVer}/";
 			} else if ( $apicall == 'Upload' ) {
-				$endpoint = 'http://upload.smugmug.com/'.$apiargs['FileName'];	// TODO: Can we do secure uploads too?
+				$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
+				$endpoint = $proto . '://upload.smugmug.com/'.$apiargs['FileName'];	// TODO: Can we do secure uploads too?
 			} else {
 				$endpoint = "http://api.smugmug.com/services/api/php/{$this->APIVer}/";
 			}
@@ -967,6 +969,15 @@ class httpRequest
         if ( is_array( $config ) ) {
             foreach ( $config as $name => $value ) {
                 $this->setConfig( $name, $value );
+				if ( $name == 'adapter' ) {
+					if ( function_exists( 'curl_init' ) && ( $value == 'curl' )
+						 && ! ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) ) {
+						$this->processor = new PhpSmugCurlRequestProcessor;
+					}
+					else {
+						$this->processor = new PhpSmugSocketRequestProcessor;
+					}
+				}
             }
 
         } else {
@@ -1065,7 +1076,7 @@ class httpRequest
 		if ( $adapter == 'curl' || $adapter == 'socket' ) {
 			$this->config['adapter'] = $adapter;
 			// We need to reset the processor too.  This is quite crude and messy, but we need to do it.
-			if ( function_exists( 'curl_init' ) && ( $this->config['adapter'] == 'curl' )
+			if ( function_exists( 'curl_init' ) && ( $adapter == 'curl' )
 				 && ! ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) ) {
 				$this->processor = new PhpSmugCurlRequestProcessor;
 			}
@@ -1093,6 +1104,14 @@ class httpRequest
 	public function getParams()
 	{
 		return $this->params;
+	}
+	
+	/**
+	 * Get the current configuration. This is more for unit testing purposes
+	 */
+	public function getConfig()
+	{
+		return $this->config;
 	}
 
 	/**
@@ -1418,7 +1437,7 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 		// perform the actual request - we use fopen so stream_get_meta_data works
 		$fh = @fopen( $url, 'r', false, $context );
 		if ( $fh === false ) {
-			throw new Exception( _t( 'Unable to connect to %s', array( $url_pieces['host'] ) ) );
+			throw new Exception( 'Unable to connect to ' . $urlbits['host'] );
 		}
 
 		// read in all the contents -- this is the same as file_get_contents, only for a specific stream handle
@@ -1431,7 +1450,7 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 
 		// did we timeout?
 		if ( $meta['timed_out'] == true ) {
-			throw new RemoteRequest_Timeout( 'Request timed out' );
+			throw new Exception( 'Request timed out' );
 		}
 
 		// $meta['wrapper_data'] should be a list of the headers, the same as is loaded into $http_response_header
