@@ -487,6 +487,15 @@ class phpSmug {
 			$this->req->setAdapter( $adapter );
 		}
 	}
+	
+	/**
+	 * Force the use of the secure/HTTPS API endpoint for ALL API calls, not just those entailing authentication
+	 */
+	
+	public function setSecureOnly()
+	{
+		$this->secure = true;
+	}
 	 
 	/**
 	 * Single login function for all non-OAuth logins.
