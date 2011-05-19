@@ -64,8 +64,10 @@ class phpSmug {
 	var $oauth_token_secret;
 	var $oauth_token;
 	var $mode;
+	var $secure = false;
 	private $req;
 	private $adapter = 'curl';
+	private $endpoint;
 	
 	/**
      * When your database cache table hits this many rows, a cleanup
@@ -115,7 +117,7 @@ class phpSmug {
         $this->APIKey = $args['APIKey'];
 		if ( array_key_exists( 'OAuthSecret', $args ) ) {
 			$this->OAuthSecret = $args['OAuthSecret'];
-			// Force 1.2.2 endpoint as OAuth is being used
+			// Force 1.2.2 endpoint as OAuth is being used.
 			$this->APIVer = '1.2.2';
 		}
 		// Over ride the above if an APIVer is provided.  This is only needed to keep support for 1.2.1 and lower APIs.
@@ -366,7 +368,7 @@ class phpSmug {
 	 **/
 	private function request( $command, $args = array() )
 	{		
-		if ( ( strpos( $command, 'login.with' ) || ( strpos( $command, 'checkAccessToken' ) ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) ) {
+		if ( ( strpos( $command, 'login.with' ) || strpos( $command, 'Token' ) ) || ( $this->oauth_signature_method == 'PLAINTEXT' ) ) {
 			$proto = "https";
 		} else {
 			$proto = "http";
@@ -375,7 +377,8 @@ class phpSmug {
 			}
 		}
 		
-		$this->req->setURL( "$proto://api.smugmug.com/services/api/php/{$this->APIVer}/" );
+		$this->endpoint = "$proto://api.smugmug.com/services/api/php/{$this->APIVer}/";
+		$this->req->setURL( $this->endpoint );
 		
         if ( substr( $command,0,8 ) != 'smugmug.' ) {
             $command = 'smugmug.' . $command;
@@ -785,7 +788,7 @@ class phpSmug {
 		} else {
 			$this->oauth_signature_method = 'HMAC-SHA1';
 			$encKey = phpSmug::urlencodeRFC3986( $this->OAuthSecret ) . '&' . phpSmug::urlencodeRFC3986( $this->oauth_token_secret );
-			$endpoint = ( $apicall == 'Upload' ) ? 'http://upload.smugmug.com/'.$apiargs['FileName'] : 'http://api.smugmug.com/services/api/php/'.$this->APIVer.'/';
+			$endpoint = ( $apicall == 'Upload' ) ? 'http://upload.smugmug.com/'.$apiargs['FileName'] : $this->endpoint;
 			$method = ( $apicall == 'Upload' ) ? 'PUT' : 'POST';
 			$params = array (
 				'oauth_version'             => '1.0',
