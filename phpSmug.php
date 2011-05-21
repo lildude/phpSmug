@@ -477,7 +477,11 @@ class phpSmug {
 	}
 
 	/**
-	 * Set the adapter.  Allowed options are 'curl' or 'socket'. Default is 'curl'
+	 * Set the adapter.  
+	 * 
+	 * @access	public
+	 * @param	string		$adapter Allowed options are 'curl' or 'socket'. Default is 'curl'
+	 * @return	void
 	 */
 	public function setAdapter( $adapter )
 	{
@@ -489,7 +493,21 @@ class phpSmug {
 	}
 	
 	/**
+	 * Get the adapter.  This is primarily for unit testing
+	 * 
+	 * @access	public
+	 * @return	string		Either 'socket' or 'curl'.
+	 */
+	public function getAdapter()
+	{
+		return $this->req->getAdapter();
+	}
+	
+	/**
 	 * Force the use of the secure/HTTPS API endpoint for ALL API calls, not just those entailing authentication
+	 * 
+	 * @access	public
+	 * @return	void
 	 */
 	
 	public function setSecureOnly()
