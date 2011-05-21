@@ -584,9 +584,6 @@ class phpSmug {
 	}
 	
 	/**
-	 * I break away from the standard API here as recommended by SmugMug at
-	 * {@link http://wiki.smugmug.net/display/API/Uploading}.
-	 *
 	 * I've chosen to go with the HTTP PUT method as it is quicker, simpler
 	 * and more reliable than using the API or POST methods.
 	 * 
