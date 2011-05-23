@@ -1295,11 +1295,10 @@ class PhpSmugCurlRequestProcessor implements PhpSmugRequestProcessor
 			CURLOPT_SSL_VERIFYHOST	=> $config['ssl_verify_host'],
 			CURLOPT_BUFFERSIZE		=> $config['buffer_size'],
 			CURLOPT_HTTPHEADER		=> $merged_headers,
-			CURLOPT_FOLLOWLOCATION	=> TRUE,
 			CURLOPT_RETURNTRANSFER	=> TRUE,
 		);
 
-		if ( $this->can_followlocation ) {
+		if ( $this->can_followlocation && $config['follow_redirects'] ) {
 			$options[CURLOPT_FOLLOWLOCATION] = TRUE; // Follow 302's and the like.
 		}
 
