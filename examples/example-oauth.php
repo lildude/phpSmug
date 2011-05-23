@@ -85,7 +85,7 @@ try {
 		$images = $f->images_get( "AlbumID={$albums['0']['id']}", "AlbumKey={$albums['0']['Key']}", "Heavy=1" );
 		// Display the thumbnails and link to the Album page for each image
 		foreach ( $images['Images'] as $image ) {
-			echo '<a href="'.$image['AlbumURL'].'"><img src="'.$image['TinyURL'].'" title="'.$image['Caption'].'" alt="'.$image['id'].'" /></a>';
+			echo '<a href="'.$image['URL'].'"><img src="'.$image['TinyURL'].'" title="'.$image['Caption'].'" alt="'.$image['id'].'" /></a>';
 		}
 	}
 }
