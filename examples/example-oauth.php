@@ -70,7 +70,6 @@ try {
 	} else {
 		$reqToken = unserialize( $_SESSION['SmugGalReqToken'] );
 		unset( $_SESSION['SmugGalReqToken'] );
-		session_unregister( 'SmugGalReqToken' );
 
 		// Step 3: Use the Request token obtained in step 1 to get an access token
 		$f->setToken("id={$reqToken['Token']['id']}", "Secret={$reqToken['Token']['Secret']}");
