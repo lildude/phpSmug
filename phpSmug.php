@@ -507,6 +507,7 @@ class phpSmug {
 	 * 
 	 * @access	public
 	 * @return	void
+	 * @todo	Document this once SmugMug have ironed out the problems with the API.
 	 */
 	
 	public function setSecureOnly()
