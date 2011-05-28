@@ -396,7 +396,6 @@ class phpSmug {
         // Process arguments, including method and login data.
         $args = array_merge( $defaultArgs, $args );
         ksort( $args );
-
         if ( !( $this->response = $this->getCached( $args ) ) ) {
   			$this->req->setPostData( $args );
 			$this->req->execute();
@@ -671,9 +670,9 @@ class phpSmug {
 		( isset( $args['Longitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Longitude', $args['Longitude'] ) : false;
 		( isset( $args['Altitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Altitude', $args['Altitude'] ) : false;
 
-		$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
-		$upload_req->setURL( $proto . '://upload.smugmug.com/'.$args['FileName'] );
-
+		//$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';	// No secure uploads at this time.
+		//$upload_req->setURL( $proto . '://upload.smugmug.com/'.$args['FileName'] );
+		$upload_req->setURL( 'http://upload.smugmug.com/'.$args['FileName'] );
 		$upload_req->setBody( $data );
 
         //Send Requests 
@@ -816,8 +815,9 @@ class phpSmug {
 			if ( strpos( $apicall, 'Token' ) || $this->secure ) {
 				$endpoint = "https://secure.smugmug.com/services/api/php/{$this->APIVer}/";
 			} else if ( $apicall == 'Upload' ) {
-				$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
-				$endpoint = $proto . '://upload.smugmug.com/'.$apiargs['FileName'];	// TODO: Can we do secure uploads too?
+				//$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
+				//$endpoint = $proto . '://upload.smugmug.com/'.$apiargs['FileName'];	// No support for secure uploads yet
+				$endpoint = 'http://upload.smugmug.com/'.$apiargs['FileName'];
 			} else {
 				$endpoint = "http://api.smugmug.com/services/api/php/{$this->APIVer}/";
 			}
