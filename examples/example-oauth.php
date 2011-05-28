@@ -70,7 +70,6 @@ try {
 	} else {
 		$reqToken = unserialize( $_SESSION['SmugGalReqToken'] );
 		unset( $_SESSION['SmugGalReqToken'] );
-		session_unregister( 'SmugGalReqToken' );
 
 		// Step 3: Use the Request token obtained in step 1 to get an access token
 		$f->setToken("id={$reqToken['Token']['id']}", "Secret={$reqToken['Token']['Secret']}");
@@ -85,7 +84,7 @@ try {
 		$images = $f->images_get( "AlbumID={$albums['0']['id']}", "AlbumKey={$albums['0']['Key']}", "Heavy=1" );
 		// Display the thumbnails and link to the Album page for each image
 		foreach ( $images['Images'] as $image ) {
-			echo '<a href="'.$image['AlbumURL'].'"><img src="'.$image['TinyURL'].'" title="'.$image['Caption'].'" alt="'.$image['id'].'" /></a>';
+			echo '<a href="'.$image['URL'].'"><img src="'.$image['TinyURL'].'" title="'.$image['Caption'].'" alt="'.$image['id'].'" /></a>';
 		}
 	}
 }
