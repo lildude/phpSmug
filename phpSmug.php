@@ -1425,7 +1425,7 @@ class PhpSmugSocketRequestProcessor implements PhpSmugRequestProcessor
 			),
 		);
 
-		if ( $method == 'POST' ) {
+		if ( $method == 'POST' || $method == 'PUT' ) {
 			$options['http']['content'] = $body;
 		}
 
