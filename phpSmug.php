@@ -1259,6 +1259,375 @@ class httpRequest
 
 }
 
+
+
+/****************** Custom HTTP Request Classes *******************************
+ *
+ * The classes below could be put into individual files, but to keep things simple
+ * I've included them in this file.
+ *
+ * The code below has been taken from the Habari project - http://habariproject.org
+ * and modified to suit the needs of phpSmug.
+ *
+ * The original source is distributed under the Apache License Version 2.0
+ */
+
+class HttpRequestException extends Exception {}
+
+interface PhpSmugRequestProcessor
+{
+	public function execute( $method, $url, $headers, $body, $config );
+	public function getBody();
+	public function getHeaders();
+}
+
+class httpRequest
+{
+	private $method = 'POST';
+	private $url;
+	private $params = array();
+	private $headers = array();
+	private $postdata = array();
+	private $files = array();
+	private $body = '';
+	private $processor = NULL;
+	private $executed = FALSE;
+
+	private $response_body = '';
+	private $response_headers = '';
+
+	private $user_agent = "Unknown application using phpSmug/3.1";
+
+	/**
+    * Adapter Configuration parameters
+    * @var  array
+    * @see  setConfig()
+    */
+    protected $config = array(
+		'adapter'			=> 'curl',
+        'connect_timeout'   => 5,
+        'timeout'           => 0,
+        'buffer_size'       => 16384,
+
+        'proxy_host'        => '',
+        'proxy_port'        => '',
+        'proxy_user'        => '',
+        'proxy_password'    => '',
+        'proxy_auth_scheme' => 'basic',
+
+		// TODO: These don't apply to SocketRequestProcessor yet
+        'ssl_verify_peer'   => FALSE,
+        'ssl_verify_host'   => 2, // 1 = check CN of ssl cert, 2 = check and verify @see http://php.net/curl_setopt
+        'ssl_cafile'        => NULL,
+        'ssl_capath'        => NULL,
+        'ssl_local_cert'    => NULL,
+        'ssl_passphrase'    => NULL,
+
+        'follow_redirects'  => FALSE,
+        'max_redirects'     => 5
+    );
+
+	/**
+	 * @param string	$url URL to request
+	 * @param string	$method Request method to use (default 'POST')
+	 * @param int		$timeout Timeout in seconds (default 30)
+	 */
+	public function __construct( $url = NULL, $method = 'POST', $timeout = 30 )
+	{
+		$this->method = strtoupper( $method );
+		$this->url = $url;
+		$this->setTimeout( $timeout );
+		$this->setHeader( array( 'User-Agent' => $this->user_agent ) );
+
+		// can't use curl's followlocation in safe_mode with open_basedir, so fallback to socket for now
+		if ( function_exists( 'curl_init' ) && ( $this->config['adapter'] == 'curl' )
+			 && ! ( ini_get( 'safe_mode' ) || ini_get( 'open_basedir' ) ) ) {
+			$this->processor = new PhpSmugCurlRequestProcessor;
+		}
+		else {
+			$this->processor = new PhpSmugSocketRequestProcessor;
+		}
+	}
+
+	/**
+	 * Set adapter configuration options
+	 *
+	 * @param mixed			$config An array of options or a string name with a
+	 *						corresponding $value
+	 * @param mixed			$value
+	 * @return httpRequest
+	 */
+	public function setConfig( $config, $value = null )
+    {
+        if ( is_array( $config ) ) {
+            foreach ( $config as $name => $value ) {
+                $this->setConfig( $name, $value );
+            }
+
+        } else {
+            if ( !array_key_exists( $config, $this->config ) ) {
+				// We only trigger an error here as using an unknow config param isn't fatal
+				trigger_error( "Unknown configuration parameter '{$config}'", E_USER_WARNING );
+            } else {
+				$this->config[$config] = $value;
+			}
+        }
+        return $this;
+    }
+
+	/**
+     * Set http method
+     *
+     * @param string HTTP method to use (GET, POST or PUT)
+     * @return void
+     */
+    public function setMethod( $method )
+	{
+		$method = strtoupper( $method );
+        if ( $method == 'GET' || $method == 'POST' || $method == 'PUT' ) {
+            $this->method = $method;
+		}
+    }
+
+	/**
+	 * Set the request query parameters (i.e., the URI's query string).
+	 * Will be merged with existing query info from the URL.
+	 *
+	 * @param array $params
+	 * @return void
+	 */
+	public function setParams( $params )
+	{
+		if ( ! is_array( $params ) ) {
+			$params = parse_str( $params );
+		}
+		$this->params = $params;
+	}
+
+	/**
+	 * Add a request header.
+	 *
+	 * @param mixed $header		The header to add, either as an associative array
+	 *							'name'=>'value' or as part of a $header $value
+	 *							string pair.
+	 * @param mixed $value		The value for the header if passing the header as
+	 *							two arguments.
+	 * @return void
+	 */
+	public function setHeader( $header, $value = NULL )
+	{
+		if ( is_array( $header ) ) {
+			$this->headers = array_merge( $this->headers, $header );
+		}
+		else {
+			$this->headers[$header] = $value;
+		}
+	}
+
+	/**
+	 * Return the response headers. Raises a warning and returns if the request wasn't executed yet.
+	 *
+	 * @return mixed
+	 */
+	public function getHeaders()
+	{
+		if ( !$this->executed ) {
+			return 'Trying to fetch response headers for a pending request.';
+		}
+		return $this->response_headers;
+	}
+
+	/**
+	 * Set the timeout. This is independent of the connect_timeout.
+	 *
+	 * @param int $timeout Timeout in seconds
+	 * @return void
+	 */
+	public function setTimeout( $timeout )
+	{
+		$this->config['timeout'] = $timeout;
+	}
+
+	/**
+	 * Set the adapter to use.  Accepted values are "curl" and "socket"
+	 *
+	 * @param string $adapter
+	 * @return void
+	 */
+	public function setAdapter( $adapter )
+	{
+		$adapter = strtolower( $adapter );
+		if ( $adapter == 'curl' || $adapter == 'socket' ) {
+			$this->config['adapter'] = $adapter;
+		}
+	}
+
+	/**
+	 * Get the currently selected adapter. This is more for unit testing purposes
+	 *
+	 * @return string
+	 */
+	public function getAdapter()
+	{
+		return $this->config['adapter'];
+	}
+
+	/**
+	 * Get the params
+	 *
+	 * @return array
+	 */
+	public function getParams()
+	{
+		return $this->params;
+	}
+	
+	/**
+	 * Get the current configuration. This is more for unit testing purposes
+	 */
+	public function getConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * Set the destination url
+	 *
+	 * @param string $url Destination URL
+	 * @return void
+	 */
+	public function setUrl( $url )
+	{
+		if ( $url ) {
+            $this->url = $url;
+		}
+	}
+
+	/**
+	 * Set request body
+	 *
+	 * @param mixed
+	 * @return void
+	 */
+	public function setBody( $body )
+	{
+		if ( $this->method === 'POST' || $this->method === 'PUT' ) {
+			$this->body = $body;
+		}
+	}
+
+	/**
+	 * set postdata
+	 *
+	 * @access	public
+	 * @param	mixed	$name
+	 * @param	string	$value
+	 * @return	void
+	 */
+	public function setPostData( $name, $value = null )
+	{
+		if ( is_array( $name ) ) {
+			//$this->postdata = array_merge( $this->postdata, $name );
+			$this->postdata = $name;
+		}
+		else {
+			$this->postdata[$name] = $value;
+		}
+	}
+
+	/**
+	 * Return the response body. Raises a warning and returns if the request wasn't executed yet.
+	 *
+	 * @return mixed
+	 */
+	public function getBody()
+	{
+		if ( !$this->executed ) {
+			return 'Trying to fetch response body for a pending request.';
+		}
+		return $this->response_body;
+	}
+
+	/**
+	 * Actually execute the request.
+	 *
+	 * @return mixed	On success, returns TRUE and populates the response_body
+	 *					and response_headers fields.
+	 *					On failure, throws error.
+	 */
+	public function execute()
+	{
+		$this->prepare();
+		$result = $this->processor->execute( $this->method, $this->url, $this->headers, $this->body, $this->config );
+		$this->body = ''; // We need to do this as we reuse the same object for performance. Once we've executed, the body is useless anyway due to the changing params
+		if ( $result ) {
+			$this->response_headers = $this->processor->getHeaders();
+			$this->response_body = $this->processor->getBody();
+			$this->executed = true;
+			return true;
+		}
+		else {
+			$this->executed = false;
+			return $result;
+		}
+	}
+
+	/**
+	 * Tidy things up in preparation of execution.
+	 *
+	 * @return void
+	 */
+	private function prepare()
+	{
+		// remove anchors (#foo) from the URL
+		$this->url = preg_replace( '/(#.*?)?$/', '', $this->url );
+		// merge query params from the URL with params given
+		$this->url = $this->mergeQueryParams( $this->url, $this->params );
+
+		if ( $this->method === 'POST' ) {
+			if ( !isset( $this->headers['Content-Type'] ) ) {
+				$this->setHeader( array( 'Content-Type' => 'application/x-www-form-urlencoded' ) );
+			}
+			if ( $this->headers['Content-Type'] == 'application/x-www-form-urlencoded' || $this->headers['Content-Type'] == 'application/json' ) {
+				if( $this->body != '' && count( $this->postdata ) > 0 ) {
+					$this->body .= '&';
+				}
+				$this->body .= http_build_query( $this->postdata, '', '&' );
+			}
+			$this->setHeader( array( 'Content-Length' => strlen( $this->body ) ) );
+		}
+	}
+
+	/**
+	 * Merge query params from the URL with given params.
+	 *
+	 * @param string $url The URL
+	 * @param string $params An associative array of parameters.
+	 * @return string
+	 */
+	private function mergeQueryParams( $url, $params )
+	{
+		$urlparts = parse_url( $url );
+
+		if ( ! isset( $urlparts['query'] ) ) {
+			$urlparts['query'] = '';
+		}
+
+		if ( ! is_array( $params ) ) {
+			parse_str( $params, $params );
+		}
+
+		if ( $urlparts['query'] != '' ) {
+			$parts = array_merge( parse_str( $qparts ) , $params );
+		} else {
+			$parts = $params;
+		}
+		$urlparts['query'] = http_build_query( $parts, '', '&' );
+		return ( $urlparts['query'] != '' ) ? $url .'?'. $urlparts['query'] : $url;
+	}
+
+}
+
  
 
 class PhpSmugCurlRequestProcessor implements PhpSmugRequestProcessor
