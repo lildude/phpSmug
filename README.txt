@@ -498,7 +498,7 @@ dedicated site at `http://phpsmug.com/'.
 If you encounter any problems with phpSmug, please check the list of known
 issues with phpSmug and the API itself at `http://phpsmug.com/bugs'.  If your
 issue is not there, please leave a comment on the revision page at
-`http://phpSmug.com/phpSmug-3.0'.
+`http://phpSmug.com/phpSmug-32'.
 
 If you are using phpSmug and wish to let the world know, drop me a line via the
 contact form at `http://phpsmug.com/about' and I'll add a link and brief
@@ -512,7 +512,7 @@ This document is also available online at `http://phpsmug.com/docs'.
 Change History
 ==============
 
-   * 3.2 - ## May '11
+   * 3.2 - 30 May '11
 
 
         * Improved support for the 1.3.0 API endpoint (Ticket #10)
