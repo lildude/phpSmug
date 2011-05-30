@@ -1,4 +1,4 @@
-phpSmug 3.1 - PHP Wrapper for the SmugMug API
+phpSmug 3.2 - PHP Wrapper for the SmugMug API
 =============================================
 
 Written by Colin Seymour
@@ -35,14 +35,18 @@ donation (http://phpsmug.com/donate).
 
 
 
-What's New in phpSmug 3.1
+What's New in phpSmug 3.2
 =========================
 
-phpSmug 3.1 is the next minor release of phpSmug and features a few "behind the
-scenes" changes and fixed which do not change the functionality.  The only
-thing that may appear to change functionality is the default API endpoint is
-now 1.2.2 instead of 1.2.0. All earlier endpoints are still available, but
-technically deprecated by SmugMug.
+phpSmug 3.2 is the next minor release of phpSmug and features a few "behind the
+scenes" changes and fixes which do not change the functionality. phpSmug should
+now work properly wit the 1.3.0 API endpoint.  I've also added the ability to
+force all API communication, except for uploads, to occur over HTTPS if you use
+OAuth for authentication.  SmugMug are encouraging people away from using basic
+login authentication in favour of OAuth (the 1.3.0 endpoint has no support for
+basic authentication) so accodingly, I have not implemented the "secure only"
+functionality for basic authentication. I may add it at a later date if there
+is the demand for it.
 
 
 
@@ -174,6 +178,8 @@ You must authenticate with SmugMug in order to use the API.
 With the release of version 1.2.2 of the SmugMug API, there are now two methods
 to authenticate with SmugMug: standard email/password or userid/hash or OAuth.
 phpSmug allows you to implement either method in your application.
+
+Note: The 1.3.0 API endpoint only support OAuth authentication.
 
 
 
@@ -401,7 +407,7 @@ Other Notes
 ===========
 
    * By default, phpSmug will attempt to use Curl to communicate with the
-     SmugMug API endpoint if it's available.  If not, it'll revert to using
+     SmugMug API endpoint if it's available.  If not, it will revert to using
      sockets based communication using `fsockopen()'.  If you wish to force the
      use of sockets, you can do so using the phpSmug supplied `setAdapter()'
      right after instantiating your instance:
@@ -433,8 +439,20 @@ Other Notes
               "username=<proxy_username>",
               "password=<proxy_password>");
 
-     Note: Proxy support is currently only available when using the default
-     "curl" adapter.
+   * By default phpSmug only uses HTTPS for authentication related methods like
+     all the `login*()' and `*Token()' methods.  You can however force the use
+     of HTTPS for ALL API calls, with the exception of uploads, by calling
+     `setSecureOnly()' immediately after instantiating the object.
+
+     For example:
+
+     $f = new phpSmug("APIKey=<value>"); $f->setSecureOnly();
+
+     NOTE: Forcing the use of HTTPS for ALL API communication may have an
+     impact on performance as HTTPS is inherently slower than HTTP NOTE:
+     phpSmug only implements this functionality for OAuth authenticated access.
+     The actual `login*()' methods will continue to use HTTPS, but none of the
+     other methods will if you authentication using basic login authentication.
 
    * If phpSmug encounters an error, or SmugMug returns a "Fail" response, an
      exception will be thrown and your application will stop executing. If
@@ -493,6 +511,20 @@ This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 3.2 - ## May '11
+
+
+        * Improved support for the 1.3.0 API endpoint (Ticket #10)
+
+        * Implemented the ability to force all API communication to occur
+          securely over HTTPS. OAuth Only. (Ticket #9)
+
+        * phpSmug now uses the documented secure.smugmug.com API endpoints
+          (Ticket #8)
+
+        * Updated OAuth example to use new Album URL and to remove its use of
+          the deprecated session_unregister() PHP function.
 
    * 3.1 - 28 Mar '11
 
