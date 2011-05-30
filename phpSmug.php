@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 3.1
+ * @version 3.2
  * @package phpSmug
  * @license GPL 3 {@link http://www.gnu.org/copyleft/gpl.html}
  * @copyright Copyright (c) 2008 Colin Seymour
@@ -54,7 +54,7 @@ class PhpSmugException extends Exception {}
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '3.1';
+	var $version = '3.2';
 	private $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
@@ -924,7 +924,7 @@ class httpRequest
 	private $response_body = '';
 	private $response_headers = '';
 
-	private $user_agent = "Unknown application using phpSmug/3.1";
+	private $user_agent = "Unknown application using phpSmug/3.2";
 
 	/**
     * Adapter Configuration parameters
