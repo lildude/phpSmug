@@ -503,16 +503,20 @@ class phpSmug {
 	}
 	
 	/**
-	 * Force the use of the secure/HTTPS API endpoint for ALL API calls, not just those entailing authentication
+	 * Force the use of the secure/HTTPS API endpoint for ALL API calls, not just 
+	 * those entailing authentication.
+	 * 
+	 * This is only implemented if authenticating using OAuth.
 	 * 
 	 * @access	public
 	 * @return	void
-	 * @todo	Document this once SmugMug have ironed out the problems with the API.
 	 */
 	
 	public function setSecureOnly()
 	{
-		$this->secure = true;
+		if ( isset( $this->OAuthSecret ) ) {
+			$this->secure = true;
+		}
 	}
 	 
 	/**
