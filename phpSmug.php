@@ -817,7 +817,7 @@ class phpSmug {
 			$this->oauth_signature_method = 'HMAC-SHA1';
 			$encKey = phpSmug::urlencodeRFC3986( $this->OAuthSecret ) . '&' . phpSmug::urlencodeRFC3986( $this->oauth_token_secret );
 			
-			if ( strpos( $apicall, 'Token' ) || $this->secure ) {
+			if ( strpos( $apicall, 'Token' ) || $this->secure && $apicall != 'Upload' ) {
 				$endpoint = "https://secure.smugmug.com/services/api/php/{$this->APIVer}/";
 			} else if ( $apicall == 'Upload' ) {
 				//$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
