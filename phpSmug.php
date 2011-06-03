@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 3.2
+ * @version 3.3
  * @package phpSmug
  * @license GPL 3 {@link http://www.gnu.org/copyleft/gpl.html}
  * @copyright Copyright (c) 2008 Colin Seymour
@@ -54,7 +54,7 @@ class PhpSmugException extends Exception {}
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '3.2';
+	var $version = '3.3';
 	private $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
@@ -395,7 +395,11 @@ class phpSmug {
 
         // Process arguments, including method and login data.
         $args = array_merge( $defaultArgs, $args );
+		$keys = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_keys( $args ) );
+		$values = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_values( $args ) );
+		$args = array_combine( $keys, $values );
         ksort( $args );
+		//
         if ( !( $this->response = $this->getCached( $args ) ) ) {
   			$this->req->setPostData( $args );
 			$this->req->execute();
@@ -840,23 +844,18 @@ class phpSmug {
 			if ( $apicall != 'Upload' ) $params = ( !empty( $apiargs ) ) ? array_merge( $params, $apiargs ) : $params;
 		    $keys = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_keys( $params ) );
 		    $values = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_values( $params ) );
-			// BUG: The API now expects FALSE to be a value and not a blank.  No notification of this change :-(
 			$params = array_combine( $keys, $values );
 		    // Sort by keys (natsort)
 		    uksort( $params, 'strnatcmp' );
-			$pairs = array();
-			foreach ( $params as $key=>$value ) {
-			  if ( is_array( $value ) ) {
-			    natsort( $value );
-			    foreach ( $value as $v2 ) {
-					$pairs[] = ( $v2 == '' ) ? "$key=0" : "$key=$v2";
-			    }
-			  } else {
-					$pairs[] = ( $value == '' )? "$key=0" : "$key=$value";
-			  }
+			// We can't use implode() here as it plays havoc with array keys with empty values.
+			$count = count( $params );
+			foreach ( $params as $key => $value ) {
+				$count--;
+				$string .= $key . '=' . $value;
+				if ( $count )	{
+					$string .= '&';
+				}
 			}
-
-			$string = implode( '&', $pairs );
 			$base_string = $method . '&' . phpSmug::urlencodeRFC3986( $endpoint ) . '&' .  phpSmug::urlencodeRFC3986( $string );
 			$sig = base64_encode( hash_hmac( 'sha1', $base_string, $encKey, true ) );
 			return $sig;
@@ -924,7 +923,7 @@ class httpRequest
 	private $response_body = '';
 	private $response_headers = '';
 
-	private $user_agent = "Unknown application using phpSmug/3.2";
+	private $user_agent = "Unknown application using phpSmug/3.3";
 
 	/**
     * Adapter Configuration parameters
@@ -1225,10 +1224,19 @@ class httpRequest
 				$this->setHeader( array( 'Content-Type' => 'application/x-www-form-urlencoded' ) );
 			}
 			if ( $this->headers['Content-Type'] == 'application/x-www-form-urlencoded' || $this->headers['Content-Type'] == 'application/json' ) {
-				if( $this->body != '' && count( $this->postdata ) > 0 ) {
+				$count = count( $this->postdata );
+				if( $this->body != '' && $count > 0 ) {
 					$this->body .= '&';
 				}
-				$this->body .= http_build_query( $this->postdata, '', '&' );
+				//$this->body .= http_build_query( $this->postdata, '', '&' );
+				// We don't use http_build_query() as it converts empty array values to 0, which we don't want.
+				foreach ( $this->postdata as $key => $value ) {
+					$count--;
+					$this->body .= $key . '=' . $value;
+					if ( $count )	{
+						$this->body .= '&';
+					}
+				}
 			}
 			$this->setHeader( array( 'Content-Length' => strlen( $this->body ) ) );
 		}
