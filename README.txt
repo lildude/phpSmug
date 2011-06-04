@@ -1,4 +1,4 @@
-phpSmug 3.2 - PHP Wrapper for the SmugMug API
+phpSmug 3.3 - PHP Wrapper for the SmugMug API
 =============================================
 
 Written by Colin Seymour
@@ -35,18 +35,14 @@ donation (http://phpsmug.com/donate).
 
 
 
-What's New in phpSmug 3.2
+What's New in phpSmug 3.3
 =========================
 
-phpSmug 3.2 is the next minor release of phpSmug and features a few "behind the
-scenes" changes and fixes which do not change the functionality. phpSmug should
-now work properly with the 1.3.0 API endpoint.  I've also added the ability to
-force all API communication, except for uploads, to occur over HTTPS if you use
-OAuth for authentication.  SmugMug are encouraging people away from using basic
-login authentication in favour of OAuth (the 1.3.0 endpoint has no support for
-basic authentication) so accordingly, I have not implemented the "secure only"
-functionality for basic authentication. I may add it at a later date if there
-is the demand for it.
+phpSmug 3.3 is the next minor release of phpSmug and fixes only one issue found
+in the way phpSmug was handling empty or FALSE argument values.  No change in
+usage from the user perspective is needed, you'll just find phpSmug handles
+boolean and empty argument values correctly and will now generate correct OAuth
+signatures for those methods involved.
 
 
 
@@ -511,6 +507,13 @@ This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 3.3 - 3 Jun '11
+
+
+        * Worked around bizarre behaviour in the way PHP's implode() and
+          http_build_query() handle associative array keys with empty values.
+          Fixes Ticket #11.
 
    * 3.2 - 30 May '11
 
