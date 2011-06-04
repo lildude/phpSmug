@@ -849,6 +849,7 @@ class phpSmug {
 		    uksort( $params, 'strnatcmp' );
 			// We can't use implode() here as it plays havoc with array keys with empty values.
 			$count = count( $params );
+			$string = '';
 			foreach ( $params as $key => $value ) {
 				$count--;
 				$string .= $key . '=' . $value;
