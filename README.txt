@@ -1,4 +1,4 @@
-phpSmug 3.3 - PHP Wrapper for the SmugMug API
+phpSmug 3.4 - PHP Wrapper for the SmugMug API
 =============================================
 
 Written by Colin Seymour
@@ -35,14 +35,13 @@ donation (http://phpsmug.com/donate).
 
 
 
-What's New in phpSmug 3.3
+What's New in phpSmug 3.4
 =========================
 
-phpSmug 3.3 is the next minor release of phpSmug and fixes only one issue found
-in the way phpSmug was handling empty or FALSE argument values.  No change in
-usage from the user perspective is needed, you'll just find phpSmug handles
-boolean and empty argument values correctly and will now generate correct OAuth
-signatures for those methods involved.
+Only a single small change in phpSmug 3.4: phpSmug was neglecting to set the
+appropriate "hidden" upload header when uploading photos that should be marked
+as hidden. phpSmug 3.4 now resolves this and "hidden" uploads should now show
+up as hidden when they arrive on SmugMug.
 
 
 
@@ -507,6 +506,12 @@ This document is also available online at `http://phpsmug.com/docs'.
 
 Change History
 ==============
+
+   * 3.4 - 21 Jun '11
+
+
+        * Added missing hidden header for image uploads that should be hidden.
+          Fixes Ticket #12.
 
    * 3.3 - 3 Jun '11
 
