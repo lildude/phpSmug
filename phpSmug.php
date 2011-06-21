@@ -678,6 +678,7 @@ class phpSmug {
 		( isset( $args['Latitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Latitude', $args['Latitude'] ) : false;
 		( isset( $args['Longitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Longitude', $args['Longitude'] ) : false;
 		( isset( $args['Altitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Altitude', $args['Altitude'] ) : false;
+		( isset( $args['Hidden'] ) ) ? $upload_req->setHeader( 'X-Smug-Hidden', $args['Hidden'] ) : false;
 
 		//$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';	// No secure uploads at this time.
 		//$upload_req->setURL( $proto . '://upload.smugmug.com/'.$args['FileName'] );
