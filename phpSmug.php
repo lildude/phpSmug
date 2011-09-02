@@ -54,7 +54,7 @@ class PhpSmugException extends Exception {}
  * @package phpSmug
  **/
 class phpSmug {
-	var $version = '3.4';
+	static $version = '3.4';
 	private $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
@@ -128,7 +128,7 @@ class phpSmug {
 		// All calls to the API are done via POST using my own constructed httpRequest class
 		$this->req = new httpRequest();
 		$this->req->setConfig( array( 'adapter' => $this->adapter, 'follow_redirects' => TRUE, 'max_redirects' => 3, 'ssl_verify_peer' => FALSE, 'ssl_verify_host' => FALSE, 'connect_timeout' => 60 ) );
-		$this->req->setHeader( array( 'User-Agent' => "{$this->AppName} using phpSmug/{$this->version}", 'Content-Type' => 'application/x-www-form-urlencoded' ) );
+		$this->req->setHeader( array( 'User-Agent' => "{$this->AppName} using phpSmug/" . phpSmug::$version, 'Content-Type' => 'application/x-www-form-urlencoded' ) );
     }
 	
 	/**
@@ -522,7 +522,7 @@ class phpSmug {
 			$this->secure = true;
 		}
 	}
-	 
+	
 	/**
 	 * Single login function for all non-OAuth logins.
 	 * 
@@ -649,7 +649,7 @@ class phpSmug {
 									     'proxy_password' => $this->proxy['password']));
 		}
 
-		$upload_req->setHeader( array( 'User-Agent' => "{$this->AppName} using phpSmug/{$this->version}",
+		$upload_req->setHeader( array( 'User-Agent' => "{$this->AppName} using phpSmug/" . phpSmug::$version,
 									   'Content-MD5' => md5_file( $args['File'] ),
 									   'Connection' => 'keep-alive') );
 
@@ -925,8 +925,6 @@ class httpRequest
 	private $response_body = '';
 	private $response_headers = '';
 
-	private $user_agent = "Unknown application using phpSmug/3.3";
-
 	/**
     * Adapter Configuration parameters
     * @var  array
@@ -966,7 +964,7 @@ class httpRequest
 		$this->method = strtoupper( $method );
 		$this->url = $url;
 		$this->setTimeout( $timeout );
-		$this->setHeader( array( 'User-Agent' => $this->user_agent ) );
+		$this->setHeader( array( 'User-Agent' => "Unknown application using phpSmug/" . phpSmug::$version ) );
 
 		// can't use curl's followlocation in safe_mode with open_basedir, so fallback to socket for now
 		if ( function_exists( 'curl_init' ) && ( $this->config['adapter'] == 'curl' )
