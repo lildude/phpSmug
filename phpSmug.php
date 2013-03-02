@@ -6,7 +6,7 @@
  *			 without having to worry about the finer details of the API.
  *
  * @author Colin Seymour <lildood@gmail.com>
- * @version 3.4
+ * @version 3.5
  * @package phpSmug
  * @license GPL 3 {@link http://www.gnu.org/copyleft/gpl.html}
  * @copyright Copyright (c) 2008 Colin Seymour
@@ -54,7 +54,7 @@ class PhpSmugException extends Exception {}
  * @package phpSmug
  **/
 class phpSmug {
-	static $version = '3.4';
+	static $version = '3.5';
 	private $cacheType = FALSE;
 	var $SessionID;
 	var $loginType;
@@ -65,7 +65,6 @@ class phpSmug {
 	var $oauth_token;
 	var $mode;
 	private $secure = false;
-	private $req;
 	private $adapter = 'curl';
 	
 	/**
@@ -656,14 +655,14 @@ class phpSmug {
 		if ( $this->loginType == 'authd' ) {
 			$upload_req->setHeader( 'X-Smug-SessionID', $this->SessionID );
 		} else {
-			$upload_req->setHeader( 'Authorization', 'OAuth realm="http://api.smugmug.com/",
-				oauth_consumer_key="'.$this->APIKey.'",
-				oauth_token="'.$this->oauth_token.'",
-				oauth_signature_method="'.$this->oauth_signature_method.'",
-				oauth_signature="'.urlencode( $sig ).'",
-				oauth_timestamp="'.$this->oauth_timestamp.'",
-				oauth_version="1.0",
-				oauth_nonce="'.$this->oauth_nonce.'"' );
+			$upload_req->setHeader( 'Authorization', 'OAuth realm="http://api.smugmug.com/",'
+				.'oauth_consumer_key="'.$this->APIKey.'",'
+				.'oauth_token="'.$this->oauth_token.'",'
+				.'oauth_signature_method="'.$this->oauth_signature_method.'",'
+				.'oauth_signature="'.urlencode( $sig ).'",'
+				.'oauth_timestamp="'.$this->oauth_timestamp.'",'
+				.'oauth_version="1.0",'
+				.'oauth_nonce="'.$this->oauth_nonce.'"' );
 		}
 			
 		$upload_req->setHeader( array( 'X-Smug-Version' => $this->APIVer,
@@ -672,13 +671,10 @@ class phpSmug {
 									   'X-Smug-Filename'=> basename($args['FileName'] ) ) ); // This is actually optional, but we may as well use what we're given
 		
 		/* Optional Headers */
-		( isset( $args['ImageID'] ) ) ? $upload_req->setHeader( 'X-Smug-ImageID', $args['ImageID'] ) : false;
-		( isset( $args['Caption'] ) ) ? $upload_req->setHeader( 'X-Smug-Caption', $args['Caption'] ) : false;
-		( isset( $args['Keywords'] ) ) ? $upload_req->setHeader( 'X-Smug-Keywords', $args['Keywords'] ) : false;
-		( isset( $args['Latitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Latitude', $args['Latitude'] ) : false;
-		( isset( $args['Longitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Longitude', $args['Longitude'] ) : false;
-		( isset( $args['Altitude'] ) ) ? $upload_req->setHeader( 'X-Smug-Altitude', $args['Altitude'] ) : false;
-		( isset( $args['Hidden'] ) ) ? $upload_req->setHeader( 'X-Smug-Hidden', $args['Hidden'] ) : false;
+		foreach( $args as $arg => $value ) {
+			if ( $arg == 'File' ) continue;
+			$upload_req->setHeader( 'X-Smug-' . $arg, $value );
+		}
 
 		//$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';	// No secure uploads at this time.
 		//$upload_req->setURL( $proto . '://upload.smugmug.com/'.$args['FileName'] );
@@ -806,12 +802,12 @@ class phpSmug {
 	  * @param	mixed		$apiargs The arguments passed to the API method.
 	  * @return string
 	  **/
-	 private function generate_signature( $apicall, $apiargs = NULL )
+	 private function generate_signature( $apicall, $apiargs = NULL, $url = NULL )
 	 {
 		$this->oauth_timestamp = time();
 		$this->oauth_nonce = md5(time() . mt_rand());
 
-		if ( $apicall != 'Upload' ) {
+		if ( !is_null( $apicall ) && $apicall != 'Upload' ) {
 			if ( substr( $apicall,0,8 ) != 'smugmug.' ) {
 				$apicall = 'smugmug.' . $apicall;
 			}
@@ -822,7 +818,9 @@ class phpSmug {
 			$this->oauth_signature_method = 'HMAC-SHA1';
 			$encKey = phpSmug::urlencodeRFC3986( $this->OAuthSecret ) . '&' . phpSmug::urlencodeRFC3986( $this->oauth_token_secret );
 			
-			if ( strpos( $apicall, 'Token' ) || $this->secure && $apicall != 'Upload' ) {
+			if ( is_null( $apicall ) && !is_null( $url ) ) {
+				$endpoint = $url;
+			} else if ( strpos( $apicall, 'Token' ) || $this->secure && $apicall != 'Upload' ) {
 				$endpoint = "https://secure.smugmug.com/services/api/php/{$this->APIVer}/";
 			} else if ( $apicall == 'Upload' ) {
 				//$proto = ( $this->oauth_signature_method == 'PLAINTEXT' || $this->secure ) ? 'https' : 'http';
@@ -832,7 +830,13 @@ class phpSmug {
 				$endpoint = "http://api.smugmug.com/services/api/php/{$this->APIVer}/";
 			}
 			
-			$method = ( $apicall == 'Upload' ) ? 'PUT' : 'POST';
+			if ( is_null( $apicall ) ) {
+				$method = 'GET';
+			} else if ( $apicall == 'Upload' ) {
+				$method = 'PUT';
+			} else {
+				$method = 'POST';
+			}
 			$params = array (
 				'oauth_version'             => '1.0',
 				'oauth_nonce'               => $this->oauth_nonce,
@@ -840,7 +844,7 @@ class phpSmug {
 				'oauth_consumer_key'        => $this->APIKey,
 				'oauth_signature_method'    => $this->oauth_signature_method
 				);
-			if ( $apicall != 'Upload' ) $params = array_merge( $params, array('method' => $apicall ) );
+			if ( !is_null( $apicall ) && $apicall != 'Upload' ) $params = array_merge( $params, array('method' => $apicall ) );
 			$params = ( !empty( $this->oauth_token ) ) ? array_merge( $params, array( 'oauth_token' => $this->oauth_token ) ) : $params;
 			if ( $apicall != 'Upload' ) $params = ( !empty( $apiargs ) ) ? array_merge( $params, $apiargs ) : $params;
 		    $keys = array_map( array( 'phpSmug', 'urlencodeRFC3986' ), array_keys( $params ) );
@@ -885,7 +889,38 @@ class phpSmug {
 		}
 		return $args;
 	  }
-	   
+
+	/**
+	 * Sign the passed resource with the OAuth params.
+	 *
+	 * This essentially generates a signature for the passed URL and returns a
+	 * string with the OAuth parameters and signature appended.
+	 *
+	 * This is very useful for allowing people to display images that are not set
+	 * to allow external view within the gallery's settings on SmugMug.
+	 *
+	 * @param   string		$url The URL to the resource you wish to sign with the  	
+	 * @access  public
+	 * @return  string 		Signed URL
+	 */
+	public function signResource( $url )
+	{
+		if ( $this->OAuthSecret ) {
+			$sig = $this->generate_signature( null, null, $url );
+			$oauth_params = array (
+				'oauth_version'             => '1.0',
+				'oauth_nonce'               => $this->oauth_nonce,
+				'oauth_timestamp'           => $this->oauth_timestamp,
+				'oauth_consumer_key'        => $this->APIKey,
+				'oauth_signature_method'    => $this->oauth_signature_method,
+				'oauth_token'				=> $this->oauth_token,
+				'oauth_signature'           => $sig
+				);
+
+			// Build and return the query string.
+			return $url . '?' . http_build_query( $oauth_params );
+		}
+	}
 }
 
 
@@ -1295,7 +1330,7 @@ class PhpSmugCurlRequestProcessor implements PhpSmugRequestProcessor
 		foreach ( $headers as $k => $v ) {
 			$merged_headers[] = $k . ': ' . $v;
 		}
-
+		
 		$ch = curl_init();
 
 		$options = array(

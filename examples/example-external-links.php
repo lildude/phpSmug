@@ -31,13 +31,18 @@ if (session_id() == "") { @session_start(); }
 <body>
 	<div>
 		<a href="http://phpsmug.com"><img src="phpSmug-logo.png" /></a>
-		<h2>phpSmug OAuth Login Example</h2>
+		<h2>phpSmug External Links Example</h2>
 <?php
 /* Last updated with phpSmug 3.5
  *
  * This example file shows you how authenticate using OAuth and then display
- * images within the first gallery found.  
- * 
+ * images within the first gallery found.  This example is the same as that in
+ * example-oauth.php, with the exception that it signs the image URLs with your
+ * OAuth credentials using "$f->signResource()". See line 91.
+ *
+ * This is how you can display images from galleries that have the 
+ * "External links" gallery setting set to "No".
+ *
  * You'll want to replace:
  * - <API KEY> with one provided by SmugMug: http://www.smugmug.com/hack/apikeys 
  * - <APP NAME/VER (URL)> with your application name, version and URL
@@ -47,7 +52,6 @@ if (session_id() == "") { @session_start(); }
  * allow SmugMug diagnose any issues users may have with your application if
  * they request help on the SmugMug forums.
  *
- * You can see this example in action at http://phpsmug.com/examples/
  */
 require_once( "../phpSmug.php" );
 
@@ -77,13 +81,14 @@ try {
 		// Set the Access token for use by phpSmug.   
 		$f->setToken( "id={$token['Token']['id']}", "Secret={$token['Token']['Secret']}" );
 
-		// Get list of public albums
+		// Get list of albums
 		$albums = $f->albums_get( 'Heavy=True' );	
-		// Get list of public images and other useful information
+		// Get list of images and other useful information from the first gallery returned
 		$images = $f->images_get( "AlbumID={$albums['0']['id']}", "AlbumKey={$albums['0']['Key']}", "Heavy=1" );
-		// Display the thumbnails and link to the Album page for each image
+		// Display the thumbnails and link to the Album page for each image.
+		// Each image is signed with your OAuth credentials.
 		foreach ( $images['Images'] as $image ) {
-			echo '<a href="'.$image['URL'].'"><img src="'.$image['TinyURL'].'" title="'.$image['Caption'].'" alt="'.$image['id'].'" /></a>';
+			echo '<a href="'.$image['URL'].'"><img src="'.$f->signResource( $image['TinyURL'] ).'" title="'.$image['Caption'].'" alt="'.$image['id'].'" /></a>';
 		}
 	}
 }
