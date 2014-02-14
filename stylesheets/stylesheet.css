@@ -51,7 +51,8 @@ body {
   font-size: 15px;
   line-height: 1.5;
   /* background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;*/
-  background: #fff url(http://www.chrishuntphoto.com/photos/i-tfVDJzj/1/X3/i-tfVDJzj-X3.jpg) center center no-repeat fixed;
+  /* background: #fff url(http://www.chrishuntphoto.com/photos/i-tfVDJzj/1/X3/i-tfVDJzj-X3.jpg) center center no-repeat fixed; */
+  background: #fff url(http://www.chrishuntphoto.com/photos/i-QDnV7ZD/1/X3/i-QDnV7ZD-X3.jpg) 0 0 no-repeat fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
