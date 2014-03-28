@@ -1,0 +1,12 @@
+{% include header.html %}
+<div class="main_content">
+  <div class="row">
+    <div class="col-md-9 docs">
+      {{ content }}
+    </div>
+    {% include docs-nav.html %}
+  </div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="{{ site.baseurl }}/js/bootstrap.min.js"></script>
+{% include footer.html %}
