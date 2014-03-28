@@ -1,30 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
+		<meta charset='utf-8'>
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<meta name="description" content="{{ page.description }}">
-		<meta name="keywords" content="PHP, API, SmugMug, photography, application, website, XML">
-		<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/stylesheets/stylesheet.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/stylesheets/pygment_trac.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/stylesheets/print.css" media="print" />
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/style.css">
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="{{ site.baseurl }}/css/fontawesome.css">
 
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-
-		<title>{{ page.title }}</title>
-		{% include analytics.html %}
+		<title>{{ site.name }} &middot; {% if page.url == '/index.html' %}{{ site.description }}{% else %}{{ page.title }}{% endif %}</title>
+	{% include analytics.html %}
 	</head>
 
-	<body>
-		<header>
-			<div class="inner">
-				<h1>phpSmug</h1>
-				<h2>A PHP wrapper class for the SmugMug API</h2>
+<body class="top" data-spy="scroll" data-target="#sidebar">
+		<div class="container">
+			<div class="header clearfix">
+				<a href="{{ site.baseurl }}"><h1 class="text-muted">{{ site.name }}</h1></a>
+				<ul class="nav nav-pills main-nav pull-right">
+					{% for tab in site.navigation %}
+						{% assign url = page.url | remove:'index.html' %}
+						{% if url == tab.url %}
+					<li class="active"><a href="{{ site.baseurl }}{{ tab.url }}">{{ tab.title }}</a></li>
+						{% else %}
+					<li><a href="{{ site.baseurl }}{{ tab.url }}">{{ tab.title }}</a></li>
+						{% endif %}
+					{% endfor %}
+				</ul>
 			</div>
-		</header>
-
-		<div id="content-wrapper">
-			<div class="inner clearfix">
-				<section id="main-content">
