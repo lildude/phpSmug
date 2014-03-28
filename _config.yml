@@ -6,6 +6,7 @@ timezone:      Europe/London
 encoding:      UTF-8
 baseurl:       /phpSmug
 permalink:     /news/:title/
+latest_version: 3.5
 gems:
   - jemoji
 markdown:      kramdown
