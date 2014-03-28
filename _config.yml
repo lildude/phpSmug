@@ -1,3 +1,26 @@
-timezone: Europe/London
-encoding: UTF-8
-baseurl: /phpSmug
+name:          phpSmug
+domain:        phpsmug.com    # This is used by the Analytics tracking code
+description:   PHP wrapper for the SmugMug API
+analytics_id:  UA-118457-4
+timezone:      Europe/London
+encoding:      UTF-8
+baseurl:       /phpSmug
+permalink:     /news/:title/
+gems:
+  - jemoji
+markdown:      kramdown
+kramdown:
+  input: GFM
+
+# Hard code our nav here to keep things in order and precisely as we want
+navigation:
+  - title: Overview
+    url: /
+  - title: Documentation
+    url: /docs/
+  - title: Download
+    url: /download/
+  - title: News
+    url: /news/
+  - title: About
+    url: /about/
