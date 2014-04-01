@@ -28,14 +28,14 @@ h1 {
 }
 
 .header h1 {
-  background: transparent url('../images/phpSmug-logo.png') no-repeat scroll 0 -5px;
+  background: transparent url('../images/phpSmug-logo.svg') no-repeat scroll 0 0;
   text-indent: -9999px;
-  height: 68px;
+  height: 87px;
   margin-top: 0;
   padding-top: 0;
   display: inline-block;
-  margin-left: -60px;
-  width: 235px;
+  margin-left: 0;
+  width: 260px;
 }
 
 .header a:hover { color: #690; }

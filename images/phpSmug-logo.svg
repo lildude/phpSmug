@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="260px" height="87px" viewBox="0 0 260 87" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>phpSmug-logo</title>
+    <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="phpSmug-logo" sketch:type="MSLayerGroup" transform="translate(-4.000000, -13.000000)">
+            <text id="PHP-wrapper-for-the-SmugMug-API" sketch:type="MSTextLayer" font-family="OfficinaSansWinCTT" font-size="17.3271298" font-weight="bold" letter-spacing="-1.21289906" fill="#000000">
+                <tspan x="23.1143911" y="95.175357">php wrapper for the SmugMug API</tspan>
+            </text>
+            <text id="g" sketch:type="MSTextLayer" font-family="OfficinaSansWinCTT" font-size="72.1963741" font-weight="bold" letter-spacing="-5.05374618" fill="#000000">
+                <tspan x="228.976937" y="65.2406546">g</tspan>
+            </text>
+            <text id="phpSm" sketch:type="MSTextLayer" font-family="OfficinaSansWinCTT" font-size="72.1963741" font-weight="bold" letter-spacing="-5.05374618" fill="#000000">
+                <tspan x="0" y="65">phpSm</tspan>
+            </text>
+            <path d="M196.947635,25.5784497 C201.524929,25.5086832 203.718684,22.8202641 203.425969,20.3763491 C203.181504,18.3335106 201.200047,16.460748 197.422091,16.4300443 C194.309981,16.4052885 192.278666,18.7085454 191.973084,21.0097126 C191.665894,23.3239006 193.105345,25.6364812 196.947635,25.5784497" id="Fill-10-copy" fill="#75B543" sketch:type="MSShapeGroup"></path>
+            <path d="M219.866271,25.0079403 C224.258607,24.7587744 226.178948,22.5646682 226.206289,20.3726518 C226.236848,17.9010873 223.862959,15.4317734 219.914521,15.751831 C216.749336,16.0088737 214.896546,18.1920487 214.615089,20.375063 C214.303074,22.8024206 215.935524,25.2302605 219.866271,25.0079403" id="Fill-12-copy" fill="#75B543" sketch:type="MSShapeGroup"></path>
+            <path d="M202.928997,60.3637701 C187.109509,60.3637701 189.271098,41.5638051 191.932876,41.4564227 C210.319252,40.716159 215.025212,39.9562835 221.582354,39.9562835 C228.250471,39.9562835 215.555959,60.3637701 202.928997,60.3637701 L202.928997,60.3637701 L202.928997,60.3637701 Z M222.667974,34.7725086 C211.708845,35.8754292 211.173272,35.9839369 191.014523,36.4486714 C182.512915,36.4848406 184.323889,65.5568686 202.475449,65.5568686 C219.763338,65.5568686 240.620101,32.9659759 222.667974,34.7725086 L222.667974,34.7725086 L222.667974,34.7725086 Z" id="Fill-13-copy" fill="#75B543" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>
