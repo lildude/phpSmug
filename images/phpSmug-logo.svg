@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="260px" height="87px" viewBox="0 0 260 87" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+<svg width="260px" height="68px" viewBox="0 0 260 68" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
     <title>phpSmug-logo</title>
     <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
         <g id="phpSmug-logo" sketch:type="MSLayerGroup" transform="translate(-4.000000, -13.000000)">
-            <text id="PHP-wrapper-for-the-SmugMug-API" sketch:type="MSTextLayer" font-family="OfficinaSansWinCTT" font-size="17.3271298" font-weight="bold" letter-spacing="-1.21289906" fill="#000000">
-                <tspan x="23.1143911" y="95.175357">php wrapper for the SmugMug API</tspan>
-            </text>
             <text id="g" sketch:type="MSTextLayer" font-family="OfficinaSansWinCTT" font-size="72.1963741" font-weight="bold" letter-spacing="-5.05374618" fill="#000000">
                 <tspan x="228.976937" y="65.2406546">g</tspan>
             </text>
