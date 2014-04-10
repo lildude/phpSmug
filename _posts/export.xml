@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <generator uri="http://www.habariproject.org/" version="0.10-alpha">Habari</generator>
+  <id>tag:phpsmug.com,2014-04-08:atom/7f5567b874fdbb937453f2dda5241676bcb321a0</id>
+  <title>phpSmug</title>
+  <subtitle>PHP Wrapper for the SmugMug API</subtitle>
+  <updated>2012-07-04T09:54:54+01:00</updated>
+  <link rel="alternate" href="http://phpsmug.com/"/>
+  <link rel="self" href="http://phpsmug.com/atom/1"/>
+
+<entry>
+    <title>#phpSmug On Twitter</title>
+    <link rel="alternate" href="http://phpsmug.com/news/phpsmug-on-twitter"/>
+    <link rel="edit" href="http://phpsmug.com/phpsmug-on-twitter/atom"/>
+    <author>
+      <name>Colin</name>
+      <uri>http://phpsmug.com</uri>
+    </author>
+    <id>tag:phpsmug.com,2012:phpsmug-on-twitter/1341392080</id>
+    <updated>2012-07-04T09:54:54+01:00</updated>
+    <app:edited xmlns:app="http://www.w3.org/2007/app">2012-07-04T09:57:13+01:00</app:edited>
+    <published>2012-07-04T09:51:54+01:00</published>
+    <category term="twitter"/>
+    <content type="html">&lt;p&gt;Need a quick bit of help, have a quick question, want to show off your app using phpSmug or just want to say thanks for phpSmug?  Please feel free to do so on Twitter using the #phpSmug hash tag.  There's a button on the sidebar too to help you :-)&lt;/p&gt;&lt;p&gt;Provided I'm not on holiday, I'll normally respond, if necessary within a couple of hours of your tweet - normally minutes if during UK business hours :-)&lt;/p&gt;</content></entry>
+<entry><title>phpSmug Now on GitHub</title><link rel="alternate" href="http://phpsmug.com/news/phpsmug-now-on-github"/><link rel="edit" href="http://phpsmug.com/phpsmug-now-on-github/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2011:phpsmug-now-on-github/1310295496</id><updated>2011-07-10T12:00:27+01:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2011-07-10T12:00:27+01:00</app:edited><published>2011-07-10T12:00:27+01:00</published><category term="phpsmug"/><category term="git"/><category term="github"/><content type="html">&lt;p&gt;Well, finally the day has come for me to put the phpSmug source code onto a public repository.&lt;/p&gt;&lt;p&gt;I've just spent the morning converting my internal Mercurial repo to a Git repo and uploading to &lt;a href="http://github.com" target="_blank"&gt;GitHub&lt;/a&gt;.  I have also manually transferred all the bugs logged to GitHub and now the &lt;a href="/bugs"&gt;Current Issues&lt;/a&gt; page pulls in the bugs from the &lt;a href="https://github.com/lildude/phpSmug/issues" target="_blank"&gt;issues on GitHub&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;So with &lt;a href="https://github.com/lildude/phpSmug" target="_blank"&gt;phpSmug out on GitHub&lt;/a&gt;, please feel free to log issues on GitHub or fork the code and submit your changes via pull requests.&lt;/p&gt;</content></entry>
+<entry><title>New Release: phpSmug 3.4</title><link rel="alternate" href="http://phpsmug.com/news/new-release-phpsmug-34"/><link rel="edit" href="http://phpsmug.com/new-release-phpsmug-34/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2011:new-release-phpsmug-34/1308652893</id><updated>2011-06-21T11:42:02+01:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2011-06-21T11:42:02+01:00</app:edited><published>2011-06-21T11:42:02+01:00</published><category term="update"/><content type="html">&lt;p&gt;Only a single small change in phpSmug 3.4: phpSmug was neglecting to set the appropriate "hidden" upload header when uploading photos that should be marked as hidden. phpSmug 3.4 now resolves this and "hidden" uploads should now show up as hidden when they arrive on SmugMug.&lt;/p&gt;&lt;p&gt;This resolves ticket &lt;a href="http://phpsmug.com/bugs#12" target="_blank"&gt;#12&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;phpSmug 3.4 is now available from the &lt;a href="http://phpsmug.com/download" target="_blank"&gt;download&lt;/a&gt; page.&lt;/p&gt;</content></entry>
+<entry><title>New Release: phpSmug 3.3</title><link rel="alternate" href="http://phpsmug.com/news/new-release-phpsmug-33"/><link rel="edit" href="http://phpsmug.com/new-release-phpsmug-33/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2011:new-release-phpsmug-33/1307183519</id><updated>2011-06-04T11:34:24+01:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2011-06-04T11:34:24+01:00</app:edited><published>2011-06-04T11:34:24+01:00</published><category term="update"/><content type="html">&lt;p&gt;Well, hot on the heels of phpSmug 3.2 comes phpSmug 3.3.&lt;/p&gt;&lt;p&gt;For a long time now, I've been working around what I thought was an undocumented change in the way the API was handling the boolean literal FALSE and empty strings.  My workaround seemed to work well for boolean literals, but fell apart when an empty string value was passed to the API, like when unsetting an album's password, as Anthony Humes discovered and from which I created ticket &lt;a href="http://phpsmug.com/bugs#11"&gt;#11&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Well, after a bit of digging I discovered the problem was NOT with the API, but rather the way PHP's &lt;code&gt;implode()&lt;/code&gt; and &lt;code&gt;http_build_query()&lt;/code&gt; functions handle associative arrays with empty values. &lt;code&gt;implode()&lt;/code&gt; seems to completely ignore the empty value when imploding and &lt;code&gt;http_build_query()&lt;/code&gt; converts the empty value to a 0. Neither of which were desired behaviours and both of which I didn't notice until now.&lt;/p&gt;&lt;p&gt;phpSmug was using both of these methods in different places to effectively come to the same result - concat the keys and values into a single string for the POST data and for calculating the signature.&lt;/p&gt;&lt;p&gt;I have now fixed this by implemented a different method of reliably concatting the keys and values for submission to the API endpoint and for the signature calculation.  The result of this is now 0, an empty string and the boolean literal FALSE all equate to FALSE and works with the API.  Empty string values are now also correctly handled so doing things like unsetting passwords will now work too.&lt;/p&gt;&lt;p&gt;phpSmug 3.3 is now available from the &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; page.&lt;/p&gt;</content></entry>
+<entry><title>New Release: phpSmug 3.2</title><link rel="alternate" href="http://phpsmug.com/news/new-release-phpsmug-32"/><link rel="edit" href="http://phpsmug.com/new-release-phpsmug-32/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2011:new-release-phpsmug-32/1306747924</id><updated>2011-05-30T10:33:48+01:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2011-05-30T10:33:48+01:00</app:edited><published>2011-05-30T10:33:48+01:00</published><category term="update"/><content type="html">&lt;p&gt;Ladies and gentlemen, phpSmug 3.2 is now available for you.&lt;/p&gt;&lt;p&gt;Once again, this is a minor release and features a few "behind the scenes" changes and fixes which do not change the functionality. phpSmug should now work properly with the 1.3.0 API endpoint. I've also added the ability to force all API communication, except for uploads, to occur over HTTPS if you use OAuth for authentication. SmugMug are encouraging people away from using basic login authentication in favour of OAuth (the 1.3.0 endpoint has no support for basic authentication) so accordingly, I have not implemented the "secure only" functionality for basic authentication. I may add it at a later date if there is the demand for it.&lt;/p&gt;&lt;p&gt;The changelog entry for phpSmug 3.2 is...&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;Improved support for the 1.3.0 API endpoint (Ticket #10)&lt;/li&gt;
+&lt;li&gt;Implemented the ability to force all API communication to occur securely over HTTPS. OAuth Only. (Ticket #9)&lt;/li&gt;
+&lt;li&gt;phpSmug now uses the documented secure.smugmug.com API endpoints (Ticket #8)&lt;/li&gt;
+&lt;li&gt;Updated OAuth example to use new Album URL and to remove its use of the deprecated session_unregister() PHP function.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;phpSmug 3.2 is now available from the &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; page.&lt;/p&gt;
+    </content>
+    </entry>
+
+<entry>
+      <title>New Release: phpSmug 3.1</title>
+      <link rel="alternate" href="http://phpsmug.com/news/new-release-phpsmug-31"/>
+      <link rel="edit" href="http://phpsmug.com/new-release-phpsmug-31/atom"/>
+      <author>
+        <name>Colin</name>
+        <uri>http://phpsmug.com</uri>
+      </author>
+      <id>tag:phpsmug.com,2011:new-release-phpsmug-31/1301326959</id>
+      <updated>2011-03-28T16:42:40+01:00</updated>
+      <app:edited xmlns:app="http://www.w3.org/2007/app">2011-03-28T16:43:27+01:00</app:edited>
+      <published>2011-03-28T16:42:39+01:00</published>
+      <category term="update"/>
+      <content type="html">&lt;p&gt;Time for another update of phpSmug.  I've just made phpSmug 3.1 available.&lt;/p&gt;&lt;p&gt;This is only a minor update which features a few "behind the scenes" changes and fixes which do not change the functionality. The only thing that may appear to change functionality is the default API endpoint is now 1.2.2 instead of 1.2.0. All earlier endpoints are still available, but technically deprecated by SmugMug.&lt;/p&gt;&lt;p&gt;For the curious, the exact changes from the change log are:&lt;/p&gt;
+        &lt;ul&gt;
+&lt;li&gt;phpSmug now defaults to using the 1.2.2 API endpoint. All earlier endpoints are still available, but technically deprecated by SmugMug.&lt;/li&gt;
+&lt;li&gt;Removed erroneous re-instantiation of processor when setting adapter.&lt;/li&gt;
+&lt;li&gt;Corrected check for safe_dir OR open_basedir so fails over to socket connection correctly&lt;/li&gt;
+&lt;li&gt;Improved connection settings&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;phpSmug 3.1 is now available from the &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; page.&lt;/p&gt;
+      </content>
+    </entry>
+
+<entry>
+      <title>SmugMug Needs Your Help</title>
+      <link rel="alternate" href="http://phpsmug.com/news/smugmug-needs-your-help"/>
+      <link rel="edit" href="http://phpsmug.com/smugmug-needs-your-help/atom"/>
+      <author><name>Colin</name><uri>http://phpsmug.com</uri></author>
+      <id>tag:phpsmug.com,2011:smugmug-needs-your-help/1294841448</id>
+      <updated>2011-01-12T14:20:06+00:00</updated>
+      <app:edited xmlns:app="http://www.w3.org/2007/app">2011-01-12T14:20:06+00:00</app:edited>
+      <published>2011-01-12T14:20:06+00:00</published>
+      <category term="smugmug"/>
+      <category term="stackexchange"/>
+      <category term="qa"/>
+      <category term="help"/>
+      <content type="html">&lt;p&gt;I've been slacking a bit on the&lt;a href="http://www.dgrin.com/forumdisplay.php?f=25" target="_blank"&gt; SmugMug DGrin API forum&lt;/a&gt;, but I popped by today and noticed a &lt;a href="http://www.dgrin.com/showthread.php?s=96c46b931a01480cf381d2abe982bb37&amp;amp;t=185872" target="_blank"&gt;call for help&lt;/a&gt; from Don MacAskill ...&lt;/p&gt;&lt;blockquote&gt;&lt;p&gt;We're seriously revamping the way we handle the API, support, announcements, and discussions around it. It's become a very important part of what SmugMug does, and our developers (that's you!) are super important.&lt;/p&gt;&lt;p&gt;As part of that, we're trying to set up a StackExchange site and could use your help, especially if you use StackOverflow, but any and all help helps. :)&lt;/p&gt;&lt;p&gt;Please read my blog post about StackExchange here: &lt;a href="http://don.blogs.smugmug.com/2010/12/15/my-love-affair-with-stackexchange-and-a-plea-for-help/" target="_blank"&gt;http://don.blogs.smugmug.com/2010/12/15/my-love-affair-with-stackexchange-and-a-plea-for-help/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;And thanks in advance for your help! More to come about the way we're going to handle announcements, improvements, end-of-life, etc, as we continue to think about it internally. &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Essentially, SmugMug want to start using &lt;a href="http://stackexchange.com/" target="_blank"&gt;StackExchange&lt;/a&gt; for hosting Q&amp;A and other useful information for users and devlopers, but in order to even get considered for a beta, they need 100% &lt;a href="http://goo.gl/QJ3Bp&amp;quot;" target="_blank"&gt;commitment&lt;/a&gt; from people to say they will use the SmugMug Q&amp;A on StackExchange.&lt;/p&gt;&lt;p&gt;If you've ever used &lt;a href="http://stackoverflow.com/" target="_blank"&gt;StackOverflow&lt;/a&gt; or other stack sites, you'll know what a great resource this is and how useful this can be for everyone, so please head on over to &lt;a href="http://goo.gl/QJ3Bp" target="_blank"&gt;StackExchange&lt;/a&gt;, hit &#x2018;Commit&#x2019;, fill in your details (your SmugMug URL works as an OpenID!), and then click the link in the email they&#x2019;ll send you.&lt;/p&gt;&lt;p&gt;The more commits they get, the quicker they'll get to start the beta phase.&lt;/p&gt;
+      </content>
+    </entry>
+
+<entry>
+      <title>New Release: phpSmug 3.0</title>
+      <link rel="alternate" href="http://phpsmug.com/news/phpsmug-30"/>
+      <link rel="edit" href="http://phpsmug.com/phpsmug-30/atom"/>
+      <author><name>Colin</name><uri>http://phpsmug.com</uri></author>
+      <id>tag:phpsmug.com,2010:new-release-phpsmug-30/1289733328</id>
+      <updated>2010-11-14T11:26:43+00:00</updated>
+      <app:edited xmlns:app="http://www.w3.org/2007/app">2010-11-14T11:26:43+00:00</app:edited>
+      <published>2010-11-14T11:26:43+00:00</published>
+      <category term="release"/>
+      <category term="phpsmug"/>
+      <category term="update"/>
+      <content type="html">&lt;p&gt;After a long delay, with a known bug (&lt;a href="http://phpsmug.com/bugs#7"&gt;Ticket #7&lt;/a&gt;) floating around in phpSmug 2.2, I've finally pushed phpSmug 3.0 out the door.&lt;/p&gt;
+        &lt;p&gt;The primary delay has been due to a major rewrite of a large portion of the backend code.  I've removed the dependency on PEAR for the out-the-box phpSmug.  I've removed this dependency because the code I was using was outdated and the newer versions of the various modules were quite unreliable.  I also wasn't too happy with these modules still offering PHP 4 support when PHP 4 has been EOL'd for so long either.&lt;/p&gt;
+        &lt;p&gt;PEAR isn't completely written off.  phpSmug still uses PEAR's MDB2 modules for those who wish to use database caching.  As this is an optional dependency - filesystem caching doesn't need PEAR - phpSmug no longer ships with any PEAR modules.  If you want this functionality, you need to install the modules yourself.  The &lt;a href="http://phpsmug.com/docs"&gt;documentation details&lt;/a&gt; this too.&lt;/p&gt;
+        &lt;p&gt;Along with this major update, a few other things have changed:&lt;/p&gt;
+        &lt;ul&gt;
+&lt;li&gt;The removal of the dependency on PEAR now gives developers the opportunity to select a preferred transport mechanism, or adapter: Curl or sockets.  phpSmug defaults to using Curl, but will gracefully fallback to sockets in the event Curl isn't available.&lt;/li&gt;
+&lt;li&gt;More specific exceptions are thrown so developers can easily identify which part of the code is throwing the exception. The exceptions now thrown are PhpSmugException, HttpRequestException and CurlRequestProcessorException or SocketRequestProcessorException.&lt;/li&gt;
+&lt;li&gt;phpSmug is now PHP 5 E_STRICT compliant, which finally resolves &lt;a href="http://phpsmug.com/bugs#2"&gt;Ticket #2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;I've fixed the problem with the OAuth token not being set correctly in phpSmug 2.2 (&lt;a href="http://phpsmug.com/bugs#7"&gt;Ticket #7&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;phpSmug is now licensed under the &lt;a href="http://www.gnu.org/copyleft/gpl.html" target="_blank"&gt;GPLv3&lt;/a&gt; instead of the LGPL.&lt;/li&gt;
+&lt;li&gt;The underlying phpSmug code is now better formatted, documented and laid out making it easier to follow. My backend code generation and testing is also more streamlined so it's easier for me to update and test changes, which should mean it won't take so long to release fixes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And last but not least, I've moved phpsmug.com to a new host and given the site a slightly different look.  It's not a major change, but it's there.&lt;/p&gt;
+&lt;p&gt;phpSmug 3.0 is now available on the &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; page.&lt;/p&gt;
+&lt;p&gt;If you spot any issues, let me know. Oh and don't forget to drop me a line if you have a product that uses phpSmug that could do with a bit of free advertising.&lt;/p&gt;
+</content>
+</entry>
+
+<entry>
+  <title>New Release: phpSmug 2.2 </title>
+  <link rel="alternate" href="http://phpsmug.com/news/phpsmug-22"/>
+  <link rel="edit" href="http://phpsmug.com/phpsmug-22/atom"/>
+  <author><name>Colin</name><uri>http://phpsmug.com</uri></author>
+  <id/><updated>2010-07-21T15:18:16+01:00</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2010-07-21T15:18:47+01:00</app:edited>
+  <published>2010-07-21T15:18:16+01:00</published>
+  <content type="html">&lt;p&gt;It's been a while since I last released an update to phpSmug, but rest assured I've not forgotten phpSmug and have actually been working on some of the behind-the-scenes stuff.  Most of the work I've been doing has been on building a test suite for my own purposes so I can thoroughly test phpSmug with ease.&lt;/p&gt;&lt;p&gt;This is list of the changes you as a developer/user may notice (taken from the README.txt):&lt;/p&gt;&lt;ul&gt;
+        &lt;li&gt;https if forced for all calls that use OAuth with the PLAINTEXT signature method. WARNING: Uploads are however rejected by the API if you use PLAINTEXT (which is NOT the default).&lt;/li&gt;
+        &lt;li&gt;Failed upload responses and smugmug.auth.* method responses are no longer cached.&lt;/li&gt;
+        &lt;li&gt;Upload filenames are now encoded to ensure spaces and non-ascii characters are correctly handled.&lt;/li&gt;
+        &lt;li&gt;images_upload() now honours any earlier setProxy() calls so uploads can occur through that proxy.&lt;/li&gt;
+        &lt;li&gt;clearCache() now takes a boolean argument to state whether you want the cache location to be removed when the cache is cleared. Default is FALSE, ie the cache location will NOT be removed&lt;/li&gt;
+        &lt;li&gt;Added methods to handle calling of the various login.* methods offered by the API when using these instead of the single login() method offered by phpSmug. (&lt;a href="http://phpsmug.com/bugs#6"&gt;Ticket #6&lt;/a&gt;)&lt;/li&gt;
+        &lt;li&gt;For my own benefit, I've now implemented a full PHPUnit test suite that checks all functionality of phpSmug.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;phpSmug 2.2 is now available on the &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; page.&lt;/p&gt;&lt;p&gt;Given the relative silence from users, I'd say not many people have encountered these or they're easily found a workaround.&lt;/p&gt;&lt;p&gt;If you spot any issues, let me know.  Oh and don't forget to drop me a line if you have a product that uses phpSmug that could do with a bit of free advertising.&lt;/p&gt;
+</content>
+</entry>
+
+<entry><title>New Release: phpSmug 2.1</title><link rel="alternate" href="http://phpsmug.com/news/phpsmug-21"/><link rel="edit" href="http://phpsmug.com/phpsmug-21/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2009:new-release-phpsmug-21/1254047907</id><updated>2009-09-27T11:52:29+01:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2009-09-27T11:53:29+01:00</app:edited><published>2009-09-27T11:52:29+01:00</published><category term="release"/><category term="bug"/><category term="fix"/><category term="major"/><content type="html">&lt;p&gt;Time for a relatively major update that primarily fixes uploading and caching.&lt;/p&gt;&lt;p&gt;SmugMug have enforced the use of upload.smugmug.com for all uploads.  All earlier releases of phpSmug uploaded to api.smugmug.com, and whilst this worked, apparently SmugMug were having problems with people using this endpoint for uploads, so they've now forced people to use the correct url :-) (&lt;a href="http://phpsmug.com/bugs#5"&gt;Ticket #5&lt;/a&gt;).&lt;/p&gt;&lt;p&gt;Other changes in this release include fixing a problem spotted with caching - data was being re-cached everytime a method call was called, even if the data was read from the cache in the first place. (&lt;a href="http://phpsmug.com/bugs#4"&gt;Ticket #4&lt;/a&gt;)&lt;/p&gt;&lt;p&gt;phpSmug now also stores SmugMug's mode in the $obj-&amp;gt;mode object variable for easy checking of SmugMug's status.  This variable is only populated if SmugMug is in read-only mode.&lt;/p&gt;&lt;p&gt;I also fixed the "login with hash" example in the README file.&lt;/p&gt;&lt;p&gt;phpSmug 2.1 is now available on the &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; page.&lt;/p&gt;</content></entry>
+<entry><title>New Release: phpSmug 2.0.2</title><link rel="alternate" href="http://phpsmug.com/news/new-release-phpsmug-202"/><link rel="edit" href="http://phpsmug.com/new-release-phpsmug-202/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2009:new-release-phpsmug-202/1235300007</id><updated>2009-02-22T10:53:32+00:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2009-02-22T10:53:32+00:00</app:edited><published>2009-02-22T10:48:04+00:00</published><category term="release"/><category term="bug"/><category term="fix"/><category term="minor"/><content type="html">&lt;p&gt;Just a small minor update to phpSmug that resolves the over zealous &lt;a href="http://phpsmug.com/clearcache-is-over-zealous"&gt;clearCache()&lt;/a&gt; (&lt;a href="http://phpsmug.com/bugs#3"&gt;Ticket #3&lt;/a&gt;) and some code tidying to get phpSmug a bit closer to being E_STRICT "compliant" (&lt;a href="http://phpsmug.com/bugs#2"&gt;Ticket #2&lt;/a&gt;).  Sadly we're still tied by PEAR for full compliance, bit for the moment all the code I have control over works with E_STRICT.&lt;/p&gt;&lt;p&gt;As usual, it's available for download from the &lt;a href="http://phpsmug.com/download"&gt;download page&lt;/a&gt;.&lt;/p&gt;</content></entry>
+<entry><title>clearCache() is Over Zealous</title><link rel="alternate" href="http://phpsmug.com/news/clearcache-is-over-zealous"/><link rel="edit" href="http://phpsmug.com/clearcache-is-over-zealous/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2008:clearcache-is-over-zealous/1227188844</id><updated>2008-11-20T13:47:24+00:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2008-11-20T13:55:41+00:00</app:edited><published>2008-11-20T13:41:23+00:00</published><category term="bug"/><category term="cache"/><category term="filesystem"/><content type="html">&lt;p&gt;I've just found another bug (&lt;a href="http://phpsmug.com/bugs#3"&gt;#3 logged&lt;/a&gt;) in phpSmug that you should be aware of.  The clearCache() function is over zealous when using the filesystem as the cache location.  The function deletes ALL files in the specified directory, not just it's own.&lt;/p&gt;&lt;p&gt;This isn't a problem if you've specified a unique directory for caching, but if you're using a shared caching directory, like you may do if including phpSmug in an application, then all the cache files are removed.&lt;/p&gt;&lt;p&gt;In order to rectify this, I'm going to have to change the caching filename or directory scheme to uniquely identify the phpSmug specific cache files so phpSmug can quickly and easily identify them when clearing the cache.&lt;/p&gt;&lt;p&gt;I'm considering changing phpSmug such that it creates it's own dedicated directory in the location specified in the enableCache() method call.  The DB caching method creates it's own table, so it only makes sense that the FS method creates it's own directory.&lt;/p&gt;&lt;p&gt;This bug does not affect database caching as phpSmug creates it's own table for the cache entries.&lt;/p&gt;&lt;p&gt;I'll fix this in the next release.&lt;/p&gt;
+</content>
+</entry>
+
+<entry><title>phpSmug and PEAR Module Instantiation with PHP5 and E_STRICT</title>
+<link rel="alternate" href="http://phpsmug.com/news/phpsmug-and-pear-module-instantiation-with-php5-and-e_strict"/>
+<link rel="edit" href="http://phpsmug.com/phpsmug-and-pear-module-instantiation-with-php5-and-e_strict/atom"/>
+<author><name>Colin</name><uri>http://phpsmug.com</uri></author>
+<id>tag:phpsmug.com,2008:phpsmug-and-pear-module-instantiation-with-php5/1226223698</id>
+<updated>2008-11-09T10:55:55+00:00</updated>
+<app:edited xmlns:app="http://www.w3.org/2007/app">2008-11-09T10:55:55+00:00</app:edited>
+<published>2008-11-09T09:45:01+00:00</published>
+<category term="php5"/>
+<category term="class"/>
+<category term="instantiation"/>
+<category term="error"/>
+<category term="e_strict"/>
+<content type="html">
+&lt;p&gt;I'm in the process of creating a project using my phpSmug class and I've discovered I'm not quite 100% PHP5 E_STRICT compliant in two locations in the way I instantiate new PEAR objects:&lt;/p&gt;
+&lt;pre&gt;
+105         $this-&gt;req = new HTTP_Request();
+[...]
+472         $upload_req = new HTTP_Request();
+&lt;/pre&gt;
+&lt;p&gt;(105 and 472 are the line numbers.)&lt;/p&gt;
+&lt;p&gt;This instantiation by reference is going to result in errors similar to:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;PHP Fatal error:  Class '&amp;lt;CLASSNAME&amp;gt;' not found in /path/to/file.php on line ###&lt;/code&gt;&lt;/p&gt;&lt;p&gt;... where &amp;lt;CLASSNAME&amp;gt; will possibly be a class that isn't even supplied as part of phpSmug and line ### will be the line in which the class has been instantiated using the "&lt;code&gt;=&amp; new&lt;/code&gt;" code.&lt;/p&gt;&lt;p&gt;There's no need to instantiate by reference anymore in PHP5.  PHP5 will actually throw the above error as it's ambiguous.  Now this is easy enough for me to fix in the files I ship (which I'll do in the next release), however it's more of a challenge to correct the files I have no control over, like PEAR modules.&lt;/p&gt;
+&lt;p&gt;Unfortunately, PEAR has (had? - the &lt;a href="http://pear.php.net/pepr/pepr-proposal-show.php?id=419"&gt;source&lt;/a&gt; seems quite old) a backward compatibility requirement which unfortunately includes the requirement of instantiating objects by reference to keep PHP4 happy. PHP4 is now EOL, so maybe that requirement has been dropped.&lt;/p&gt;
+&lt;p&gt;I'm going to need to do some research to see how I can resolve this.  This may mean forcing the use of the classes supplied with phpSmug ahead of those supplied by your ISP/system. I provide these only for convenience at the moment, but I may need to change that to "necessity".&lt;/p&gt;
+&lt;p&gt;If you encounter a similar situation, you can resolve the issue by replacing all instances of "&lt;code&gt;=&amp; new&lt;/code&gt;" with "&lt;code&gt;= new&lt;/code&gt;" when objects are being instantiated.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: It looks like this is only when E_STRICT error reporting is set.  Lowering the level allows things to work as expected. Ticket #2 logged to get phpSmug E_STRICT compliant.&lt;/p&gt;
+</content>
+</entry>
+
+<entry><title>New Release: phpSmug 2.0.1</title><link rel="alternate" href="http://phpsmug.com/news/phpsmug-2-0-1"/><link rel="edit" href="http://phpsmug.com/phpsmug-2-0-1/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2008:phpsmug-2-0-1/1226076439</id><updated>2008-11-07T16:47:19+00:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2008-11-07T16:49:07+00:00</app:edited><published>2008-11-07T16:49:07+00:00</published><category term="release"/><category term="bug"/><category term="fix"/><category term="minor"/><content type="html">&lt;p&gt;Thanks to &lt;a href="http://phpsmug.com/phpsmug-2-0#comment-6"&gt;MVA for pointing&lt;/a&gt; out a rather silly mistake I made in phpSmug 2.0 - I wasn't passing the error code correctly to Exception() on line 350 (Ticket #1).&lt;/p&gt;&lt;p&gt;As this involves something quite crucial, I've released a minor update to rectify this.  This is now available for &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt; now.&lt;/p&gt;</content></entry>
+<entry><title>New Release: phpSmug 2.0</title><link rel="alternate" href="http://phpsmug.com/news/phpsmug-2-0"/><link rel="edit" href="http://phpsmug.com/phpsmug-2-0/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2008:phpsmug-2-0/1225393746</id><updated>2008-10-30T19:09:06+00:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2008-11-20T14:21:56+00:00</app:edited><published>2008-10-31T16:52:13+00:00</published><category term="release"/><category term="20"/><content type="html">&lt;p&gt;Finally, after 7 months of slow, but steady development, I'm happy to announce phpSmug 2.0 is now available for &lt;a href="http://phpsmug.com/download"&gt;download&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;It's been a long time coming as there has only been one bug reported in the last release, and it wasn't a major issue, and I've been working on consolidating the code to make it more uniform and a lot easier to manage and maintain.&lt;/p&gt;&lt;h3&gt;What's New?&lt;/h3&gt;&lt;p&gt;First things first, I have to issue a warning:&lt;/p&gt;&lt;div class="alert"&gt;&lt;div align="center"&gt;&lt;p&gt;&lt;strong&gt;WARNING&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;phpSmug 2.0 is &lt;strong&gt;NOT&lt;/strong&gt; a drop in replacement for phpSmug 1.0.x of 1.1.x. &lt;br&gt;Please ensure you read this post, which is also documented in the README and the &lt;a href="http://phpsmug.com/docs"&gt;documentation&lt;/a&gt;, for details on how phpSmug 2.x now functions.&lt;br&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;Right, now we've got that out of the way, lets get to the nitty gritty.&lt;/p&gt;&lt;p&gt;For those who've used phpSmug before, things have changed with phpSmug 2.0 and hopefully it's for the good and won't be too much trouble to adapt your applications for.&lt;/p&gt;&lt;p&gt;If you've not used phpSmug before, you can skip the rest of this post as it won't mean much to you.&lt;/p&gt;&lt;ul&gt;
+&lt;li&gt;Method Arguments
+
+The general functionality is the same, however the method of passing arguments to methods has changed.
+Now when you pass arguments to a method, you need to pass them either as a series of strings, for example:
+
+&lt;pre class="prettyprint lang-php"&gt;
+$f-&amp;gt;images_getInfo("ImageID=&amp;lt;value&amp;gt;", "ImageKey=&amp;lt;value&amp;gt;");
+&lt;/pre&gt;
+
+&amp;hellip; or as an array &amp;hellip;
+
+&lt;pre class="prettyprint lang-php"&gt;
+$f-&amp;gt;images_getInfo(array("ImageID" =&amp;gt; "&amp;lt;value&amp;gt;", "ImageKey" =&amp;gt; "&amp;lt;value&amp;gt;"));
+&lt;/pre&gt;
+
+This is a deliberate design decision to keep things consistent and is actually due to work I've done to ease the development and maintenance of phpSmug.
+
+You'll see phpSmug 2.0 is considerably smaller than previous versions.  This is because phpSmug now uses PHP 5's &lt;code&gt;__call()&lt;/code&gt; method to dynamically create the API calls for methods that are not explicitly declared.
+
+As a result of this, phpSmug 2.0 and later will definitely NOT work with PHP4.
+
+It also has the added bonus in that you no longer need to have empty arguments in your method calls: you only need to pass what's required or what you need.
+
+&lt;li&gt;SmugMug API Endpoint Compatibility
+
+phpSmug 2.0 defaults to using the only stable endpoint provided by SmugMug: the 1.2.0 endpoint.  However, it is fully functional with the later endpoint revisions, unless otherwise documented on the "&lt;a href="http://phpsmug.com/bugs"&gt;Current Issues&lt;/a&gt;" page.
+
+To use a later version of the endpoint, just set the version when instantiating the instance using &lt;code&gt;APIver&lt;/code&gt;.
+
+&lt;li&gt;All &lt;code&gt;smugmug.login.*&lt;/code&gt; Methods Handled by a Single &lt;code&gt;login()&lt;/code&gt; Method
+
+To simplfy things even further, I've consolidated all the &lt;code&gt;smugmug.login.*&lt;/code&gt; API methods into a single &lt;code&gt;login()&lt;/code&gt; method.
+
+phpSmug will determine which API method you wish to use from the arguments passed when calling the method. If not arguments are passed, phpSmug will login anonymously.
+
+&lt;li&gt;phpSmug now throws exceptions on error
+
+In order to take full advantage of PHP5 functionality and make phpSmug behave more like a proper PHP class, I've removed the "die_on_error" functionality and instead turned to using exceptions. It's up to you as the application developer to catch the exceptions and turn it into something useful for your users.  All the examples supplied with phpSmug now catch the exceptions.
+
+The only exception to this is caching.  If there is a problem creating the cache, phpSmug will just error and continue without using any caching.  I didn't think it worth stopping the world due to a caching issue.
+&lt;/ul&gt;&lt;p&gt;So, go on, get &lt;a href="http://phpsmug.com/download"&gt;downloading&lt;/a&gt; and if you encounter any problems, please leave a comment on this post.&lt;/p&gt;</content></entry>
+<entry><title>Welcome to phpSmug's New Home</title><link rel="alternate" href="http://phpsmug.com/news/welcome-to-phpsmugs-new-home"/><link rel="edit" href="http://phpsmug.com/welcome-to-phpsmugs-new-home/atom"/><author><name>Colin</name><uri>http://phpsmug.com</uri></author><id>tag:phpsmug.com,2008:welcome-to-phpsmug-s-new-home/1215950036</id><updated>2008-07-13T12:54:20+01:00</updated><app:edited xmlns:app="http://www.w3.org/2007/app">2008-10-30T18:54:47+00:00</app:edited><published>2008-10-30T18:52:00+00:00</published><category term="phpsmugcom"/><content type="html">&lt;p&gt;Ladies and gentlemen, welcome to phpSmug's new home - &lt;a href="http://phpsmug.com"&gt;phpsmug.com&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;As phpSmug has grown to take up a fair amount of my time and it's starting to be used by more and more projects, I thought it's about time it got it's own home, instead of hiding in a corner of my &lt;a href="http://www.lildude.co.uk"&gt;tech site&lt;/a&gt;. And this is it.&lt;/p&gt;&lt;p&gt;If you're using phpSmug in your application, and want a bit of link love, let me know and I'll add a link back to your application site (and hopefully you'll reciprocate ;-) ). I've not setup a dedicated section for this yet, but as I'm thinking about it and hope to setup a dedicated section in, probably in the sidebar, once I've got a nice list of applications going.&lt;/p&gt;&lt;p&gt;It's early days for this site so it may be a little rusty around the edges, but if you spot any problems, leave a comment on this post.&lt;/p&gt;</content></entry></feed>
