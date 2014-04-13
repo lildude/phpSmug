@@ -12,8 +12,8 @@ Once again, this is a minor release and features a few "behind the scenes" chang
 
 The changelog entry for phpSmug 3.2 is...
 
-* Improved support for the 1.3.0 API endpoint (Ticket #10)
-* Implemented the ability to force all API communication to occur securely over HTTPS. OAuth Only. (Ticket #9)
-* phpSmug now uses the documented secure.smugmug.com API endpoints (Ticket #8)
+* Improved support for the 1.3.0 API endpoint ([#10](https://github.com/lildude/phpSmug/issues/10))
+* Implemented the ability to force all API communication to occur securely over HTTPS. OAuth Only. ([#9](https://github.com/lildude/phpSmug/issues/9))
+* phpSmug now uses the documented secure.smugmug.com API endpoints ([#8](https://github.com/lildude/phpSmug/issues/8))
 * Updated OAuth example to use new Album URL and to remove its use of the deprecated session_unregister() PHP function.
-phpSmug 3.2 is now available from the [download](http://phpsmug.com/download "") page.
+phpSmug 3.2 is now available from the [download](http://phpsmug.com/download) page.
