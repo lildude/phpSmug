@@ -12,8 +12,9 @@ This is only a minor update which features a few "behind the scenes" changes and
 
 For the curious, the exact changes from the change log are:
 
-        * phpSmug now defaults to using the 1.2.2 API endpoint. All earlier endpoints are still available, but technically deprecated by SmugMug.
+* phpSmug now defaults to using the 1.2.2 API endpoint. All earlier endpoints are still available, but technically deprecated by SmugMug.
 * Removed erroneous re-instantiation of processor when setting adapter.
-* Corrected check for safe_dir OR open_basedir so fails over to socket connection correctly
+* Corrected check for `safe_dir` OR `open_basedir` so fails over to socket connection correctly
 * Improved connection settings
-phpSmug 3.1 is now available from the [download](http://phpsmug.com/download "") page.
+
+phpSmug 3.1 is now available from the [download](http://phpsmug.com/download) page.
