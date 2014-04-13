@@ -3,7 +3,7 @@ layout: news_item
 title: "phpSmug and PEAR Module Instantiation with PHP5 and E_STRICT"
 date: "2008-11-09 09:45:01 +0000"
 author: lildude
-categories:
+categories: update
 ---
 
 I'm in the process of creating a project using my phpSmug class and I've discovered I'm not quite 100% PHP5 E_STRICT compliant in two locations in the way I instantiate new PEAR objects:

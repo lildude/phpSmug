@@ -3,7 +3,7 @@ layout: news_item
 title: "New Release: phpSmug 3.3"
 date: "2011-06-04 11:34:24 +0100"
 author: lildude
-categories:
+categories: release
 ---
 
 Well, hot on the heels of phpSmug 3.2 comes phpSmug 3.3.

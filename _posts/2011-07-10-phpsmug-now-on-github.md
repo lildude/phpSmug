@@ -3,7 +3,7 @@ layout: news_item
 title: "phpSmug Now on GitHub"
 date: "2011-07-10 12:00:27 +0100"
 author: lildude
-categories:
+categories: update
 ---
 
 Well, finally the day has come for me to put the phpSmug source code onto a public repository.

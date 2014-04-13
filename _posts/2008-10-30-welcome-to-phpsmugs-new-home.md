@@ -3,7 +3,7 @@ layout: news_item
 title: "Welcome to phpSmug's New Home"
 date: "2008-10-30 18:52:00 +0000"
 author: lildude
-categories:
+categories: update
 ---
 
 Ladies and gentlemen, welcome to phpSmug's new home - [phpsmug.com](http://phpsmug.com).

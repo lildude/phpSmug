@@ -3,7 +3,7 @@ layout: news_item
 title: "clearCache() is Over Zealous"
 date: "2008-11-20 13:41:23 +0000"
 author: lildude
-categories:
+categories: update
 ---
 
 I've just found another bug ([#3 logged](https://github.com/lildude/phpSmug/issues/3)) in phpSmug that you should be aware of.  The `clearCache()` function is over zealous when using the filesystem as the cache location.  The function deletes ALL files in the specified directory, not just it's own.

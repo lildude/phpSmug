@@ -3,7 +3,7 @@ layout: news_item
 title: "SmugMug Needs Your Help"
 date: "2011-01-12 14:20:06 +0000"
 author: lildude
-categories:
+categories: update
 ---
 
 I've been slacking a bit on the[ SmugMug DGrin API forum](http://www.dgrin.com/forumdisplay.php?f=25), but I popped by today and noticed a [call for help](http://www.dgrin.com/showthread.php?s=96c46b931a01480cf381d2abe982bb37&amp;t=185872) from Don MacAskill ...

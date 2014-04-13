@@ -3,7 +3,7 @@ layout: news_item
 title: "New Release: phpSmug 3.4"
 date: "2011-06-21 11:42:02 +0100"
 author: lildude
-categories:
+categories: release
 ---
 
 Only a single small change in phpSmug 3.4: phpSmug was neglecting to set the appropriate "hidden" upload header when uploading photos that should be marked as hidden. phpSmug 3.4 now resolves this and "hidden" uploads should now show up as hidden when they arrive on SmugMug.
