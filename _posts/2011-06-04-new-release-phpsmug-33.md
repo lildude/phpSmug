@@ -8,7 +8,7 @@ categories:
 
 Well, hot on the heels of phpSmug 3.2 comes phpSmug 3.3.
 
-For a long time now, I've been working around what I thought was an undocumented change in the way the API was handling the boolean literal FALSE and empty strings.  My workaround seemed to work well for boolean literals, but fell apart when an empty string value was passed to the API, like when unsetting an album's password, as Anthony Humes discovered and from which I created ticket [#11](http://github.com/lildude/phpsmug/issues/11).
+For a long time now, I've been working around what I thought was an undocumented change in the way the API was handling the boolean literal FALSE and empty strings.  My workaround seemed to work well for boolean literals, but fell apart when an empty string value was passed to the API, like when unsetting an album's password, as Anthony Humes discovered and from which I created ticket [#11](http://github.com/lildude/phpSmug/issues/11).
 
 Well, after a bit of digging I discovered the problem was NOT with the API, but rather the way PHP's `implode()` and `http_build_query()` functions handle associative arrays with empty values. `implode()` seems to completely ignore the empty value when imploding and `http_build_query()` converts the empty value to a 0. Neither of which were desired behaviours and both of which I didn't notice until now.
 
