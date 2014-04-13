@@ -7,7 +7,7 @@ title: About
 
 Not already a [SmugMug](http://www.smugmug.com) user?  Here, have a $5 discount off your first year on me by [registering](https://secure.smugmug.com/signup.mg?Coupon=2ZxFXMC19qOxU) using this code:
 
-<h2 class="center">2ZxFXMC19qOxU</h2>
+<h2 class="center" style="font-weight:bold">2ZxFXMC19qOxU</h2>
 
 # Using {{ site.name }}
 
