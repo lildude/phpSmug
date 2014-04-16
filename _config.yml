@@ -4,7 +4,7 @@ description:   PHP wrapper for the SmugMug API
 analytics_id:  UA-118457-4
 timezone:      Europe/London
 encoding:      UTF-8
-baseurl:       /phpSmug
+baseurl:       ""
 permalink:     /news/:title/
 latest_version: 3.5
 gems:
