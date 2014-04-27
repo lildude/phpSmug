@@ -1,6 +1,8 @@
 name:          phpSmug
 domain:        phpsmug.com    # This is used by the Analytics tracking code
 description:   PHP wrapper for the SmugMug API
+url:           http://phpsmug.com
+author:        Colin Seymour (@lildude)
 analytics_id:  UA-118457-4
 timezone:      Europe/London
 encoding:      UTF-8
