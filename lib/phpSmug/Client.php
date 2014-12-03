@@ -1,7 +1,7 @@
 <?php
 namespace phpSmug;
 
-use phpSmug\Api\ApiInterface;
+//use phpSmug\Api\ApiInterface;
 use phpSmug\Exception\InvalidArgumentException;
 use phpSmug\Exception\BadMethodCallException;
 use phpSmug\HttpClient\HttpClient;
