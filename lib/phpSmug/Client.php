@@ -7,6 +7,12 @@ use phpSmug\Exception\BadMethodCallException;
 use phpSmug\HttpClient\HttpClient;
 use phpSmug\HttpClient\HttpClientInterface;
 
+/**
+ * Simple yet very cool PHP SmugMug client
+ *
+ * @method Api\User user()
+ *
+ */
 
 class Client
 {
@@ -48,7 +54,7 @@ class Client
     public function api($name)
     {
         switch ($name) {
-            case 'me':
+            case 'user':
                 $api = new Api\User($this);
                 break;
 
