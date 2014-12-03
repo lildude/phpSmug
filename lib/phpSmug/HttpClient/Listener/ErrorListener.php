@@ -1,16 +1,16 @@
 <?php
 
-namespace Github\HttpClient\Listener;
+namespace phpSmug\HttpClient\Listener;
 
-use Github\Exception\TwoFactorAuthenticationRequiredException;
-use Github\HttpClient\Message\ResponseMediator;
+use phpSmug\Exception\TwoFactorAuthenticationRequiredException;
+use phpSmug\HttpClient\Message\ResponseMediator;
 use Guzzle\Common\Event;
 use Guzzle\Http\Message\Response;
 
-use Github\Exception\ApiLimitExceedException;
-use Github\Exception\ErrorException;
-use Github\Exception\RuntimeException;
-use Github\Exception\ValidationFailedException;
+use phpSmug\Exception\ApiLimitExceedException;
+use phpSmug\Exception\ErrorException;
+use phpSmug\Exception\RuntimeException;
+use phpSmug\Exception\ValidationFailedException;
 
 /**
  * @author Joseph Bielawski <stloyd@gmail.com>
