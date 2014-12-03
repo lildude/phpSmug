@@ -14,15 +14,15 @@ class Client
     );
 
     /**
-     * The Buzz instance used to communicate with GitHub
+     * The instance used to communicate with SmugMug
      *
      * @var HttpClient
      */
     private $httpClient;
     /**
-     * Instantiate a new GitHub client
+     * Instantiate a new SmugMug client
      *
-     * @param null|HttpClientInterface $httpClient Github http client
+     * @param null|HttpClientInterface $httpClient SmugMug http client
      */
     public function __construct(HttpClientInterface $httpClient = null)
     {
