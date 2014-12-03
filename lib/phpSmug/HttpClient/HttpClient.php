@@ -26,6 +26,7 @@ class HttpClient implements HttpClientInterface
 
         'api_limit'   => 5000,
         'api_version' => 'v2',
+        'api_key'     => null,
 
         'cache_dir'   => null
     );
@@ -71,7 +72,7 @@ class HttpClient implements HttpClientInterface
     public function clearHeaders()
     {
         $this->headers = array(
-            'Accept' => sprintf('application/vnd.github.%s+json', $this->options['api_version']),
+            'Accept' => 'application/json',
             'User-Agent' => sprintf('%s', $this->options['user_agent']),
         );
     }
