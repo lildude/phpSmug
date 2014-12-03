@@ -27,7 +27,7 @@
         "knplabs/gaufrette": "Needed for optional Gaufrette cache"
     },
     "autoload": {
-        "psr-4": { "phpSmug\\": "lib/" }
+        "psr-4": { "phpSmug\\": "lib/phpSmug" }
     },
     "extra": {
         "branch-alias": {
