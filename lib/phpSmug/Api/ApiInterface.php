@@ -1,6 +1,6 @@
 <?php
 
-namespace Github\Api;
+namespace phpSmug\Api;
 
 /**
  * Api interface
