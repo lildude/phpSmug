@@ -9,7 +9,7 @@ class UnauthorizedException extends RuntimeException
     public function __construct($type, $code = 0, $previous = null)
     {
         $this->type = $type;
-        parent::__construct('Unauthorized', $code, $previous);
+        parent::__construct($type, $code, $previous);
     }
 
     public function getType()
