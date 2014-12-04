@@ -1,0 +1,3 @@
+.DS*
+vendor
+composer.lock
