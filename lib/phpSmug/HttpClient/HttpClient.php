@@ -138,7 +138,7 @@ class HttpClient implements HttpClientInterface
             $response = $this->client->send($request);
         } catch (\LogicException $e) {
             throw new ErrorException($e->getMessage(), $e->getCode(), $e);
-        } catch (TwoFactorAuthenticationRequiredException $e) {
+        } catch (UnauthorizedException $e) {
             throw $e;
         } catch (\RuntimeException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
