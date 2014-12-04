@@ -9,6 +9,7 @@ use Guzzle\Http\Message\Response;
 
 use phpSmug\Exception\ErrorException;
 use phpSmug\Exception\RuntimeException;
+use phpSmug\Exception\UnauthorizedException;
 use phpSmug\HttpClient\Listener\AuthListener;
 use phpSmug\HttpClient\Listener\ErrorListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -138,6 +139,8 @@ class HttpClient implements HttpClientInterface
             $response = $this->client->send($request);
         } catch (\LogicException $e) {
             throw new ErrorException($e->getMessage(), $e->getCode(), $e);
+        } catch (UnauthorizedException $e) {
+            throw $e;
         } catch (\RuntimeException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }

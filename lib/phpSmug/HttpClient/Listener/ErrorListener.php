@@ -2,7 +2,6 @@
 
 namespace phpSmug\HttpClient\Listener;
 
-use phpSmug\Exception\TwoFactorAuthenticationRequiredException;
 use phpSmug\Exception\UnauthorizedException;
 use phpSmug\HttpClient\Message\ResponseMediator;
 use Guzzle\Common\Event;
@@ -41,15 +40,14 @@ class ErrorListener
         $response = $request->getResponse();
 
         if ($response->isClientError() || $response->isServerError()) {
-            $remaining = (string) $response->getHeader('X-RateLimit-Remaining');
 
             if (null != $remaining && 1 > $remaining && 'rate_limit' !== substr($request->getResource(), 1, 10)) {
                 throw new ApiLimitExceedException($this->options['api_limit']);
             }
 
             if (401 === $response->getStatusCode()) {
-                $type = $response->getBody();
-                throw new UnauthorizedException($type);
+                $message = $response->getBody();
+                throw new UnauthorizedException($message, 401);
             }
 
             $content = ResponseMediator::getContent($response);
