@@ -1,5 +1,9 @@
-phpSmug 3.5 - PHP Wrapper for the SmugMug API
+phpSmug 4.0 - PHP Wrapper for the SmugMug API
 =============================================
+
+# :construction: Work In Progress :construction: #
+
+phpSmug 4.0 will be the first release to support the new SmugMug API 2.0. Consider this branch broken and not working until this text has been removed.
 
 Written by Colin Seymour  
 Project Homepage: <http://phpSmug.com/>
@@ -36,16 +40,10 @@ Please help support the maintenance and development of phpSmug by making a
 --------------------------------------------------------------------------------
 
 
-What's New in phpSmug 3.5
+What's New in phpSmug 4.0
 =========================
 
-phpSmug 3.5 introduces the ability for you to now embed images that are not marked
-as externally linkable ("External links" is set to "No" within your SmugMug album 
-settings) into external websites by introducing a new method `signResource()`.
 
-See the Display Unlinkable Images section below for more details.
-
-This README file is now in Markdown format instead of plaintext.
 
 
 Requirements
