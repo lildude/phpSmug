@@ -54,10 +54,13 @@ class AuthListener
 
             case Client::AUTH_URL_TOKEN:
                 $url = $event['request']->getUrl();
+                $url = urldecode($url);
                 $url .= (false === strpos($url, '?') ? '?' : '&');
-                $url .= utf8_encode(http_build_query(array('access_token' => $this->tokenOrLogin), '', '&'));
+                $url .= utf8_encode(http_build_query(array('APIKey' => $this->tokenOrLogin), '', '&'));
 
                 $event['request']->setUrl($url);
+
+                print $url;
                 break;
 
             default:
