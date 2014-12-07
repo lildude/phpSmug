@@ -17,6 +17,30 @@ use phpSmug\HttpClient\HttpClientInterface;
 class Client
 {
     /**
+     * Constant for authentication method. Indicates the default, but deprecated
+     * login with username and token in URL.
+     */
+    const AUTH_URL_TOKEN = 'url_token';
+
+    /**
+     * Constant for authentication method. Not indicates the new login, but allows
+     * usage of unauthenticated rate limited requests for given client_id + client_secret
+     */
+    const AUTH_URL_CLIENT_ID = 'url_client_id';
+
+    /**
+     * Constant for authentication method. Indicates the new favored login method
+     * with username and password via HTTP Authentication.
+     */
+    const AUTH_HTTP_PASSWORD = 'http_password';
+
+    /**
+     * Constant for authentication method. Indicates the new login method with
+     * with username and token via HTTP Authentication.
+     */
+    const AUTH_HTTP_TOKEN = 'http_token';
+
+    /**
      * @var array
      */
     private $options = array(
@@ -24,7 +48,7 @@ class Client
         'user_agent'    => 'phpSmug (http://phpsmug.com)',
         'timeout'       => 10,
         'cache_dir'     => null,
-        'api_key'       => null,
+        'APIKey'       => null,
     );
 
     /**
@@ -65,7 +89,34 @@ class Client
         return $api;
     }
 
-        /**
+    /**
+     * Authenticate a user for all next requests
+     *
+     * @param string      $tokenOrLogin GitHub private token/username/client ID
+     * @param null|string $password     GitHub password/secret (optionally can contain $authMethod)
+     * @param null|string $authMethod   One of the AUTH_* class constants
+     *
+     * @throws InvalidArgumentException If no authentication method was given
+     */
+    public function authenticate($tokenOrLogin, $password = null, $authMethod = null)
+    {
+        if (null === $password && null === $authMethod) {
+            throw new InvalidArgumentException('You need to specify authentication method!');
+        }
+
+        if (null === $authMethod && in_array($password, array(self::AUTH_URL_TOKEN, self::AUTH_URL_CLIENT_ID, self::AUTH_HTTP_PASSWORD, self::AUTH_HTTP_TOKEN))) {
+            $authMethod = $password;
+            $password   = null;
+        }
+
+        if (null === $authMethod) {
+            $authMethod = self::AUTH_HTTP_PASSWORD;
+        }
+
+        $this->getHttpClient()->authenticate($tokenOrLogin, $password, $authMethod);
+    }
+
+    /**
      * @return HttpClient
      */
     public function getHttpClient()
