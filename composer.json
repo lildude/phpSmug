@@ -17,8 +17,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/guzzle": "~5.0",
-        "guzzlehttp/guzzle-services": "0.4.*"
+        "guzzlehttp/guzzle": "~4.2",
+        "guzzlehttp/guzzle-services": "~0.3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
