@@ -1,7 +1,7 @@
 {
     "name": "lildude/phpsmug",
     "type": "library",
-    "description": "SmugMug API v2 client",
+    "description": "A simple Object Orientated wrapper for the SmugMug API v2",
     "homepage": "http://phpsmug.com",
     "keywords": ["smugmug", "api"],
     "license": "MIT",
