@@ -54,8 +54,8 @@ class Client
     public function api($name)
     {
         switch ($name) {
-            case 'me':
-                $api = new Api\CurrentUser($this);
+            case 'user':
+                $api = new Api\User($this);
                 break;
 
         default:
