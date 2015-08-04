@@ -10,10 +10,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotHaveToPassHttpClientToConstructor()
     {
-        $client = new Client();
+      $client = new Client();
 
-        $this->assertInstanceOf('phpSmug\HttpClient\HttpClient', $client->getHttpClient());
+      $this->assertInstanceOf('phpSmug\HttpClient\HttpClient', $client->getHttpClient());
     }
+
+    
 }
 
 ?>
