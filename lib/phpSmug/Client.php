@@ -1,31 +1,55 @@
 <?php
 namespace phpSmug;
 
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Command\Guzzle\Description;
+use phpSmug\HttpClient\HttpClient;
+use phpSmug\HttpClient\HttpClientInterface;
 
 
-class Client extends GuzzleClient
+class Client
 {
-    public function __construct(array $config = [])
+    /**
+     * @var array
+     */
+    private $options = array(
+        'base_url'    => 'https://api.smugmug.com/',
+
+        'user_agent'  => 'phpSmug (http://phpsmug.com)',
+        'timeout'     => 10,
+
+        'api_limit'   => 5000,
+        'api_version' => 'v2',
+
+        'cache_dir'   => null
+    );
+
+    /**
+     * The client instance used to communicate with SmugMug.
+     *
+     * @var HttpClient
+     */
+    private $httpClient;
+
+    /**
+     * Instantiate a new SmugMug client.
+     *
+     * @param null|HttpClientInterface $httpClient SmugMug http client
+     */
+    public function __construct(HttpClientInterface $httpClient = null)
     {
-        $client = new Client([
-        //$client = new Client(["base_url" => "https://api.smugmug.com/api/v2/"]);
-            "defaults" => [
-                "headers" => [
-                    "User-Agent" => sprintf("%s (%s)", "MyTestApp", "phpSmug/4.0"),
-                    "Content-type" => "application/json; charset=utf-8"
-                ],
-                "base_url" => "https://api.smugmug.com/api/v2/"
-            ]
-        ]);
-
-        $description = new Description(include __DIR__ . '/smugmug-api.php');
-        //$description = new Description();
+        $this->httpClient = $httpClient;
+    }
 
 
-        parent::__construct($client, $description, $config);
+    /**
+     * @return HttpClient
+     */
+    public function getHttpClient()
+    {
+        if (null === $this->httpClient) {
+            $this->httpClient = new HttpClient($this->options);
+        }
+
+        return $this->httpClient;
     }
 }
 
