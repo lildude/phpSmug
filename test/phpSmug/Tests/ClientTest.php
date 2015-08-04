@@ -10,8 +10,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotHaveToPassHttpClientToConstructor()
     {
+        $client = new Client();
 
+        $this->assertInstanceOf('GuzzleHttp\Client', $client->getHttpClient());
     }
+
 
 }
 
