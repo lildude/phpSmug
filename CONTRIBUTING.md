@@ -1,0 +1,2 @@
+Contributing to phpSmug
+=======================
