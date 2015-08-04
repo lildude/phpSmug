@@ -1,8 +1,7 @@
 <?php
 namespace phpSmug;
 
-use phpSmug\HttpClient\HttpClient;
-use phpSmug\HttpClient\HttpClientInterface;
+use GuzzleHttp\Client as GuzzleClient;
 
 
 class Client
@@ -13,19 +12,42 @@ class Client
     const API_KEY = 'api_key';
 
     /**
+     * The Guzzle instance used to communicate with SmugMug.
+     *
+     * @var $httpClient
+     */
+    private $httpClient;
+
+    /**
      * @var array
      */
     private $options = array(
-        'base_url'    => 'https://api.smugmug.com/',
+        'base_url'    => 'https://api.smugmug.com/api/v2',
+        'query'       => ['APIKey' => self::API_KEY],
 
         'user_agent'  => 'phpSmug (http://phpsmug.com)',
         'timeout'     => 10,
-
-        'api_limit'   => 5000,
-        'api_version' => 'v2',
-
-        'cache_dir'   => null
     );
 
+    /**
+     * Instantiate a new SmugMug client.
+     */
+    public function __construct(array $options = array())
+    {
+        $this->options = array_merge($this->options, $options);
+        $this->httpClient = new GuzzleClient($this->options);
+    }
 
+    /**
+     * @return HttpClient
+     */
+    public function getHttpClient()
+    {
+        if (null === $this->httpClient) {
+            $this->httpClient = new GuzzleClient($this->options);
+        }
+
+        return $this->httpClient;
+    }
+}
 ?>
