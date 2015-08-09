@@ -22,11 +22,12 @@ class Client
      * @var array
      */
     private $options = array(
-        'base_url'    => 'https://api.smugmug.com/api/v2',
+        'base_uri'    => 'https://api.smugmug.com/api/v2/',
         'query'       => ['APIKey' => self::API_KEY],
 
         'user_agent'  => 'phpSmug (http://phpsmug.com)',
         'timeout'     => 10,
+        'debug'       => true
     );
 
     /**
