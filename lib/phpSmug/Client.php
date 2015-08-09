@@ -54,5 +54,14 @@ class Client
 
         return $this->httpClient;
     }
+
+    public function get($url = null)
+    {
+        $client = $this->httpClient->get($url);
+        $code = $client->getStatusCode();
+        $body = (string)$client->getBody();
+        return json_decode($body);
+    }
+
 }
 ?>
