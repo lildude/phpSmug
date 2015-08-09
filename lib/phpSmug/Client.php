@@ -24,6 +24,10 @@ class Client
     private $options = array(
         'base_uri'    => 'https://api.smugmug.com/api/v2/',
         'query'       => ['APIKey' => self::API_KEY],
+        'headers' => [
+                          'User-Agent' => 'phpSmug Dev/4.0 (http://phpsmug.com)',
+                          'Accept'     => 'application/json',
+                      ],
 
         'user_agent'  => 'phpSmug (http://phpsmug.com)',
         'timeout'     => 10,
