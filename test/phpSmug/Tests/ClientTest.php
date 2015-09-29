@@ -15,6 +15,33 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GuzzleHttp\Client', $client->getHttpClient());
     }
 
+    /**
+     * @test
+     */
+    public function shouldThrowExceptionIfNoApikey()
+    {
+        $client = new Client();
+    }
+
+    /**
+     * @test
+     */
+    public function shouldHaveOptionsSetInConstructor()
+    {
+        $APIKey = "I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test";
+        $options = [
+            "AppName"   => "Testing phpSmug",
+            "verbosity" => 1,
+            ];
+        $client = new Client($APIKey, $options);
+
+        $this->assertArraySubset($options, $client->getOptions());
+        $this->assertEquals($client->getOptions()['APIKey'], $APIKey);
+        $this->assertEquals($client->getOptions()['AppName'], $options['AppName']);
+        $this->assertEquals($client->getOptions()['verbosity'], $options['verbosity']);
+        $this->assertEquals($client->getOptions()['headers']['User-Agent'], 'Testing phpSmug using phpSmug/4.0');
+    }
+
 }
 
 ?>
