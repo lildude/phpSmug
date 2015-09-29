@@ -61,7 +61,7 @@ class Client
         return $this->httpClient;
     }
 
-    public function get($url = null)
+    public function get($url)
     {
         $client = $this->httpClient->get($url);
         $code = $client->getStatusCode();
