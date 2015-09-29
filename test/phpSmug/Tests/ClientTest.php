@@ -10,7 +10,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotHaveToPassHttpClientToConstructor()
     {
-        $client = new Client();
+        $client = new Client("I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test");
 
         $this->assertInstanceOf('GuzzleHttp\Client', $client->getHttpClient());
     }
