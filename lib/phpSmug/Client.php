@@ -61,6 +61,14 @@ class Client
         return $this->httpClient;
     }
 
+    /**
+     * @return options
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
     public function get($url)
     {
         # Strip off the /api/v2/ part if it's in the URL
