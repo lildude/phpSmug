@@ -7,11 +7,6 @@ use GuzzleHttp\Client as GuzzleClient;
 class Client
 {
     /**
-     * Constant for the API Key. Get your API Key from https://api.smugmug.com/api/developer/apply
-     */
-    const API_KEY = 'api_key';
-
-    /**
      * The Guzzle instance used to communicate with SmugMug.
      *
      * @var $httpClient
@@ -23,23 +18,34 @@ class Client
      */
     private $options = array(
         'base_uri'    => 'https://api.smugmug.com/api/v2/',
-        'query'       => ['APIKey' => self::API_KEY],
-        'headers' => [
-                          'User-Agent' => 'phpSmug Dev/4.0 (http://phpsmug.com)',
+        'query'       => [],
+        'headers'     => [
+                          'User-Agent' => 'phpSmug/4.0',
                           'Accept'     => 'application/json',
                       ],
-
-        'user_agent'  => 'phpSmug (http://phpsmug.com)',
-        'timeout'     => 10,
-        'debug'       => true
+        'APIKey'      => null,
+        'OAuthSecret' => null,
+        'AppName'     => 'Unknown Application',
+        'timeout'     => 30,
+        'verbosity'   => 2,
     );
 
     /**
      * Instantiate a new SmugMug client.
      */
-    public function __construct(array $options = array())
+    public function __construct($APIKey, array $options = array())
     {
+        $this->options['APIKey'] = $APIKey;
+
+        $options['query'] = [
+          "APIKey" => $APIKey,
+          "_verbosity" => (array_key_exists('verbosity', $options)) ? $options['verbosity'] : $this->options['verbosity'],
+        ];
+
         $this->options = array_merge($this->options, $options);
+
+        $this->options['headers']['User-Agent'] = $this->options['AppName'] . " using " . $this->options['headers']['User-Agent'];
+
         $this->httpClient = new GuzzleClient($this->options);
     }
 
