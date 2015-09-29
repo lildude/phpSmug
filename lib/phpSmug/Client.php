@@ -63,6 +63,8 @@ class Client
 
     public function get($url)
     {
+        # Strip off the /api/v2/ part if it's in the URL
+        $url = strtr( $url, '/api/v2/', '' );
         $client = $this->httpClient->get($url);
         $code = $client->getStatusCode();
         $body = (string)$client->getBody();
