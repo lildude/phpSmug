@@ -78,14 +78,17 @@ class Client
         return $this->options;
     }
 
-    public function get($url)
+    public function __call($method, $args)
     {
-        # Strip off the /api/v2/ part if it's in the URL
-        $url = strtr( $url, '/api/v2/', '' );
-        $client = $this->httpClient->get($url);
-        $code = $client->getStatusCode();
-        $body = (string)$client->getBody();
-        return json_decode($body);
+      $url = strtr($args[0], '/api/v2/', '');
+      $optimizers = (count($args) == 2) ? $args[1] : '';
+
+      $client = self::getHttpClient();
+      $request = $client->request(strtoupper($method), $url);
+      //$code = $request->getStatusCode();
+      //$body = (string)$request->getBody();
+      //$headers = $request->getHeaders();
+      return json_decode((string)$request->getBody());
     }
 
 }
