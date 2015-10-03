@@ -86,4 +86,3 @@ class Client
       return json_decode((string)$request->getBody());
     }
 }
-?>
