@@ -30,6 +30,7 @@ class Client
         'AppName'     => 'Unknown Application',
         'timeout'     => 30,
         'verbosity'   => 2,
+        'shorturis'   => false,
     );
 
     /**
@@ -46,7 +47,13 @@ class Client
 
         $this->options = array_merge($this->options, $options);
 
-        $this->options['headers']['User-Agent'] = $this->options['AppName'] . " using " . $this->options['headers']['User-Agent'];
+        if ($this->options['shorturis']) {
+            $this->options['query']['_shorturis'] = $this->options['shorturis'];
+        }
+        $this->options['query']['_verbosity'] = $this->options['verbosity'];
+        $this->options['query']['APIKey'] = $APIKey;
+
+        $this->options['headers']['User-Agent'] = sprintf("%s using %s/%s", $this->options['AppName'], $this->options['headers']['User-Agent'], Client::VERSION);
 
         $this->httpClient = new GuzzleClient($this->options);
     }
