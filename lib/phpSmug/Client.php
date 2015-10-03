@@ -6,6 +6,8 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client
 {
+    const VERSION = "4.0.0";
+
     /**
      * The Guzzle instance used to communicate with SmugMug.
      *
@@ -20,7 +22,7 @@ class Client
         'base_uri'    => 'https://api.smugmug.com/api/v2/',
         'query'       => [],
         'headers'     => [
-                          'User-Agent' => 'phpSmug/4.0',
+                          'User-Agent' => 'phpSmug',
                           'Accept'     => 'application/json',
                       ],
         'APIKey'      => null,
