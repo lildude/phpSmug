@@ -6,7 +6,14 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client
 {
-    const VERSION = "4.0.0";
+    /**
+     * A few default variables
+     */
+    const VERSION = '4.0.0';
+    public $AppName = 'Unknown Application';
+    public $APIKey;
+    public $verbosity = 2;
+    public $shorturis = false;
 
     /**
      * The Guzzle instance used to communicate with SmugMug.
@@ -18,19 +25,15 @@ class Client
     /**
      * @var array
      */
-    private $options = array(
+    private $request_options = array(
         'base_uri'    => 'https://api.smugmug.com/api/v2/',
         'query'       => [],
         'headers'     => [
                           'User-Agent' => 'phpSmug',
                           'Accept'     => 'application/json',
                       ],
-        'APIKey'      => null,
-        'OAuthSecret' => null,
-        'AppName'     => 'Unknown Application',
         'timeout'     => 30,
-        'verbosity'   => 2,
-        'shorturis'   => false,
+        'auth'        => null,
     );
 
     /**
@@ -38,19 +41,25 @@ class Client
      */
     public function __construct($APIKey = null, array $options = array())
     {
-        $this->options['APIKey'] = $APIKey;
+        $this->APIKey = $APIKey;
+        if (isset($options['verbosity'])) $this->verbosity = $options['verbosity'];
+        if (isset($options['shorturis'])) $this->shorturis = $options['shorturis'];
+        if (isset($options['AppName'])) $this->AppName = $options['AppName'];
+        unset($options['verbosity'], $options['shorturis'], $options['AppName']);
+
+        $this->request_options = array_merge($this->request_options, $options);
 
         $this->options = array_merge($this->options, $options);
 
-        if ($this->options['shorturis']) {
-            $this->options['query']['_shorturis'] = $this->options['shorturis'];
+        if ($this->shorturis) {
+            $this->request_options['query']['_shorturis'] = $this->shorturis;
         }
-        $this->options['query']['_verbosity'] = $this->options['verbosity'];
-        $this->options['query']['APIKey'] = $APIKey;
+        $this->request_options['query']['_verbosity'] = $this->verbosity;
+        $this->request_options['query']['APIKey'] = $APIKey;
 
-        $this->options['headers']['User-Agent'] = sprintf("%s using %s/%s", $this->options['AppName'], $this->options['headers']['User-Agent'], Client::VERSION);
+        $this->request_options['headers']['User-Agent'] = sprintf("%s using %s/%s", $this->AppName, $this->request_options['headers']['User-Agent'], Client::VERSION);
 
-        $this->httpClient = new GuzzleClient($this->options);
+        $this->httpClient = new GuzzleClient($this->request_options);
     }
 
     /**
@@ -59,7 +68,7 @@ class Client
     public function getHttpClient()
     {
         if (null === $this->httpClient) {
-            $this->httpClient = new GuzzleClient($this->options);
+            $this->httpClient = new GuzzleClient($this->request_options);
         }
 
         return $this->httpClient;
@@ -68,9 +77,9 @@ class Client
     /**
      * @return options
      */
-    public function getOptions()
+    public function getRequestOptions()
     {
-        return $this->options;
+        return $this->request_options;
     }
 
     public function __call($method, $args)

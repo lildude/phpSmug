@@ -26,22 +26,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldHaveOptionsSetInConstructor()
+    public function shouldHaveOptionsSetInInstance()
     {
-        $APIKey = "I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test";
+        $APIKey = 'I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test';
         $options = [
-            "AppName"   => "Testing phpSmug",
-            "verbosity" => 1,
+            'AppName'   => 'Testing phpSmug',
+            'verbosity' => 1,
+            'shorturis' => true,
             ];
         $client = new Client($APIKey, $options);
 
-        $this->assertArraySubset($options, $client->getOptions());
-        $this->assertEquals($client->getOptions()['APIKey'], $APIKey);
-        $this->assertEquals($client->getOptions()['AppName'], $options['AppName']);
-        $this->assertEquals($client->getOptions()['verbosity'], $options['verbosity']);
-        $this->assertEquals($client->getOptions()['headers']['User-Agent'], sprintf("Testing phpSmug using phpSmug/%s", $client::VERSION));
+        $this->assertEquals($client->APIKey, $APIKey);
+        $this->assertEquals($client->AppName, $options['AppName']);
+        $this->assertEquals($client->verbosity, $options['verbosity']);
+        $this->assertEquals($client->shorturis, $options['shorturis']);
+        $this->assertEquals($client->getRequestOptions()['headers']['User-Agent'], sprintf("Testing phpSmug using phpSmug/%s", $client::VERSION));
     }
 
 }
-
-?>
