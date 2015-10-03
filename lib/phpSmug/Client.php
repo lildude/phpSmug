@@ -40,11 +40,6 @@ class Client
     {
         $this->options['APIKey'] = $APIKey;
 
-        $options['query'] = [
-          "APIKey" => $APIKey,
-          "_verbosity" => (array_key_exists('verbosity', $options)) ? $options['verbosity'] : $this->options['verbosity'],
-        ];
-
         $this->options = array_merge($this->options, $options);
 
         if ($this->options['shorturis']) {
@@ -90,6 +85,5 @@ class Client
       //$headers = $request->getHeaders();
       return json_decode((string)$request->getBody());
     }
-
 }
 ?>
