@@ -39,7 +39,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($client->getOptions()['APIKey'], $APIKey);
         $this->assertEquals($client->getOptions()['AppName'], $options['AppName']);
         $this->assertEquals($client->getOptions()['verbosity'], $options['verbosity']);
-        $this->assertEquals($client->getOptions()['headers']['User-Agent'], 'Testing phpSmug using phpSmug/4.0');
+        $this->assertEquals($client->getOptions()['headers']['User-Agent'], sprintf("Testing phpSmug using phpSmug/%s", $client::VERSION));
     }
 
 }
