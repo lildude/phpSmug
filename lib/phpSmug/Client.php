@@ -36,7 +36,7 @@ class Client
     /**
      * Instantiate a new SmugMug client.
      */
-    public function __construct($APIKey, array $options = array())
+    public function __construct($APIKey = null, array $options = array())
     {
         $this->options['APIKey'] = $APIKey;
 
