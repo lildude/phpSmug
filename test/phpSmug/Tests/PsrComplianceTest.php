@@ -8,25 +8,6 @@ namespace phpSmug\Tests;
  */
 class PsrComplianceTest extends \PHPUnit_Framework_TestCase
 {
-    // Possible names for php-cs-fixer.
-    private $commands = array('php-cs-fixer.phar', 'php-cs-fixer');
-    private $command = null;
-
-    /**
-     * Set up.
-     */
-    public function setUp()
-    {
-        // Attempt to look for the PSR linter in the command path.
-        // Downloadable from http://get.sensiolabs.org/php-cs-fixer.phar.
-        foreach ($this->commands as $command) {
-            $this->command = trim(shell_exec("which $command"));
-            if ($this->command) {
-                return;
-            }
-        }
-    }
-
     /**
      * Test for all PSR.
      */
@@ -34,7 +15,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
     {
         // If we can't find the command-line tool, we mark the test as skipped
         // so it shows as a warning to the developer rather than passing silently.
-        if (!$this->command) {
+        if (!file_exists('vendor/bin/php-cs-fixer')) {
             $this->markTestSkipped(
                 'Needs linter to check PSR compliance'
             );
@@ -45,7 +26,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
         foreach (array('lib/', 'test/') as $path) {
             // Run linter in dry-run mode so it changes nothing.
             exec(
-                "$this->command fix --dry-run "
+                'vendor/bin/php-cs-fixer fix --dry-run '
                         .$_SERVER['PWD']."/$path",
                 $output,
                 $return_var
