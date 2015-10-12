@@ -13,8 +13,11 @@ class Client
     const VERSION = '4.0.0';
     public $AppName = 'Unknown Application';
     public $APIKey;
-    public $verbosity = 2;
-    public $shorturis = false;
+    public $OAuthSecret;
+    public $_verbosity = 2;
+    public $_shorturis = false;
+    public $oauth_token;
+    public $oauth_token_secret;
 
     /**
      * The Guzzle instance used to communicate with SmugMug.
