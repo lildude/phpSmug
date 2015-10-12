@@ -55,7 +55,7 @@ class Client
 
         $this->request_options = array_merge($this->request_options, $options);
 
-        if ($this->shorturis) {
+        if ($this->_shorturis) {
             $this->request_options['query']['_shorturis'] = $this->_shorturis;
         }
         $this->request_options['query']['_verbosity'] = $this->_verbosity;
