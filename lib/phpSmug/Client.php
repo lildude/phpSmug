@@ -59,9 +59,9 @@ class Client
 
 
         if ($this->shorturis) {
-            $this->request_options['query']['_shorturis'] = $this->shorturis;
+            $this->request_options['query']['_shorturis'] = $this->_shorturis;
         }
-        $this->request_options['query']['_verbosity'] = $this->verbosity;
+        $this->request_options['query']['_verbosity'] = $this->_verbosity;
         $this->request_options['query']['APIKey'] = $APIKey;
 
         $this->request_options['headers']['User-Agent'] = sprintf('%s using %s/%s', $this->AppName, $this->request_options['headers']['User-Agent'], self::VERSION);
