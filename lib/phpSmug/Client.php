@@ -45,7 +45,7 @@ class Client
     public function __construct($APIKey = null, array $options = array())
     {
         $this->APIKey = $APIKey;
-        $option_keys = array('_verbosity', '_shorturis', 'AppName', 'OAuthSecret');
+        $option_keys = ['_verbosity', '_shorturis', 'AppName', 'OAuthSecret'];
         foreach ($option_keys as $option) {
             if (isset($options[$option])) {
                 $this->{$option} = $options[$option];
