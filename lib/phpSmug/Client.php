@@ -15,7 +15,7 @@ class Client
     public $AppName = 'Unknown Application';
     public $APIKey;
     public $OAuthSecret;
-    public $_verbosity = 2;
+    public $_verbosity;
     public $_shorturis = false;
     public $oauth_token;
     public $oauth_token_secret;
@@ -58,8 +58,11 @@ class Client
         if ($this->_shorturis) {
             $this->request_options['query']['_shorturis'] = $this->_shorturis;
         }
-        $this->request_options['query']['_verbosity'] = $this->_verbosity;
-        $this->request_options['query']['APIKey'] = $APIKey;
+
+        # SmugMug defaults to a verbosity of 2 so no point adding if it equals 2.
+        if ($this->_verbosity != 2) {
+            $this->request_options['query']['_verbosity'] = $this->_verbosity;
+        }
 
         $this->request_options['headers']['User-Agent'] = sprintf('%s using %s/%s', $this->AppName, $this->request_options['headers']['User-Agent'], self::VERSION);
 
@@ -67,6 +70,9 @@ class Client
             # Setup the handler stack - we'll need this later.
             $this->stack = HandlerStack::create();
             $this->request_options['handler'] = $this->stack;
+        } else {
+            # We only need the APIKey query parameter if we're not authenticating
+            $this->request_options['query']['APIKey'] = $APIKey;
         }
 
         $this->httpClient = new GuzzleClient($this->request_options);
