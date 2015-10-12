@@ -44,19 +44,15 @@ class Client
     public function __construct($APIKey = null, array $options = array())
     {
         $this->APIKey = $APIKey;
-        if (isset($options['verbosity'])) {
-            $this->verbosity = $options['verbosity'];
+        $option_keys = array('_verbosity', '_shorturis', 'AppName', 'OAuthSecret');
+        foreach ($option_keys as $option) {
+            if (isset($options[$option])) {
+                $this->{$option} = $options[$option];
+                unset($options[$option]);
+            }
         }
-        if (isset($options['shorturis'])) {
-            $this->shorturis = $options['shorturis'];
-        }
-        if (isset($options['AppName'])) {
-            $this->AppName = $options['AppName'];
-        }
-        unset($options['verbosity'], $options['shorturis'], $options['AppName']);
 
         $this->request_options = array_merge($this->request_options, $options);
-
 
         if ($this->shorturis) {
             $this->request_options['query']['_shorturis'] = $this->_shorturis;
