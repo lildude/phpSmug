@@ -112,6 +112,44 @@ class Client
                     }
                 }
             break;
+            case 'upload':
+                $method = 'POST';
+                # Unset all query params
+                unset($this->request_options['query']['_verbosity'], $this->request_options['query']['_shorturis'], $this->request_options['query']['APIKey']);
+
+                $file = $args[1];
+                $options = $args[2];
+                # Required headers
+                $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
+                $this->request_options['headers']['X-Smug-Version'] = 'v2';
+                $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($arg[0], '/api/v2/') === false) ? "/api/v2/{$args[0]}" : $args[0];
+                # Optional headers:
+                $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
+                foreach ($optional_headers as $header) {
+                    if (isset($options[$header])) {
+                        # Accept options with and without X-Smug- at the beginning.
+                        if (strpos($options[$header], 'X-Smug-') === false) {
+                            $this->request_options['headers']["X-Smug-{$header}"] = $options[$header];
+                        } else {
+                            $this->request_options['headers'][$header] = $options[$header];
+                        }
+                    }
+                }
+                $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
+
+                unset($this->request_options['query']['_verbosity'], $this->request_options['query']['_shorturis'], $this->request_options['query']['APIKey']);
+
+                $url = "https://upload.smugmug.com/{$filename}";
+
+                if (is_file($file)) {
+                    $fp = fopen($file, 'r');
+                    $data = fread($fp, filesize($file));
+                    fclose($fp);
+                } /*else {
+                    throw new PhpSmugException( "File doesn't exist: {$args['File']}" );
+                }*/
+                $this->request_options['body'] = $data;
+            break;
             default:
                 if ($options) {
                     $this->request_options['json'] = $options;
