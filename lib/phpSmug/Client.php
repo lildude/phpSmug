@@ -163,7 +163,7 @@ class Client
                 'consumer_secret' => $this->OAuthSecret,
                 'token' => $this->oauth_token,
                 'token_secret' => $this->oauth_token_secret,
-                'version' => '1.0a',
+                'version' => '1.0',
             ];
 
             $oauth_middleware = new Oauth1($oauth_middleware_config);
