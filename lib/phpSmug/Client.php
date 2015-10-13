@@ -126,7 +126,7 @@ class Client
                 # Optional headers:
                 $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
                 if ($options && is_array($options)) {
-                    foreach($options as $key => $value) {
+                    foreach ($options as $key => $value) {
                         $newkey = (strpos($key, 'X-Smug-') === false) ? 'X-Smug-'.$key : $key;
                         if (in_array($newkey, $optional_headers)) {
                             $this->request_options['headers'][$newkey] = $value;
