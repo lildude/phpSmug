@@ -1,0 +1,4 @@
+.DS*
+vendor
+composer.lock
+composer.phar

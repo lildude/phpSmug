@@ -10,6 +10,7 @@
          stopOnFailure="false"
          syntaxCheck="false"
          bootstrap="test/bootstrap.php"
+         report-useless-tests="true"
 >
     <testsuites>
         <testsuite name="phpSmug Test Suite">
