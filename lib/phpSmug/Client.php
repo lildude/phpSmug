@@ -231,11 +231,22 @@ class Client
             $this->stack->push($oauth_middleware);
         }
 
-        $request = $client->request(strtoupper($method), $url, $this->request_options);
-        //$code = $request->getStatusCode();
-        //$body = (string)$request->getBody();
-        //$headers = $request->getHeaders();
-        return json_decode((string) $request->getBody());
+        # Merge the default and request options
+
+        # Should I use array_merge_recursive
+        $this->request_options = array_merge($this->default_options, $this->request_options);
+
+        # Perform the API request
+        $this->response = $client->request(strtoupper($method), $url, $this->request_options);
+        $body = json_decode((string) $this->response->getBody());
+        // Return the simplified responses to make devs live's easier. If you really want the full unadulterated reponse, use getResponse();
+        if ($method == 'options') {
+            return $body->Options;
+        } elseif (isset($body->Response)) {
+            return $body->Response;
+        } else {
+            return $body;
+        }
     }
 
     /**
