@@ -90,5 +90,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->oauth_token, $oauth_token);
         $this->assertEquals($this->oauth_token_secret, $oauth_token_secret);
     }
+
+    /**
+     * @test
+     */
+    public function shouldHaveAPIKeyInQuery()
+    {
+        $client = new Client($this->APIKey);
+
+        $options = $client->getDefaultOptions();
+
+        $this->assertEquals($this->APIKey, $options['query']['APIKey']);
+    }
     }
 }
