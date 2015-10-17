@@ -26,7 +26,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotHaveToPassHttpClientToConstructorWithDefaultOptionsSet()
     {
-        $client = new Client('I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test');
+        $client = new Client($this->APIKey);
 
         $this->assertInstanceOf('GuzzleHttp\Client', $client->getHttpClient());
     }
@@ -44,10 +44,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldHaveOptionsSetInInstance()
     {
-        $APIKey = 'I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test';
         $options = [
             'AppName' => 'Testing phpSmug',
-            'OAuthSecret' => 'I-am-not-a-valid-OAuthSecret-but-it-does-not-matter-for-this-test',
+            'OAuthSecret' => $this->OAuthSecret,
             '_verbosity' => 1,
             '_shorturis' => true,
             ];
