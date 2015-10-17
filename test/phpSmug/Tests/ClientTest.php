@@ -194,5 +194,26 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('boo', $options->foo);
         //$this->assertDoesNotHaveAttribute('Response', $options); # TODO: Need to negate the test too.
     }
+
+    /**
+     * @test
+     */
+    public function shouldExtractQueryFromURLAndSetQueryInRequest()
+    {
+        $mock = new MockHandler([
+            new Response(200), # We don't care about headers or body for this test so we don't set them.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $response = $client->get('user/'.$this->user.'?_expand=UserProfile&_verbosity=2');
+
+        $request_options = $client->getRequestOptions();
+
+        $this->assertArrayHasKey('_expand', $request_options['query']);
+        $this->assertEquals('UserProfile', $request_options['query']['_expand']);
+        $this->assertArrayHasKey('_verbosity', $request_options['query']);
+        $this->assertEquals(2, $request_options['query']['_verbosity']);
+    }
     }
 }
