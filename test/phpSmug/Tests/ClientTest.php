@@ -281,5 +281,41 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         //$this->assertEquals
     }
+
+    /**
+     * @test
+     */
+    public function shouldSetAndUnSetHeadersEtcForUploadAndAssumeUploadWorkedWithOptionsThatMatchHeaders()
+    {
+        $mock = new MockHandler([
+            new Response(200), # TODO: Do we care about headers or body for this test so we don't set them?
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler, '_verbosity' => 1]);
+
+        $options = [
+            'X-Smug-Altitude' => 1085,
+            'X-Smug-Caption' => 'This is a test image.',
+            'X-Smug-FileName' => 'test-file.jpg',
+            'X-Smug-Hidden' => false,
+            'X-Smug-ImageUri' => '/api/v2/image/nSCcZwm-0',
+            'X-Smug-Keywords' => 'test; table',
+            'X-Smug-Latitude' => -34.045034,
+            'X-Smug-Longitude' => 18.386065,
+            'X-Smug-Pretty' => true,
+            'X-Smug-Title' => 'I am a test image',
+        ];
+
+        $client->upload('album/rAnD0m', './examples/phpSmug-logo.png', $options); # TODO: Make this a bit more resiliant and make the pic nice ;-)
+        $request_options = $client->getRequestOptions();  # TODO: This assumes Guzzle sets the headers correctly.  We can sort of test this from the response we get from SmugMug, but maybe not in testing.
+        foreach ($options as $header => $value) {
+            $this->assertArrayHasKey($header, $request_options['headers']);
+            $this->assertEquals($value, $request_options['headers'][$header]);
+        }
+        # TODO: These query params should _not_ be set
+        //$this->assertArrayHasKey('_verbosity', $request_options['query']['_verbosity']);
+    }
+
     }
 }
