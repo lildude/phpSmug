@@ -45,6 +45,9 @@ class Client
     public function __construct($APIKey = null, array $options = array())
     {
         $this->APIKey = $APIKey;
+        if (is_null($APIKey)) {
+            throw new \InvalidArgumentException('An API key is required for all SmugMug interactions.');
+        }
         $option_keys = ['_verbosity', '_shorturis', 'AppName', 'OAuthSecret'];
         foreach ($option_keys as $option) {
             if (isset($options[$option])) {
