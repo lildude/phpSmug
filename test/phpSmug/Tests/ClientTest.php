@@ -10,6 +10,18 @@ use GuzzleHttp\Psr7\Response;
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Setup a few variables for use in later tests.
+     */
+    public function setup()
+    {
+        $this->APIKey = 'I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test';
+        $this->user = 'random-user';
+        $this->OAuthSecret = 'I-am-not-a-valid-OAuthSecret-but-it-does-not-matter-for-this-test';
+        $this->oauth_token = 'I-am-an-oauth-token';
+        $this->oauth_token_secret = 'I-am-an-oauth-token-secret';
+        $this->fauxSmugMugResponse = '{"Options": {"foo":"boo"}, "Response": {"ano":"bar"}}';
+    }
+    /**
      * @test
      */
     public function shouldNotHaveToPassHttpClientToConstructor()
