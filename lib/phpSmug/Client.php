@@ -26,6 +26,16 @@ class Client
     private $httpClient;
 
     /**
+     * The response object for each request.
+     */
+    private $response;
+
+    /**
+     * The per-request options that are merged in with the default options.
+     */
+    private $request_options;
+
+    /**
      * @var array
      */
     private $default_options = array(
@@ -94,8 +104,44 @@ class Client
     }
 
     /**
+     * @return statusCode Returns the HTTP status code for the last request
+     */
+    public function getStatusCode()
+    {
+        return $this->response->getStatusCode();
+    }
+
+    /**
+     * @return headers Returns the HTTP headers as an array for the last request
+     */
+    public function getHeaders()
+    {
+        return $this->response->getHeaders();
+    }
+
+    /**
+     * @return ReasonPhrase Returns the HTTP status message for the last request
+     */
+    public function getReasonPhrase()
+    {
+        return $this->response->getReasonPhrase();
+    }
+
+    /**
      * @return options
      */
+    public function getDefaultOptions()
+    {
+        return $this->default_options;
+    }
+
+    /**
+     * @return $response Returns the full response without any phpSmug touches.
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
     public function getRequestOptions()
     {
         return $this->request_options;
