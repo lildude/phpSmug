@@ -158,6 +158,14 @@ class Client
         $client = self::getHttpClient();
         # Strip off /api/v2/ from any methods as we add this automatically
         $url = strtr($args[0], '/api/v2/', '');
+        # Cater for any args passed in via `?whatever=foo`
+        if (strpos($url, '?') !== false) {
+            $pairs = explode('&', explode('?', $url)[1]);
+            foreach ($pairs as $pair) {
+                list($key, $value) = explode('=', $pair);
+                $this->request_options['query'][$key] = $value;
+            }
+        }
         $options = (count($args) == 2) ? $args[1] : array();
         switch ($method) {
             case 'get':
