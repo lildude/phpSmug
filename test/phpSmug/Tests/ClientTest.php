@@ -119,5 +119,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('OK', $client->getReasonPhrase());
     }
+
+    /**
+     * @test
+     */
+    public function shouldGetHeaders()
+    {
+        $mock = new MockHandler([
+            # We don't care about the body for this test, so we don't set it.
+            new Response(200, ['X-Foo' => 'Bar']),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+
+        $r = $client->get('user/'.$this->user);
+
+        $this->assertArrayHasKey('X-Foo', $client->getHeaders());
+    }
     }
 }
