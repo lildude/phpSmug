@@ -243,5 +243,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('_shorturis', $request_options['query']);
         $this->assertEquals(true, $request_options['query']['_shorturis']);
     }
+
+    /**
+     * @test
+     */
+    public function shouldReturnReponseObject()
+    {
+        $mock = new MockHandler([
+            new Response(200, [], $this->fauxSmugMugResponse), # We don't care about headers for this test so we don't set them.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+
+        $response = $client->get('user/'.$this->user);
+
+        $this->assertEquals('bar', $response->ano);
+    }
     }
 }
