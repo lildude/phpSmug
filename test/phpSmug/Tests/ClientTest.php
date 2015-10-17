@@ -76,5 +76,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($options['OAuthSecret'], $client->OAuthSecret);
         $this->assertEquals(sprintf('Testing phpSmug using phpSmug/%s', $client::VERSION), $client->getDefaultOptions()['headers']['User-Agent']);
     }
+
+    /**
+     * @test
+     */
+    public function shouldSetAndGetOAuthTokens()
+    {
+        $client = new Client($this->APIKey);
+        $client->setToken($this->oauth_token, $this->oauth_token_secret);
+
+        list($oauth_token, $oauth_token_secret) = $client->getToken();
+
+        $this->assertEquals($this->oauth_token, $oauth_token);
+        $this->assertEquals($this->oauth_token_secret, $oauth_token_secret);
+    }
     }
 }
