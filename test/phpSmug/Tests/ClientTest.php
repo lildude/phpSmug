@@ -102,5 +102,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->APIKey, $options['query']['APIKey']);
     }
+
+    /**
+     * @test
+     */
+    public function shouldGetReasonPhrase()
+    {
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar']),  # We don't need a body so we don't set one.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+
+        $r = $client->get('user/'.$this->user);
+
+        $this->assertEquals('OK', $client->getReasonPhrase());
+    }
     }
 }
