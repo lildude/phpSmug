@@ -55,6 +55,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('This test has not been implemented yet.');
         $client = Client::getHttpClient(); # Still not sure how to do this.
     }
+
+    /**
+     * @test
+     */
     public function shouldHaveOptionsSetInInstance()
     {
         $options = [
@@ -62,14 +66,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'OAuthSecret' => $this->OAuthSecret,
             '_verbosity' => 1,
             '_shorturis' => true,
-            ];
-        $client = new Client($APIKey, $options);
+        ];
+        $client = new Client($this->APIKey, $options);
 
-        $this->assertEquals($client->APIKey, $APIKey);
-        $this->assertEquals($client->AppName, $options['AppName']);
-        $this->assertEquals($client->_verbosity, $options['_verbosity']);
-        $this->assertEquals($client->_shorturis, $options['_shorturis']);
-        $this->assertEquals($client->OAuthSecret, $options['OAuthSecret']);
-        $this->assertEquals($client->getRequestOptions()['headers']['User-Agent'], sprintf('Testing phpSmug using phpSmug/%s', $client::VERSION));
+        $this->assertEquals($this->APIKey, $client->APIKey);
+        $this->assertEquals($options['AppName'], $client->AppName);
+        $this->assertEquals($options['_verbosity'], $client->_verbosity);
+        $this->assertEquals($options['_shorturis'], $client->_shorturis);
+        $this->assertEquals($options['OAuthSecret'], $client->OAuthSecret);
+        $this->assertEquals(sprintf('Testing phpSmug using phpSmug/%s', $client::VERSION), $client->getDefaultOptions()['headers']['User-Agent']);
+    }
     }
 }
