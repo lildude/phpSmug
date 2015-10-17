@@ -384,5 +384,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('json', $request_options);
         $this->assertEquals($options, $request_options['json']);
     }
+
+    /**
+     * @test
+     */
+    public function shouldSetOAuthParamsInAuthorizationHeader()
+    {
     }
 }
