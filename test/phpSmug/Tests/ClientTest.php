@@ -175,5 +175,24 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('ano', $decoded_response->Response);
         $this->assertEquals('bar', $decoded_response->Response->ano);
     }
+
+    /**
+     * @test
+     */
+    public function shouldGetSmugMugMethodOptions()
+    {
+        $mock = new MockHandler([
+            # We don't care about headers for this test so we don't set them.
+            new Response(200, [], $this->fauxSmugMugResponse), # TODO: Populate with JSON that resembles the response we get.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+
+        $options = $client->options('user/'.$this->user);
+
+        $this->assertEquals('boo', $options->foo);
+        //$this->assertDoesNotHaveAttribute('Response', $options); # TODO: Need to negate the test too.
+    }
     }
 }
