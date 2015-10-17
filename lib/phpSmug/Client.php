@@ -289,4 +289,11 @@ class Client
         $this->oauth_token_secret = $oauth_token_secret;
     }
 
+    /**
+     * Get the OAuth tokens that may have been set using setToken().
+     */
+    public function getToken()
+    {
+        return array($this->oauth_token, $this->oauth_token_secret);
+    }
 }
