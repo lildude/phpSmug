@@ -361,5 +361,28 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = new Client($this->APIKey);
         $client->upload('album/rAnD0m', '/path/to/non/existant/file.jpg');
     }
+
+    /**
+     * @test
+     */
+    public function shouldSetJsonOptionOnPutAndPatchRequests()
+    {
+        $mock = new MockHandler([
+            new Response(200), # TODO: Do we care about headers or body for this test so we don't set them?
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler, '_verbosity' => 1]);
+        $options = [
+            'NiceName' => 'New-Album-from-API',
+            'Title' => 'Ano Different Album Name from API',
+            'Privacy' => 'Private',
+        ];
+        $client->put('album/rAnD0m', $options);
+        $request_options = $client->getRequestOptions();
+
+        $this->assertArrayHasKey('json', $request_options);
+        $this->assertEquals($options, $request_options['json']);
+    }
     }
 }
