@@ -24,7 +24,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldNotHaveToPassHttpClientToConstructor()
+    public function shouldNotHaveToPassHttpClientToConstructorWithDefaultOptionsSet()
     {
         $client = new Client('I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test');
 
