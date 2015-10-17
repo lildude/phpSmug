@@ -28,7 +28,7 @@ class Client
     /**
      * @var array
      */
-    private $request_options = array(
+    private $default_options = array(
         'base_uri' => 'https://api.smugmug.com/api/v2/',
         'query' => [],
         'headers' => [
@@ -53,29 +53,29 @@ class Client
             }
         }
 
-        $this->request_options = array_merge($this->request_options, $options);
+        $this->default_options = array_merge($this->default_options, $options);
 
         if ($this->_shorturis) {
-            $this->request_options['query']['_shorturis'] = $this->_shorturis;
+            $this->default_options['query']['_shorturis'] = $this->_shorturis;
         }
 
         # SmugMug defaults to a verbosity of 2 so no point adding if it equals 2.
         if ($this->_verbosity != 2) {
-            $this->request_options['query']['_verbosity'] = $this->_verbosity;
+            $this->default_options['query']['_verbosity'] = $this->_verbosity;
         }
 
-        $this->request_options['headers']['User-Agent'] = sprintf('%s using %s/%s', $this->AppName, $this->request_options['headers']['User-Agent'], self::VERSION);
+        $this->default_options['headers']['User-Agent'] = sprintf('%s using %s/%s', $this->AppName, $this->default_options['headers']['User-Agent'], self::VERSION);
 
         if ($this->OAuthSecret) {
             # Setup the handler stack - we'll need this later.
             $this->stack = HandlerStack::create();
-            $this->request_options['handler'] = $this->stack;
+            $this->default_options['handler'] = $this->stack; # TODO: How do we cater for more than one handler? This tramples all over previously set handlers.
         } else {
             # We only need the APIKey query parameter if we're not authenticating
-            $this->request_options['query']['APIKey'] = $APIKey;
+            $this->default_options['query']['APIKey'] = $APIKey;
         }
 
-        $this->httpClient = new GuzzleClient($this->request_options);
+        $this->httpClient = new GuzzleClient($this->default_options);
     }
 
     /**
@@ -84,7 +84,7 @@ class Client
     public function getHttpClient()
     {
         if (null === $this->httpClient) {
-            $this->httpClient = new GuzzleClient($this->request_options);
+            $this->httpClient = new GuzzleClient($this->default_options);
         }
 
         return $this->httpClient;
@@ -100,6 +100,8 @@ class Client
 
     public function __call($method, $args)
     {
+        # Ensure the per-request options are empty
+        $this->request_options = [];
         $client = self::getHttpClient();
         # Strip off /api/v2/ from any methods as we add this automatically
         $url = strtr($args[0], '/api/v2/', '');
@@ -114,15 +116,15 @@ class Client
             break;
             case 'upload':
                 $method = 'POST';
-                # Unset all query params
-                unset($this->request_options['query']['_verbosity'], $this->request_options['query']['_shorturis'], $this->request_options['query']['APIKey']);
+                # Unset all default query params
+                unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
 
                 $file = $args[1];
                 $options = (count($args) == 3) ? $args[2] : null;
                 # Required headers
                 $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
                 $this->request_options['headers']['X-Smug-Version'] = 'v2';
-                $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($arg[0], '/api/v2/') === false) ? "/api/v2/{$args[0]}" : $args[0];
+                $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($args[0], '/api/v2/') === false) ? "/api/v2/{$args[0]}" : $args[0];
                 # Optional headers:
                 $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
                 if ($options && is_array($options)) {
