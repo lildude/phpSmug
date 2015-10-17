@@ -351,5 +351,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         # TODO: These query params should _not_ be set
         //$this->assertArrayHasKey('_verbosity', $request_options['query']['_verbosity']);
     }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     */
+    public function shouldThrowExceptionIfUploadFileNotFound()
+    {
+        $client = new Client($this->APIKey);
+        $client->upload('album/rAnD0m', '/path/to/non/existant/file.jpg');
+    }
     }
 }
