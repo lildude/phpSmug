@@ -142,6 +142,10 @@ class Client
     {
         return $this->response;
     }
+
+    /**
+     * @return $request_options Returns the request options. These are set just before the request is made and cleared before every request.
+     */
     public function getRequestOptions()
     {
         return $this->request_options;
