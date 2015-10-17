@@ -215,5 +215,33 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('_verbosity', $request_options['query']);
         $this->assertEquals(2, $request_options['query']['_verbosity']);
     }
+
+    /**
+     * @test
+     */
+    public function shouldSetQueryFromOptionsPassedOnRequest()
+    {
+        $mock = new MockHandler([
+            new Response(200), # We don't care about headers or body for this test so we don't set them.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $options = [
+            '_filter' => ['BioText', 'CoverImage'],  # TODO: Prevent encoding of commas.
+            '_filteruri' => ['User'],
+            '_shorturis' => true,
+        ];
+        $response = $client->get('user/'.$this->user, $options);
+
+        $request_options = $client->getRequestOptions(); # TODO: If possible, need to get the actual URL as this is blindly trusting Guzzle to use these params.
+
+        $this->assertArrayHasKey('_filter', $request_options['query']);
+        $this->assertEquals('BioText,CoverImage', $request_options['query']['_filter']);
+        $this->assertArrayHasKey('_filteruri', $request_options['query']);
+        $this->assertEquals('User', $request_options['query']['_filteruri']);
+        $this->assertArrayHasKey('_shorturis', $request_options['query']);
+        $this->assertEquals(true, $request_options['query']['_shorturis']);
+    }
     }
 }
