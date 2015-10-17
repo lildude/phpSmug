@@ -137,5 +137,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('X-Foo', $client->getHeaders());
     }
+
+    /**
+     * @test
+     */
+    public function shouldGetStatusCode()
+    {
+        $mock = new MockHandler([
+            # We don't care about headers or body for this test so we don't set them.
+            new Response(200),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+
+        $r = $client->get('user/'.$this->user);
+
+        $this->assertEquals('200', $client->getStatusCode());
+    }
     }
 }
