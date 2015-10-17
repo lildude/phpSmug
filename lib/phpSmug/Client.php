@@ -141,8 +141,6 @@ class Client
 
                 $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
 
-                unset($this->request_options['query']['_verbosity'], $this->request_options['query']['_shorturis'], $this->request_options['query']['APIKey']);
-
                 $url = 'https://upload.smugmug.com/'.$filename;
 
                 if (is_file($file)) {
