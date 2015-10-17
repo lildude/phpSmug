@@ -29,6 +29,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = new Client($this->APIKey);
 
         $this->assertInstanceOf('GuzzleHttp\Client', $client->getHttpClient());
+        $options = $client->getDefaultOptions();
+
+        $this->assertInstanceOf('GuzzleHttp\Client', $client->getHttpClient());
+        $this->assertEquals('https://api.smugmug.com/api/v2/', $options['base_uri']);
+        $this->assertEquals($client->AppName.' using phpSmug/'.$client::VERSION, $options['headers']['User-Agent']);
+        $this->assertEquals('application/json', $options['headers']['Accept']);
+        $this->assertEquals(30, $options['timeout']);
     }
 
     /**
