@@ -5,7 +5,9 @@ namespace phpSmug\Tests;
 use phpSmug\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Middleware;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -381,5 +383,41 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldSetOAuthParamsInAuthorizationHeader()
     {
+        //$this->markTestIncomplete('This test has not been implemented yet.');
+        $mock = new MockHandler([
+            new Response(200),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $container = [];
+        // Add the history middleware to the handler stack.
+        $history = Middleware::history($container);
+        $handler->push($history);
+
+        $client = new Client($this->APIKey, ['handler' => $handler, 'OAuthSecret' => $this->OAuthSecret]);
+        $client->setToken($this->oauth_token, $this->oauth_token_secret);
+        $client->get('album/rAnD0m');
+        foreach ($container as $transaction) {
+            $auth_header = Psr7\parse_header($transaction['request']->getHeader('Authorization'));
+
+            // Asserts the header is set and populated
+            $this->assertNotEmpty($auth_header);
+
+            // Now parse and flatten the header so we can check the values
+            $parsed_auth_header = [];
+            foreach ($auth_header as $h) {
+                foreach ($h as $key => $value) {
+                    $parsed_auth_header[$key] = $value;
+                }
+            }
+            $this->assertEquals($this->APIKey, $parsed_auth_header['OAuth oauth_consumer_key']);
+            $this->assertEquals($this->oauth_token, $parsed_auth_header['oauth_token']);
+            $this->assertEquals('HMAC-SHA1', $parsed_auth_header['oauth_signature_method']);
+            $this->assertEquals('1.0', $parsed_auth_header['oauth_version']);
+            $this->assertArrayHasKey('oauth_nonce', $parsed_auth_header);
+            $this->assertArrayHasKey('oauth_signature', $parsed_auth_header);
+            $this->assertArrayHasKey('oauth_timestamp', $parsed_auth_header);
+        }
     }
 }
