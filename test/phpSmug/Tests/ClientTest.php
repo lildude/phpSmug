@@ -342,8 +342,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $this->assertArrayHasKey('X-Smug-'.$header, $request_options['headers']);
             $this->assertEquals($value, $request_options['headers']['X-Smug-'.$header]);
         }
-        # TODO: These query params should _not_ be set
-        //$this->assertArrayHasKey('_verbosity', $request_options['query']['_verbosity']);
+        # There should be no query params.
+        $this->assertEmpty($request_options['query']);
     }
 
     /**
