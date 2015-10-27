@@ -19,7 +19,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->OAuthSecret = 'I-am-not-a-valid-OAuthSecret-but-it-does-not-matter-for-this-test';
         $this->oauth_token = 'I-am-an-oauth-token';
         $this->oauth_token_secret = 'I-am-an-oauth-token-secret';
-        $this->fauxSmugMugResponse = '{"Options": {"foo":"boo"}, "Response": {"ano":"bar"}}';
+        $this->fauxSmugMugResponse = '{"Options":{"foo":"bar"},"Response": {"ano":"bar"},"Code":200,"Message":"OK"}';
     }
     /**
      * @test
