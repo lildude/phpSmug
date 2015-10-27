@@ -211,7 +211,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldSetQueryFromOptionsPassedOnRequest()
+    public function shouldSetQueryFromOptionsPassedOnRequestAndOverWriteDefaults()
     {
         $mock = new MockHandler([
             new Response(200), # We don't care about headers or body for this test so we don't set them.
@@ -220,20 +220,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $handler = HandlerStack::create($mock);
         $client = new Client($this->APIKey, ['handler' => $handler]);
         $options = [
-            '_filter' => ['BioText', 'CoverImage'],  # TODO: Prevent encoding of commas.
+            '_filter' => ['BioText', 'CoverImage'],  # TODO: Ensure default options are over-written and none are lost.
             '_filteruri' => ['User'],
             '_shorturis' => true,
+            '_verbosity' => 2,
         ];
         $response = $client->get('user/'.$this->user, $options);
 
-        $request_options = $client->getRequestOptions(); # TODO: If possible, need to get the actual URL as this is blindly trusting Guzzle to use these params.
-
-        $this->assertArrayHasKey('_filter', $request_options['query']);
-        $this->assertEquals('BioText,CoverImage', $request_options['query']['_filter']);
-        $this->assertArrayHasKey('_filteruri', $request_options['query']);
-        $this->assertEquals('User', $request_options['query']['_filteruri']);
-        $this->assertArrayHasKey('_shorturis', $request_options['query']);
-        $this->assertEquals(true, $request_options['query']['_shorturis']);
+        $request_options = $client->getRequestOptions();
+        # We're not testing Guzzle, so we assume it does the right thing with these options.
+        foreach ($options as $key => $value) {
+            $this->assertArrayHasKey($key, $request_options['query']);
+            $this->assertEquals((is_array($value)) ? implode(',', $value) : $value, $request_options['query'][$key]);
+        }
     }
 
     /**
