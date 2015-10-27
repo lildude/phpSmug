@@ -96,10 +96,6 @@ class Client
      */
     public function getHttpClient()
     {
-        if (null === $this->httpClient) {
-            $this->httpClient = new GuzzleClient($this->default_options);
-        }
-
         return $this->httpClient;
     }
 
