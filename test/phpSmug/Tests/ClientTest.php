@@ -422,4 +422,28 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $this->assertArrayHasKey('oauth_timestamp', $parsed_auth_header);
         }
     }
+
+    /**
+     * @test
+     */
+    public function shouldSignRequestUrlWithOAuthParams()
+    {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldGetRequestToken()
+    {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldGetAccessToken()
+    {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+    }
 }
