@@ -81,8 +81,8 @@ class Client
 
         if ($this->OAuthSecret) {
             # Setup the handler stack - we'll need this later.
-            $this->stack = HandlerStack::create();
-            $this->default_options['handler'] = $this->stack; # TODO: How do we cater for more than one handler? This tramples all over previously set handlers.
+            $this->stack = (isset($options['handler'])) ? $options['handler'] : HandlerStack::create();
+            $this->default_options['handler'] = $this->stack;
         } else {
             # We only need the APIKey query parameter if we're not authenticating
             $this->default_options['query']['APIKey'] = $APIKey;
