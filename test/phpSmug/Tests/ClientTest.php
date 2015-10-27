@@ -384,7 +384,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldSetOAuthParamsInAuthorizationHeader()
     {
-        //$this->markTestIncomplete('This test has not been implemented yet.');
         $mock = new MockHandler([
             new Response(200),
         ]);
