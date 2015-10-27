@@ -48,15 +48,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldInstantiateClientWithDefaultOptionsWithoutCallingClientNew()
-    {
-        $this->markTestIncomplete('This test has not been implemented yet.');
-        $client = Client::getHttpClient(); # Still not sure how to do this.
-    }
-
-    /**
-     * @test
-     */
     public function shouldHaveOptionsSetInInstance()
     {
         $options = [
