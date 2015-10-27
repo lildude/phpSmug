@@ -11,6 +11,7 @@
          syntaxCheck="false"
          bootstrap="test/bootstrap.php"
          report-useless-tests="true"
+
 >
     <testsuites>
         <testsuite name="phpSmug Test Suite">
@@ -29,4 +30,8 @@
             <directory suffix=".php">./lib/phpSmug/</directory>
         </whitelist>
     </filter>
+
+    <logging>
+        <log type="coverage-html" target="/tmp/report" lowUpperBound="35" highLowerBound="70"/>
+    </logging>
 </phpunit>
