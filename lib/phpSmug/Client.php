@@ -224,12 +224,14 @@ class Client
 
             $oauth_middleware = new Oauth1($oauth_middleware_config);
 
-            $this->stack->push($oauth_middleware);
+            $this->stack->unshift($oauth_middleware); # Bump OAuth to the top of the stack
         }
 
         # Merge the default and request options
 
-        # Should I use array_merge_recursive
+        # Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
+        $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
+        # Merge the rest of the options.
         $this->request_options = array_merge($this->default_options, $this->request_options);
 
         # Perform the API request
