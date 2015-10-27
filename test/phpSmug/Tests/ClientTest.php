@@ -174,7 +174,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $mock = new MockHandler([
             # We don't care about headers for this test so we don't set them.
-            new Response(200, [], $this->fauxSmugMugResponse), # TODO: Populate with JSON that resembles the response we get.
+            new Response(200, [], $this->fauxSmugMugResponse),
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -182,8 +182,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $options = $client->options('user/'.$this->user);
 
-        $this->assertEquals('boo', $options->foo);
-        //$this->assertDoesNotHaveAttribute('Response', $options); # TODO: Need to negate the test too.
+        $this->assertObjectHasAttribute('foo', $options);
+        $this->assertEquals('bar', $options->foo);
+        $this->assertObjectNotHasAttribute('Response', $options);
     }
 
     /**
