@@ -251,6 +251,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $response = $client->get('user/'.$this->user);
 
+        $this->assertObjectHasAttribute('ano', $response);
         $this->assertEquals('bar', $response->ano);
     }
 
