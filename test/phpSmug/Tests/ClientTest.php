@@ -403,7 +403,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client->get('album/rAnD0m');
         foreach ($container as $transaction) {
             $auth_header = Psr7\parse_header($transaction['request']->getHeader('Authorization'));
-
             // Asserts the header is set and populated
             $this->assertNotEmpty($auth_header);
 
