@@ -260,20 +260,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldSetOAuthParamsInQuery()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
         $mock = new MockHandler([
-            new Response(200), # TODO: Do we care about headers or body for this test so we don't set them?
+            new Response(200),
         ]);
 
         $handler = HandlerStack::create($mock);
-        $client = new Client($this->APIKey, ['handler' => $handler, 'OAuthSecret' => $this->OAuthSecret]); # TODO: This currently barfs because when we use the OAuth library, it creates its own handler that tramples all over the Mock handler.
 
-        $client->setToken($this->oauth_token, $this->oauth_token_secret);
+        $container = [];
+        // Add the history middleware to the handler stack.
+        $history = Middleware::history($container);
+        $handler->push($history);
 
+        $client = new Client($this->APIKey, ['handler' => $handler]);
         $client->get('album/rAnD0m');
-        $request_options = $client->getRequestOptions();
-
-        //$this->assertEquals
+        foreach ($container as $transaction) {
+            $query = $transaction['request']->getUri()->getQuery();
+            $this->assertEquals('APIKey='.$this->APIKey, $query);
+        }
     }
 
     /**
