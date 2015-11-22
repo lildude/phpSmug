@@ -176,14 +176,14 @@ class Client
                 }
             break;
             case 'getRequestToken':
-                $http_method = 'POST';
+                $http_method = 'GET';
                 $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
 
                 # Unset all default query params
                 unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
 
                 $callback = $args[0];
-                $this->request_options['form_params'] = [
+                $this->request_options['query'] = [
                     'oauth_callback' => $callback,
                 ];
             break;
