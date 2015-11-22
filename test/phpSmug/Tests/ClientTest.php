@@ -462,7 +462,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $handler = HandlerStack::create($mock);
         $client = new Client($this->APIKey, ['handler' => $handler]);
 
-        $oauth_verifier = '12345678';
+        $oauth_verifier = '12345678'; # This isn't important
         $request_token = $client->getAccessToken($oauth_verifier);
 
         $this->assertArrayHasKey('oauth_token', $request_token);
