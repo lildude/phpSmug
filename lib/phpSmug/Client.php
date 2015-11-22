@@ -340,11 +340,41 @@ class Client
         return array($this->oauth_token, $this->oauth_token_secret);
     }
 
-    public function getAuthorizeURL($callback, $options)
+    /**
+     * Helper function that generates and returns the authorization URL.
+     *
+     * If no arguments are passed, we use the default settings and set no
+     * callback URL.  This means SmugMug won't redirect your user back to your
+     * site.
+     *
+     * If the first argument is a string, we take this to be the callback URL.
+     *
+     * If this first argument is an array, we take this to be the options, which
+     * can include the callback URL.  If one of those options happens to be
+     * oauth_callback, you're in luck and you don't need to pass it as a
+     * separate argument.
+     */
+    public function getAuthorizeURL()
     {
-        $url = 'https://secure.smugmug.com/services/oauth/1.0a/authorize';
-        $auth_params = \http_build_query($options);
+        $num_args = func_num_args();
+        if ($num_args == 2) {
+            list($callback, $auth_params) = func_get_args();
+        } else {
+            $arg = func_get_args();
+            if (count($arg) > 0) {
+                if (is_string($arg[0])) {
+                    $callback = $arg[0];
+                }
+                if (is_array($arg[0])) {
+                    $auth_params = $arg[0];
+                }
+            }
+        }
 
-        return "{$url}?oauth_token={$this->oauth_token}&oauth_callback=".$callback."&{$auth_params}";
+        $oauth_callback = (isset($callback)) ? '&oauth_callback='.urlencode($callback) : '';
+        $auth_params = (isset($auth_params)) ? '&'.\http_build_query($auth_params) : '';
+        $url = 'https://secure.smugmug.com/services/oauth/1.0a/authorize';
+
+        return "{$url}?oauth_token={$this->oauth_token}{$oauth_callback}{$auth_params}";
     }
 }
