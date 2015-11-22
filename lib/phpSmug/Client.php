@@ -339,4 +339,12 @@ class Client
     {
         return array($this->oauth_token, $this->oauth_token_secret);
     }
+
+    public function getAuthorizeURL($callback, $options)
+    {
+        $url = 'https://secure.smugmug.com/services/oauth/1.0a/authorize';
+        $auth_params = \http_build_query($options);
+
+        return "{$url}?oauth_token={$this->oauth_token}&oauth_callback=".$callback."&{$auth_params}";
+    }
 }
