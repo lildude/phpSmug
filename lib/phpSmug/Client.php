@@ -175,8 +175,37 @@ class Client
                     }
                 }
             break;
+            case 'getRequestToken':
+                $http_method = 'POST';
+                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
+
+                # Unset all default query params
+                unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
+
+                $callback = $args[0];
+                $this->request_options['form_params'] = [
+                    'oauth_callback' => $callback,
+                ];
+            break;
+            case 'getAccessToken':
+                $http_method = 'GET';
+                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
+
+                # Unset all default query params
+                unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
+
+                $oauth_verifier = $args[0];
+                $this->request_options['query'] = [
+                    'oauth_verifier' => $oauth_verifier,
+                ];
+
+            break;
+            case 'signRequest':
+              # TODO Take query and append OAuth stuffs
+            break;
             case 'upload':
-                $method = 'POST';
+                $http_method = 'POST';
+
                 # Unset all default query params
                 unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
 
@@ -239,15 +268,26 @@ class Client
         $this->request_options = array_merge($this->default_options, $this->request_options);
 
         # Perform the API request
-        $this->response = $client->request(strtoupper($method), $url, $this->request_options);
-        $body = json_decode((string) $this->response->getBody());
-        // Return the simplified responses to make devs live's easier. If you really want the full unadulterated reponse, use getResponse();
-        if ($method == 'options') {
-            return $body->Options;
-        } elseif (isset($body->Response)) {
-            return $body->Response;
-        } else {
-            return $body;
+        $this->response = $client->request((isset($http_method)) ? strtoupper($http_method) : strtoupper($method), $url, $this->request_options);
+
+        switch ($method) {
+          case 'getRequestToken':
+          case 'getAccessToken':
+              parse_str($this->response->getBody(), $token);
+              $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
+
+              return $token;
+          break;
+          default:
+              $body = json_decode((string) $this->response->getBody());
+              if ($method == 'options') {
+                  return $body->Options;
+              } elseif (isset($body->Response)) {
+                  return $body->Response;
+              } else {
+                  return $body;
+              }
+          break;
         }
     }
 
