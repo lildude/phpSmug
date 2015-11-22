@@ -211,10 +211,12 @@ class Client
 
                 $file = $args[1];
                 $options = (count($args) == 3) ? $args[2] : null;
+
                 # Required headers
                 $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
                 $this->request_options['headers']['X-Smug-Version'] = 'v2';
                 $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($args[0], '/api/v2/') === false) ? "/api/v2/{$args[0]}" : $args[0];
+
                 # Optional headers:
                 $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
                 if ($options && is_array($options)) {
@@ -252,7 +254,6 @@ class Client
                 'consumer_secret' => $this->OAuthSecret,
                 'token' => $this->oauth_token,
                 'token_secret' => $this->oauth_token_secret,
-                'version' => '1.0',
             ];
 
             $oauth_middleware = new Oauth1($oauth_middleware_config);
