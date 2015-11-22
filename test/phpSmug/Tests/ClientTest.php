@@ -474,6 +474,40 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function shouldGenerateAuthorizationUrl()
+    {
+        $client = new Client($this->APIKey);
+        $callback = 'http://localhost/index.php';
+        $options = [
+            'Access' => 'Public',
+            'Permissions' => 'Add',
+            'allowThirdPartyLogin' => false,
+            'showSignUpButton' => false,
+            'viewportScale' => 0.0,
+        ];
+
+        $client->setToken($this->oauth_token, $this->oauth_token_secret);
+
+        $authorize_url = $client->getAuthorizeURL();
+        $this->assertTrue(is_string($authorize_url));
+        $this->assertEquals("https://secure.smugmug.com/services/oauth/1.0a/authorize?oauth_token={$this->oauth_token}", $authorize_url);
+
+        $authorize_url = $client->getAuthorizeURL($callback);
+        $this->assertTrue(is_string($authorize_url));
+        $this->assertEquals("https://secure.smugmug.com/services/oauth/1.0a/authorize?oauth_token={$this->oauth_token}&oauth_callback=".urlencode($callback), $authorize_url);
+
+        $authorize_url = $client->getAuthorizeURL($options);
+        $this->assertTrue(is_string($authorize_url));
+        $this->assertEquals("https://secure.smugmug.com/services/oauth/1.0a/authorize?oauth_token={$this->oauth_token}".'&'.\http_build_query($options), $authorize_url);
+
+        $authorize_url = $client->getAuthorizeURL($callback, $options);
+        $this->assertTrue(is_string($authorize_url));
+        $this->assertEquals("https://secure.smugmug.com/services/oauth/1.0a/authorize?oauth_token={$this->oauth_token}&oauth_callback=".urlencode($callback).'&'.\http_build_query($options), $authorize_url);
+    }
+
+    /**
+     * @test
+     */
     public function shouldSignRequestUrlWithOAuthParams()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
