@@ -23,6 +23,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->oauth_token_secret = 'I-am-an-oauth-token-secret';
         $this->fauxSmugMugResponse = '{"Options":{"foo":"bar"},"Response": {"ano":"bar"},"Code":200,"Message":"OK"}';
         $this->fauxRequestTokenResponse = 'oauth_token=I-am-an-oauth-token&oauth_token_secret=I-am-an-oauth-token-secret&oauth_callback_confirmed=true';
+        $this->fauxAccessTokenResponse = 'oauth_token=I-am-an-oauth-token&oauth_token_secret=I-am-an-oauth-token-secret';
     }
     /**
      * @test
@@ -451,15 +452,29 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldSignRequestUrlWithOAuthParams()
+    public function shouldGetAccessToken()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $mock = new MockHandler([
+            # We don't care about headers for this test so we don't set them.
+            new Response(200, [], $this->fauxAccessTokenResponse),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+
+        $oauth_verifier = '12345678';
+        $request_token = $client->getAccessToken($oauth_verifier);
+
+        $this->assertArrayHasKey('oauth_token', $request_token);
+        $this->assertEquals($this->oauth_token, $request_token['oauth_token']);
+        $this->assertArrayHasKey('oauth_token_secret', $request_token);
+        $this->assertEquals($this->oauth_token_secret, $request_token['oauth_token_secret']);
     }
 
     /**
      * @test
      */
-    public function shouldGetAccessToken()
+    public function shouldSignRequestUrlWithOAuthParams()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
