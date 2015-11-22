@@ -31,7 +31,7 @@ $username = 'A_USERNAME';
 </head>
 <body>
     <div>
-        <a href="http://phpsmug.com"><img src="phpSmug-logo.png" /></a>
+        <a href="http://phpsmug.com"><img src="phpSmug-logo.svg" /></a>
         <h2>phpSmug First Album Example</h2>
 <?php
 
