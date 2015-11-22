@@ -22,8 +22,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->oauth_token = 'I-am-an-oauth-token';
         $this->oauth_token_secret = 'I-am-an-oauth-token-secret';
         $this->fauxSmugMugResponse = '{"Options":{"foo":"bar"},"Response": {"ano":"bar"},"Code":200,"Message":"OK"}';
-        $this->fauxRequestTokenResponse = 'oauth_token=I-am-an-oauth-token&oauth_token_secret=I-am-an-oauth-token-secret&oauth_callback_confirmed=true';
-        $this->fauxAccessTokenResponse = 'oauth_token=I-am-an-oauth-token&oauth_token_secret=I-am-an-oauth-token-secret';
+        $this->fauxRequestTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}&oauth_callback_confirmed=true";
+        $this->fauxAccessTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}";
     }
     /**
      * @test
