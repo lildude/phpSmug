@@ -258,7 +258,7 @@ class Client
 
             $oauth_middleware = new Oauth1($oauth_middleware_config);
 
-            $this->stack->unshift($oauth_middleware); # Bump OAuth to the top of the stack
+            $this->stack->unshift($oauth_middleware); # Bump OAuth to the bottom of the stack
         }
 
         # Merge the default and request options
