@@ -258,7 +258,7 @@ class Client
 
             $oauth_middleware = new Oauth1($oauth_middleware_config);
 
-            $this->stack->unshift($oauth_middleware); # Bump OAuth to the bottom of the stack
+            $this->stack->unshift($oauth_middleware, 'oauth_middleware'); # Bump OAuth to the bottom of the stack
         }
 
         # Merge the default and request options
@@ -276,6 +276,8 @@ class Client
           case 'getAccessToken':
               parse_str($this->response->getBody(), $token);
               $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
+              # Remove the middleware so it is re-added with the updated credentials on subsequent requests.
+              $this->stack->remove('oauth_middleware');
 
               return $token;
           break;
