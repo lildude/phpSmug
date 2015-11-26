@@ -42,7 +42,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(
                 0,
                 $return_var,
-                "PSR linter reported errors in $path: ".implode('; ', $output)
+                "PSR linter reported errors in $path: \n\t".implode("\n\t", $output)
             );
         }
     }
