@@ -9,7 +9,7 @@ namespace phpSmug\Tests;
 class PsrComplianceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test for all PSR.
+     * @test
      */
     public function testPSR()
     {
