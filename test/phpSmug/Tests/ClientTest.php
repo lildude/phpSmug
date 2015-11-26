@@ -75,7 +75,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldSetAndGetOAuthTokens()
     {
-        $client = new Client($this->APIKey);
+        $options = ['OAuthSecret' => $this->OAuthSecret];
+        $client = new Client($this->APIKey, $options);
         $client->setToken($this->oauth_token, $this->oauth_token_secret);
 
         list($oauth_token, $oauth_token_secret) = $client->getToken();
@@ -436,7 +437,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $handler = HandlerStack::create($mock);
-        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $client = new Client($this->APIKey, ['OAuthSecret' => $this->OAuthSecret, 'handler' => $handler]);
 
         $callback = 'http://localhost/index.php';
         $request_token = $client->getRequestToken($callback);
@@ -460,7 +461,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $handler = HandlerStack::create($mock);
-        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $client = new Client($this->APIKey, ['OAuthSecret' => $this->OAuthSecret, 'handler' => $handler]);
 
         $oauth_verifier = '12345678'; # This isn't important
         $request_token = $client->getAccessToken($oauth_verifier);
@@ -476,7 +477,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldGenerateAuthorizationUrl()
     {
-        $client = new Client($this->APIKey);
+        $options = ['OAuthSecret' => $this->OAuthSecret];
+        $client = new Client($this->APIKey, $options);
         $callback = 'http://localhost/index.php';
         $options = [
             'Access' => 'Public',
