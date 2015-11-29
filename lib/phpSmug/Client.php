@@ -242,10 +242,16 @@ class Client
                 }
                 $this->request_options['body'] = $data;
             break;
-            default:
+            case 'put':
+            case 'post':
+            case 'patch':
+            case 'options':
                 if ($options) {
                     $this->request_options['json'] = $options;
                 }
+            break;
+            default:
+                throw new \BadMethodCallException('Invalid method: '.$method);
             break;
         }
         if ($this->OAuthSecret) {
