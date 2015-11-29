@@ -546,6 +546,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException BadMethodCallException
+     */
+    public function shouldThrowBadMethodCallException()
+    {
+        $client = new Client($this->APIKey);
+        $client->badmethod();
+    }
+    /**
+     * @test
      */
     public function shouldSignRequestUrlWithOAuthParams()
     {
