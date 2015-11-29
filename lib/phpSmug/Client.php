@@ -40,7 +40,8 @@ class Client
      * @var array
      */
     private $default_options = array(
-        'base_uri' => 'https://api.smugmug.com/api/v2/',
+        'base_uri' => 'https://api.smugmug.com/',
+        'api_version' => 'v2',
         'query' => [],
         'headers' => [
                         'User-Agent' => 'phpSmug',
@@ -154,9 +155,19 @@ class Client
         $this->request_options = [];
         $client = self::getHttpClient();
         if (!empty($args)) {
-            # Strip off /api/v2/ from any methods as we add this automatically
             if (is_string($args[0])) {
-                $url = strtr($args[0], '/api/v2/', '');
+                # Add '/api/v#' to the method if it doesn't exist
+                if (strpos($args[0], '/api/'.$this->default_options['api_version']) === false) {
+                    $url = '/api/'.$this->default_options['api_version'];
+                    # Cater for ! queries like !authuser - these don't need a trailing / after the API version.
+                    if (strpos($args[0], '!') !== 0) {
+                        $url .= '/';
+                    }
+                    $url .= $args[0];
+                } else {
+                    $url = $args[0];
+                }
+
                 # Cater for any args passed in via `?whatever=foo`
                 if (strpos($url, '?') !== false) {
                     $pairs = explode('&', explode('?', $url)[1]);
@@ -215,8 +226,8 @@ class Client
 
                 # Required headers
                 $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
-                $this->request_options['headers']['X-Smug-Version'] = 'v2';
-                $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($args[0], '/api/v2/') === false) ? "/api/v2/{$args[0]}" : $args[0];
+                $this->request_options['headers']['X-Smug-Version'] = $this->default_options['api_version'];
+                $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($args[0], '/api/'.$this->default_options['api_version'].'/') === false) ? '/api/'.$this->default_options['api_version'].'/'.$args[0] : $args[0];
 
                 # Optional headers:
                 $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
