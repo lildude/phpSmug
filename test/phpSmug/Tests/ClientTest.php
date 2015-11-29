@@ -285,6 +285,43 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function shouldSetCorrectQueryUrl()
+    {
+        $mock = new MockHandler([
+            new Response(200),
+            new Response(200),
+            new Response(200),
+            new Response(200),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $container = [];
+        // Add the history middleware to the handler stack.
+        $history = Middleware::history($container);
+        $handler->push($history);
+
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $queries = ['!album', 'album/rAnD0m', '/api/v2/album/rAnD0m', 'album/rAnD0m!images'];
+        foreach ($queries as $q) {
+            $client->get($q);
+        }
+        foreach ($container as $key => $transaction) {
+            $query_path = $transaction['request']->getUri()->getPath();
+            if (strpos($queries[$key], '!') === 0) {
+                $expected = '/api/v2'.$queries[$key];
+            } elseif (strpos($queries[$key], '/api/v2/') === 0) {
+                $expected = $queries[$key];
+            } else {
+                $expected = '/api/v2/'.$queries[$key];
+            }
+            $this->assertEquals($expected, $query_path);
+        }
+    }
+
+    /**
+     * @test
+     */
     public function shouldSetAndUnSetHeadersEtcForUploadAndAssumeUploadWorkedWithOptionsThatMatchHeaders()
     {
         $mock = new MockHandler([
