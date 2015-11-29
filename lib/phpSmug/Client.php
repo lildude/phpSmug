@@ -190,10 +190,6 @@ class Client
             case 'getRequestToken':
                 $http_method = 'GET';
                 $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
-
-                # Unset all default query params
-                unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
-
                 $callback = $args[0];
                 $this->request_options['query'] = [
                     'oauth_callback' => $callback,
@@ -202,15 +198,10 @@ class Client
             case 'getAccessToken':
                 $http_method = 'GET';
                 $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
-
-                # Unset all default query params
-                unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
-
                 $oauth_verifier = $args[0];
                 $this->request_options['query'] = [
                     'oauth_verifier' => $oauth_verifier,
                 ];
-
             break;
             case 'signRequest':
               # TODO Take query and append OAuth stuffs

@@ -23,7 +23,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
 
         // Let's check all PSR compliance for our code and tests.
         // Add any other pass you want to test to this array.
-        foreach (array('lib/', 'test/') as $path) {
+        foreach (array('lib/', 'examples', 'test/') as $path) {
             // Run linter in dry-run mode so it changes nothing.
             exec(
                 escapeshellcmd('vendor/bin/php-cs-fixer fix --dry-run '.$_SERVER['PWD']."/$path"),
