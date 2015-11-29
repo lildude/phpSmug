@@ -19,6 +19,7 @@ class Client
     public $_shorturis = false;
     public $oauth_token;
     public $oauth_token_secret;
+    private $stack;
 
     /**
      * The Guzzle instance used to communicate with SmugMug.
