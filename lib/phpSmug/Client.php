@@ -4,7 +4,6 @@ namespace phpSmug;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 class Client
 {
@@ -265,7 +264,7 @@ class Client
                 'token_secret' => $this->oauth_token_secret,
             ];
 
-            $oauth_middleware = new Oauth1($oauth_middleware_config);
+            $oauth_middleware = new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauth_middleware_config);
 
             $this->stack->unshift($oauth_middleware, 'oauth_middleware'); # Bump OAuth to the bottom of the stack
         }
