@@ -202,9 +202,6 @@ class Client
                     'oauth_verifier' => $oauth_verifier,
                 ];
             break;
-            case 'signRequest':
-              # TODO Take query and append OAuth stuffs
-            break;
             case 'upload':
                 $http_method = 'POST';
 
