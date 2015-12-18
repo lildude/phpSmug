@@ -12,4 +12,3 @@ install:
 
 script:
   - vendor/bin/phpunit
-  - output=$(vendor/bin/php-cs-fixer fix -v --dry-run --diff .); if [[ $output ]]; then while read -r line; do echo -e "\e[00;31m$line\e[00m"; done <<< "$output"; false; fi;
