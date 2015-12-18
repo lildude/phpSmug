@@ -558,6 +558,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldSignRequestUrlWithOAuthParams()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $client = new Client($this->APIKey, ['OAuthSecret' => $this->OAuthSecret]);
+        $client->setToken($this->oauth_token, $this->oauth_token_secret);
+        $signed_url = $client->signResource('https://photos.smugmug.com/photos/i-am-not-a-valid-img/0/L/i-am-not-a-valid-img-L.jpg');
+        parse_str(parse_url($signed_url)['query'], $query_parts);
+
+        $this->assertArrayHasKey('oauth_consumer_key', $query_parts);
+        $this->assertEquals($this->APIKey, $query_parts['oauth_consumer_key']);
+        $this->assertArrayHasKey('oauth_nonce', $query_parts);
+        $this->assertArrayHasKey('oauth_signature', $query_parts);
+        $this->assertArrayHasKey('oauth_signature_method', $query_parts);
+        $this->assertEquals('HMAC-SHA1', $query_parts['oauth_signature_method']);
+        $this->assertArrayHasKey('oauth_timestamp', $query_parts);
+        $this->assertArrayHasKey('oauth_token', $query_parts);
+        $this->assertEquals($this->oauth_token, $query_parts['oauth_token']);
+        $this->assertArrayHasKey('oauth_version', $query_parts);
+        $this->assertEquals('1.0', $query_parts['oauth_version']);
     }
 }
