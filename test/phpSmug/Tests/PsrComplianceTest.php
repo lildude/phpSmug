@@ -21,29 +21,27 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        // Let's check all PSR compliance for our code and tests.
-        // Add any other pass you want to test to this array.
-        foreach (array('lib/', 'examples/', 'test/') as $path) {
-            // Run linter in dry-run mode so it changes nothing.
-            exec(
-                escapeshellcmd('vendor/bin/php-cs-fixer fix --dry-run '.$_SERVER['PWD']."/$path"),
-                $output,
-                $return_var
-            );
+        // Run linter in dry-run mode so it changes nothing.
+        exec(
+            escapeshellcmd('vendor/bin/php-cs-fixer fix --diff -v --dry-run .'),
+            $output,
+            $return_var
+        );
 
-            // If we've got output, pop its first item ("Fixed all files...")
-            // and trim whitespace from the rest so the below makes sense.
-            if ($output) {
-                array_pop($output);
-                $output = array_map('trim', $output);
-            }
-
-            // Check shell return code: if nonzero, report the output as a failure.
-            $this->assertEquals(
-                0,
-                $return_var,
-                "PSR linter reported errors in $path: \n\t".implode("\n\t", $output)
-            );
+        // If we've got output, pop its first item ("Fixed all files...")
+        // shift off the last two lines, and trim whitespace from the rest.
+        if ($output) {
+            array_pop($output);
+            array_shift($output);
+            array_shift($output);
+            $output = array_map('trim', $output);
         }
+
+        // Check shell return code: if nonzero, report the output as a failure.
+        $this->assertEquals(
+            0,
+            $return_var,
+            "PSR linter reported errors in: \n\t".implode("\n\t", $output)
+        );
     }
 }
