@@ -1,6 +1,8 @@
 phpSmug 4.0 - PHP Wrapper for the SmugMug API
 =============================================
 
+[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master)
+
 # :construction: Work In Progress :construction: #
 
 phpSmug 4.0 will be the first release to support the new SmugMug API 2.0. Consider this branch broken and not working until this text has been removed.
