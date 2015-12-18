@@ -87,6 +87,6 @@ try {
     echo "{$e->getMessage()} (Error Code: {$e->getCode()})";
 }
 ?>
-	</div>
+    </div>
 </body>
 </html>
