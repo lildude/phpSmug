@@ -49,7 +49,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
         }*/
         // Run linter in dry-run mode so it changes nothing.
         exec(
-            escapeshellcmd('vendor/bin/php-cs-fixer fix --diff -v --dry-run '.$_SERVER['PWD']),
+            escapeshellcmd('vendor/bin/php-cs-fixer fix --diff -v --dry-run .'),
             $output,
             $return_var
         );
