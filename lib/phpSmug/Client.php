@@ -384,4 +384,48 @@ class Client
 
         return "{$url}?oauth_token={$this->oauth_token}{$oauth_callback}{$auth_params}";
     }
+
+    /**
+     * Sign the passed resource with the OAuth params.
+     *
+     * This essentially generates a signature for the passed URL and returns a
+     * string with the OAuth parameters and signature appended.
+     *
+     * This is very useful for allowing people to display images that are not set
+     * to allow external view within the gallery's settings on SmugMug.
+     *
+     * This is a bit of a hack at the moment as I use the Mock handler to fake
+     * making the requests so I can grab the final URL.
+     *
+     * @todo Find a better way of doing this, possibly by creating my own middleware.
+     */
+    public function signResource($url)
+    {
+        $oauth = new \GuzzleHttp\Subscriber\Oauth\Oauth1([
+            'request_method' => 'query',
+            'consumer_key' => $this->APIKey,
+            'consumer_secret' => $this->OAuthSecret,
+            'token' => $this->oauth_token,
+            'token_secret' => $this->oauth_token_secret,
+        ]);
+
+        $mock = new \GuzzleHttp\Handler\MockHandler([
+            new \GuzzleHttp\Psr7\Response(200),
+        ]);
+        $container = [];
+        $handler = HandlerStack::create($mock);
+
+        # Add OAuth to the stack
+        $handler->push($oauth);
+        # Add history to the stack
+        $history = \GuzzleHttp\Middleware::history($container);
+        $handler->push($history);
+
+        $client = new GuzzleClient(['handler' => $handler, 'auth' => 'oauth']);
+        $request = $client->get($url);
+        foreach ($container as $transaction) {
+            $url = $transaction['request']->getUri();
+        }
+        return (string) $url;
+    }
 }
