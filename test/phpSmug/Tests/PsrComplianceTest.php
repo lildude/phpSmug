@@ -26,7 +26,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
         foreach (array('lib/', 'examples/', 'test/') as $path) {
             // Run linter in dry-run mode so it changes nothing.
             exec(
-                escapeshellcmd('vendor/bin/php-cs-fixer fix --dry-run '.$_SERVER['PWD']."/$path"),
+                escapeshellcmd('vendor/bin/php-cs-fixer fix -v --dry-run '.$_SERVER['PWD']."/$path"),
                 $output,
                 $return_var
             );
