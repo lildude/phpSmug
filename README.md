@@ -1,7 +1,7 @@
 phpSmug 4.0 - PHP Wrapper for the SmugMug API
 =============================================
 
-[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master)
+[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master) [![Build Status](https://travis-ci.org/lildude/phpSmug.svg)](https://travis-ci.org/lildude/phpSmug)
 
 # :construction: Work In Progress :construction: #
 
