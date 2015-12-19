@@ -153,37 +153,17 @@ class Client
 
     public function __call($method, $args)
     {
+        if (empty($args)) {
+            throw new InvalidArgumentException('Method needs arguments');
+        }
         # Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
-        if (!empty($args)) {
-            if (is_string($args[0])) {
-                # Add '/api/v#' to the method if it doesn't exist
-                if (strpos($args[0], '/api/'.$this->default_options['api_version']) === false) {
-                    $url = '/api/'.$this->default_options['api_version'];
-                    # Cater for ! queries like !authuser - these don't need a trailing / after the API version.
-                    if (strpos($args[0], '!') !== 0) {
-                        $url .= '/';
-                    }
-                    $url .= $args[0];
-                } else {
-                    $url = $args[0];
-                }
-
-                # Cater for any args passed in via `?whatever=foo`
-                if (strpos($url, '?') !== false) {
-                    $pairs = explode('&', explode('?', $url)[1]);
-                    foreach ($pairs as $pair) {
-                        list($key, $value) = explode('=', $pair);
-                        $this->request_options['query'][$key] = $value;
-                    }
-                }
-            }
-        }
+        $url = $this->buildRequestUrl($method, $args[0]);  # args[0] should always be the API destination
         $options = (count($args) == 2) ? $args[1] : array();
         switch ($method) {
             case 'get':
-                if ($options) {
+                if (!empty($options)) {
                     foreach (self::flattenOptimizers($options) as $key => $value) {
                         $this->request_options['query'][$key] = $value;
                     }
@@ -191,7 +171,6 @@ class Client
             break;
             case 'getRequestToken':
                 $http_method = 'GET';
-                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
                 $callback = $args[0];
                 $this->request_options['query'] = [
                     'oauth_callback' => $callback,
@@ -199,7 +178,6 @@ class Client
             break;
             case 'getAccessToken':
                 $http_method = 'GET';
-                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
                 $oauth_verifier = $args[0];
                 $this->request_options['query'] = [
                     'oauth_verifier' => $oauth_verifier,
@@ -218,6 +196,7 @@ class Client
                 $http_method = 'POST';
                 $album = $args[0];
                 $options = (count($args) == 3) ? $args[2] : null;
+
                 $this->prepareUpload($album, $options);
 
                 $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
@@ -277,6 +256,41 @@ class Client
         }
 
         return $o;
+    }
+
+    private function buildRequestUrl($method, $arg)
+    {
+        switch ($method) {
+            case 'getRequestToken':
+                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
+            break;
+            case 'getAccessToken':
+                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
+            break;
+            default:
+                # Add '/api/v#' to the method if it doesn't exist
+                if (strpos($arg, '/api/'.$this->default_options['api_version']) === false) {
+                    $url = '/api/'.$this->default_options['api_version'];
+                    # Cater for ! queries like !authuser - these don't need a trailing / after the API version.
+                    if (strpos($arg, '!') !== 0) {
+                        $url .= '/';
+                    }
+                    $url .= $arg;
+                } else {
+                    $url = $arg;
+                }
+                # Cater for any args passed in via `?whatever=foo`
+                if (strpos($url, '?') !== false) {
+                    $pairs = explode('&', explode('?', $url)[1]);
+                    foreach ($pairs as $pair) {
+                        list($key, $value) = explode('=', $pair);
+                        $this->request_options['query'][$key] = $value;
+                    }
+                }
+            break;
+        }
+
+        return $url;
     }
 
     private function prepareUpload($album, $options)
