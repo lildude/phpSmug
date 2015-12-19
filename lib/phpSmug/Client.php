@@ -405,7 +405,7 @@ class Client
      * This is a bit of a hack at the moment as I use the Mock handler to fake
      * making the requests so I can grab the final URL.
      *
-     * @todo Find a better way of doing this, possibly by creating my own middleware.
+     * I may need to find a better way of doing this, possibly by creating my own middleware.
      */
     public function signResource($url)
     {
