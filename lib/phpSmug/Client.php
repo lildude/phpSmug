@@ -21,6 +21,7 @@ class Client
     public $oauth_token;
     public $oauth_token_secret;
     private $stack;
+    private $client;
 
     /**
      * The Guzzle instance used to communicate with SmugMug.
@@ -154,7 +155,7 @@ class Client
     {
         # Ensure the per-request options are empty
         $this->request_options = [];
-        $client = self::getHttpClient();
+        $this->client = self::getHttpClient();
         if (!empty($args)) {
             if (is_string($args[0])) {
                 # Add '/api/v#' to the method if it doesn't exist
@@ -205,34 +206,7 @@ class Client
                 ];
             break;
             case 'upload':
-                $http_method = 'POST';
-
-                # Unset all default query params
-                unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
-
                 $file = $args[1];
-                $options = (count($args) == 3) ? $args[2] : null;
-
-                # Required headers
-                $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
-                $this->request_options['headers']['X-Smug-Version'] = $this->default_options['api_version'];
-                $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($args[0], '/api/'.$this->default_options['api_version'].'/') === false) ? '/api/'.$this->default_options['api_version'].'/'.$args[0] : $args[0];
-
-                # Optional headers:
-                $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
-                if ($options && is_array($options)) {
-                    foreach ($options as $key => $value) {
-                        $newkey = (strpos($key, 'X-Smug-') === false) ? 'X-Smug-'.$key : $key;
-                        if (in_array($newkey, $optional_headers)) {
-                            $this->request_options['headers'][$newkey] = $value;
-                        }
-                    }
-                }
-
-                $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
-
-                $url = 'https://upload.smugmug.com/'.$filename;
-
                 if (is_file($file)) {
                     $fp = fopen($file, 'r');
                     $data = fread($fp, filesize($file));
@@ -240,6 +214,14 @@ class Client
                 } else {
                     throw new InvalidArgumentException('File not found: '.$file);
                 }
+
+                $http_method = 'POST';
+                $album = $args[0];
+                $options = (count($args) == 3) ? $args[2] : null;
+                $this->prepareUpload($album, $options);
+
+                $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
+                $url = 'https://upload.smugmug.com/'.$filename;
                 $this->request_options['body'] = $data;
             break;
             case 'put':
@@ -254,29 +236,8 @@ class Client
                 throw new BadMethodCallException('Invalid method: '.$method);
             break;
         }
-        if ($this->OAuthSecret) {
-            $this->request_options['auth'] = 'oauth';
-            $oauth_middleware_config = [
-                'consumer_key' => $this->APIKey,
-                'consumer_secret' => $this->OAuthSecret,
-                'token' => $this->oauth_token,
-                'token_secret' => $this->oauth_token_secret,
-            ];
 
-            $oauth_middleware = new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauth_middleware_config);
-
-            $this->stack->unshift($oauth_middleware, 'oauth_middleware'); # Bump OAuth to the bottom of the stack
-        }
-
-        # Merge the default and request options
-
-        # Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
-        $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
-        # Merge the rest of the options.
-        $this->request_options = array_merge($this->default_options, $this->request_options);
-
-        # Perform the API request
-        $this->response = $client->request((isset($http_method)) ? strtoupper($http_method) : strtoupper($method), $url, $this->request_options);
+        $this->performRequest((isset($http_method)) ? strtoupper($http_method) : strtoupper($method), $url);
 
         switch ($method) {
           case 'getRequestToken':
@@ -316,6 +277,55 @@ class Client
         }
 
         return $o;
+    }
+
+    private function prepareUpload($album, $options)
+    {
+        # Unset all default query params
+        unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
+
+        # Required headers
+        $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
+        $this->request_options['headers']['X-Smug-Version'] = $this->default_options['api_version'];
+        $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($album, '/api/'.$this->default_options['api_version'].'/') === false) ? '/api/'.$this->default_options['api_version'].'/'.$album : $album;
+
+        # Optional headers:
+        $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
+        if ($options && is_array($options)) {
+            foreach ($options as $key => $value) {
+                $newkey = (strpos($key, 'X-Smug-') === false) ? 'X-Smug-'.$key : $key;
+                if (in_array($newkey, $optional_headers)) {
+                    $this->request_options['headers'][$newkey] = $value;
+                }
+            }
+        }
+    }
+
+    private function performRequest($method, $url)
+    {
+        if ($this->OAuthSecret) {
+            $this->request_options['auth'] = 'oauth';
+            $oauth_middleware_config = [
+                'consumer_key' => $this->APIKey,
+                'consumer_secret' => $this->OAuthSecret,
+                'token' => $this->oauth_token,
+                'token_secret' => $this->oauth_token_secret,
+            ];
+
+            $oauth_middleware = new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauth_middleware_config);
+
+            $this->stack->unshift($oauth_middleware, 'oauth_middleware'); # Bump OAuth to the bottom of the stack
+        }
+
+        # Merge the default and request options
+
+        # Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
+        $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
+        # Merge the rest of the options.
+        $this->request_options = array_merge($this->default_options, $this->request_options);
+
+        # Perform the API request
+        $this->response = $this->client->request($method, $url, $this->request_options);
     }
 
     /**
