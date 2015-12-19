@@ -20,7 +20,7 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
                 'Needs linter to check PSR compliance'
             );
         }
-        
+
         // Run linter in dry-run mode so it changes nothing.
         exec(
             escapeshellcmd('vendor/bin/php-cs-fixer fix --diff -v --dry-run .'),
