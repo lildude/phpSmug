@@ -248,7 +248,7 @@ class Client
                     $data = fread($fp, filesize($file));
                     fclose($fp);
                 } else {
-                    throw new \InvalidArgumentException('File not found: '.$file);
+                    throw new InvalidArgumentException('File not found: '.$file);
                 }
                 $this->request_options['body'] = $data;
             break;
