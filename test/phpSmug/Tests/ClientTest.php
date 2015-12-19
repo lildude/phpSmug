@@ -556,13 +556,24 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException phpSmug\Exception\InvalidArgumentException
+     */
+    public function shouldThrowInvalidArgumentExceptionIfCallMethodWithoutDestination()
+    {
+        $client = new Client($this->APIKey);
+        $client->get();
+    }
+
+    /**
+     * @test
      * @expectedException phpSmug\Exception\BadMethodCallException
      */
     public function shouldThrowBadMethodCallException()
     {
         $client = new Client($this->APIKey);
-        $client->badmethod();
+        $client->badmethod('album/r4nD0m');
     }
+
     /**
      * @test
      */
