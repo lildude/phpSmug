@@ -42,7 +42,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException phpSmug\Exception\InvalidArgumentException
      */
     public function shouldThrowExceptionIfNoApikey()
     {
@@ -391,7 +391,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException phpSmug\Exception\InvalidArgumentException
      */
     public function shouldThrowExceptionIfUploadFileNotFound()
     {
@@ -546,7 +546,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException BadMethodCallException
+     * @expectedException phpSmug\Exception\BadMethodCallException
      */
     public function shouldThrowBadMethodCallException()
     {
