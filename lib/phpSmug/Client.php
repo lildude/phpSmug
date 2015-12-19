@@ -13,6 +13,10 @@ class InvalidArgumentException extends \InvalidArgumentException implements Exce
 {
 }
 
+class BadMethodCallException extends \BadMethodCallException implements Exception
+{
+}
+
 class Client
 {
     /**
@@ -257,7 +261,7 @@ class Client
                 }
             break;
             default:
-                throw new \BadMethodCallException('Invalid method: '.$method);
+                throw new BadMethodCallException('Invalid method: '.$method);
             break;
         }
         if ($this->OAuthSecret) {
