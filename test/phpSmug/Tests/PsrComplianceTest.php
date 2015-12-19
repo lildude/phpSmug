@@ -23,18 +23,18 @@ class PsrComplianceTest extends \PHPUnit_Framework_TestCase
 
         // Run linter in dry-run mode so it changes nothing.
         exec(
-            escapeshellcmd('vendor/bin/php-cs-fixer fix --diff -v --dry-run .'),
+            escapeshellcmd('vendor/bin/php-cs-fixer fix --diff -v --dry-run .').' 2>&1',
             $output,
             $return_var
         );
 
-        // If we've got output, pop its first item ("Fixed all files...")
-        // shift off the last two lines, and trim whitespace from the rest.
+        /* If we've got output, pop the first row ("Fixed all files...") and shift
+           off the last three lines. */
         if ($output) {
             array_pop($output);
             array_shift($output);
             array_shift($output);
-            $output = array_map('trim', $output);
+            array_shift($output);
         }
 
         // Check shell return code: if nonzero, report the output as a failure.
