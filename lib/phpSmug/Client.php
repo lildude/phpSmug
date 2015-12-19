@@ -426,7 +426,7 @@ class Client
         $handler->push($history);
 
         $client = new GuzzleClient(['handler' => $handler, 'auth' => 'oauth']);
-        $request = $client->get($url);
+        $client->get($url);
         foreach ($container as $transaction) {
             $url = $transaction['request']->getUri();
         }
