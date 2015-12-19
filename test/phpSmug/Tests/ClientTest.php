@@ -465,6 +465,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException phpSmug\Exception\InvalidArgumentException
+     */
+    public function shouldThrowExcetionIfNoOAuthSecret()
+    {
+        $client = new Client($this->APIKey);
+        $client->setToken($this->oauth_token, $this->oauth_token_secret);
+    }
+
+    /**
+     * @test
      */
     public function shouldGetRequestToken()
     {
