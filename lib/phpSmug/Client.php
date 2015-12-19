@@ -5,6 +5,14 @@ namespace phpSmug;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
 
+interface Exception
+{
+}
+
+class InvalidArgumentException extends \InvalidArgumentException implements Exception
+{
+}
+
 class Client
 {
     /**
@@ -57,7 +65,7 @@ class Client
     {
         $this->APIKey = $APIKey;
         if (is_null($APIKey)) {
-            throw new \InvalidArgumentException('An API key is required for all SmugMug interactions.');
+            throw new InvalidArgumentException('An API key is required for all SmugMug interactions.');
         }
         $option_keys = ['_verbosity', '_shorturis', 'AppName', 'OAuthSecret'];
         foreach ($option_keys as $option) {
