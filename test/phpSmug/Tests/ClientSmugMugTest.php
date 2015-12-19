@@ -8,11 +8,6 @@
 namespace phpSmug\Tests;
 
 use phpSmug\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Middleware;
 
 class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,10 +28,84 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     *
+     * Test unauthenticated GET
+     */
+    public function shouldGetPublicUserInfo()
+    {
+        $this->checkEnvVars();
+        $client = new Client(getenv('APIKEY'));
+    }
+
+    /**
+     * @test
+     *
+     * Tests POST
      */
     public function shouldCreateNewAlbum()
     {
         $this->checkEnvVars();
 
+        $options = [
+            'AppName' => 'phpSmug Unit Testing',
+            'OAuthSecret' => getenv('OAUTH_SECRET'),
+            '_verbosity' => 1,
+            '_shorturis' => true,
+        ];
+        $client = new Client(getenv('APIKEY'), $options);
+        $client->setToken(getenv('OAUTH_TOKEN'), getenv('OAUTH_TOKEN_SECRET'));
+    }
+
+    /**
+     * @test
+     * @depends shouldCreateNewAlbum
+     *
+     * Tests PUT
+     */
+    public function shouldModifyNewlyCreatedAlbum()
+    {
+        $this->checkEnvVars();
+    }
+
+    /**
+     * @test
+     * @depends shouldModifyNewlyCreatedAlbum
+     *
+     * Tests UPLOAD
+     */
+    public function shouldUploadPictureToNewlyCreatedAlbum()
+    {
+        $this->checkEnvVars();
+    }
+
+    /**
+     * @test
+     * @depends shouldUploadPictureToNewlyCreatedAlbum
+     *
+     * Tests GET
+     */
+    public function shouldGetNewlyCreatedAlbumWithUploadedPicture()
+    {
+        $this->checkEnvVars();
+    }
+
+    /**
+     * @test
+     * @depends shouldGetNewlyCreatedAlbumWithUploadedPicture
+     * Tests DELETE
+     */
+    public function shouldDeleteNewlyCreatedAlbumWithUploadedPicture()
+    {
+        $this->checkEnvVars();
+    }
+
+    /**
+     * @test
+     *
+     * Tests OPTIONS
+     */
+    public function shouldGetInfoAboutMethod()
+    {
+        $this->checkEnvVars();
     }
 }
