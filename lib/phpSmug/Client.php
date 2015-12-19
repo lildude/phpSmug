@@ -343,10 +343,6 @@ class Client
      **/
     public function setToken($oauth_token, $oauth_token_secret)
     {
-        # TODO: Implement an equivalent check elsewhere - need to find a better exception type too as this isn't an invalid argument here.
-        if (is_null($this->OAuthSecret)) {
-            throw new \InvalidArgumentException('An OAuthSecret is required for all SmugMug OAuth interactions.');
-        }
         $this->oauth_token = $oauth_token;
         $this->oauth_token_secret = $oauth_token_secret;
     }
