@@ -343,6 +343,9 @@ class Client
      **/
     public function setToken($oauth_token, $oauth_token_secret)
     {
+        if (is_null($this->OAuthSecret)) {
+            throw new InvalidArgumentException('An OAuthSecret is required for all SmugMug OAuth interactions.');
+        }
         $this->oauth_token = $oauth_token;
         $this->oauth_token_secret = $oauth_token_secret;
     }
