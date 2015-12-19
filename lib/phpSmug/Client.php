@@ -4,18 +4,8 @@ namespace phpSmug;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
-
-interface Exception
-{
-}
-
-class InvalidArgumentException extends \InvalidArgumentException implements Exception
-{
-}
-
-class BadMethodCallException extends \BadMethodCallException implements Exception
-{
-}
+use phpSmug\Exception\InvalidArgumentException;
+use phpSmug\Exception\BadMethodCallException;
 
 class Client
 {
