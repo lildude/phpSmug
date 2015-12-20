@@ -6,6 +6,19 @@ use phpSmug\Client;
 
 class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
 {
+    public function setup()
+    {
+        $options = [
+            'AppName' => 'phpSmug Unit Testing',
+            'OAuthSecret' => getenv('OAUTH_SECRET'),
+            '_verbosity' => 1,
+            '_shorturis' => true,
+        ];
+
+        $this->client = new \phpSmug\Client(getenv('APIKEY'), $options);
+        $this->client->setToken(getenv('OAUTH_TOKEN'), getenv('OAUTH_TOKEN_SECRET'));
+    }
+
     /**
      * A quick handy feature to ensure we don't attempt to run any tests if these
      * env vars aren't set.
@@ -29,7 +42,11 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     public function shouldGetPublicUserInfo()
     {
         $this->checkEnvVars();
-        $client = new Client(getenv('APIKEY'));
+        $client = new \phpSmug\Client(getenv('APIKEY'));
+        $response = $client->get('user/colinseymour');
+        $this->assertTrue(is_object($response));
+        $this->assertEquals('Public', $response->User->ResponseLevel);
+        $this->assertEquals('colinseymour', $response->User->NickName);
     }
 
     /**
@@ -47,8 +64,6 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
             '_verbosity' => 1,
             '_shorturis' => true,
         ];
-        $client = new Client(getenv('APIKEY'), $options);
-        $client->setToken(getenv('OAUTH_TOKEN'), getenv('OAUTH_TOKEN_SECRET'));
     }
 
     /**
