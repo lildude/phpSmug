@@ -218,27 +218,7 @@ class Client
 
         $this->performRequest((isset($http_method)) ? strtoupper($http_method) : strtoupper($method), $url);
 
-        switch ($method) {
-          case 'getRequestToken':
-          case 'getAccessToken':
-              parse_str($this->response->getBody(), $token);
-              $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
-              # Remove the middleware so it is re-added with the updated credentials on subsequent requests.
-              $this->stack->remove('oauth_middleware');
-
-              return $token;
-          break;
-          default:
-              $body = json_decode((string) $this->response->getBody());
-              if ($method == 'options') {
-                  return $body->Options;
-              } elseif (isset($body->Response)) {
-                  return $body->Response;
-              } else {
-                  return $body;
-              }
-          break;
-        }
+        return $this->processResponse($method);
     }
 
     /**
@@ -340,6 +320,31 @@ class Client
 
         # Perform the API request
         $this->response = $this->client->request($method, $url, $this->request_options);
+    }
+
+    private function processResponse($method)
+    {
+        switch ($method) {
+          case 'getRequestToken':
+          case 'getAccessToken':
+              parse_str($this->response->getBody(), $token);
+              $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
+              # Remove the middleware so it is re-added with the updated credentials on subsequent requests.
+              $this->stack->remove('oauth_middleware');
+
+              return $token;
+          break;
+          default:
+              $body = json_decode((string) $this->response->getBody());
+              if ($method == 'options') {
+                  return $body->Options;
+              } elseif (isset($body->Response)) {
+                  return $body->Response;
+              } else {
+                  return $body;
+              }
+          break;
+        }
     }
 
     /**
