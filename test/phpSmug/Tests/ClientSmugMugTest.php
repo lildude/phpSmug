@@ -1,10 +1,5 @@
 <?php
 
-/**
- * This series of tests actually checks we're working correctly by interacting
- * with SmugMug's API.  All options are provided via environment variables to
- * prevent accidental committing to the repository.
- */
 namespace phpSmug\Tests;
 
 use phpSmug\Client;
@@ -85,6 +80,26 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
      * Tests GET
      */
     public function shouldGetNewlyCreatedAlbumWithUploadedPicture()
+    {
+        $this->checkEnvVars();
+    }
+
+    /**
+     * @test
+     * @depends shouldGetNewlyCreatedAlbumWithUploadedPicture
+     */
+    public function shouldFailToGetPrivateImage()
+    {
+        $this->checkEnvVars();
+    }
+
+    /**
+     * @test
+     * @depends shouldGetNewlyCreatedAlbumWithUploadedPicture
+     *
+     * Tests signResource()
+     */
+    public function shouldGetPrivateImageWithSignedUrl()
     {
         $this->checkEnvVars();
     }
