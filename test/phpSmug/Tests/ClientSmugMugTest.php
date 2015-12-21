@@ -42,7 +42,7 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     public function shouldGetPublicUserInfo()
     {
         $this->checkEnvVars();
-        $client = new \phpSmug\Client(getenv('APIKEY'));
+        $client = new \phpSmug\Client(getenv('APIKEY'), ['AppName' => 'phpSmug Unit Testing']);
         $response = $client->get('user/colinseymour');
         $this->assertTrue(is_object($response));
         $this->assertEquals('Public', $response->User->ResponseLevel);
