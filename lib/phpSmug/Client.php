@@ -275,7 +275,7 @@ class Client
 
     private function prepareUpload($album, $options)
     {
-        # Unset all default query params
+        # Unset all default query params - SmugMug's upload endpoint doesn't honor them anyway.
         unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
 
         # Required headers
@@ -334,11 +334,14 @@ class Client
 
               return $token;
           break;
+          case 'options':
+              $body = json_decode((string) $this->response->getBody());
+
+              return $body->Options;
+          break;
           default:
               $body = json_decode((string) $this->response->getBody());
-              if ($method == 'options') {
-                  return $body->Options;
-              } elseif (isset($body->Response)) {
+              if (isset($body->Response)) {
                   return $body->Response;
               } else {
                   return $body;
