@@ -117,13 +117,6 @@ class Client
                     }
                 }
             break;
-            case 'getRequestToken':
-                $http_method = 'GET';
-                $callback = $args[0];
-                $this->request_options['query'] = [
-                    'oauth_callback' => $callback,
-                ];
-            break;
             case 'getAccessToken':
                 $http_method = 'GET';
                 $oauth_verifier = $args[0];
@@ -249,7 +242,21 @@ class Client
 
         $this->performRequest('POST', $url);
 
-        return $this->processResponse($method);
+        return $this->processResponse();
+    }
+
+    public function getRequestToken($callback)
+    {
+        # Ensure the per-request options are empty
+        $this->request_options = [];
+        $this->client = self::getHttpClient();
+        $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
+        $this->request_options['query'] = [
+            'oauth_callback' => $callback,
+        ];
+        $this->performRequest('GET', $url);
+
+        return $this->processResponse('getRequestToken');
     }
 
     private function performRequest($method, $url)
@@ -278,7 +285,7 @@ class Client
         $this->response = $this->client->request($method, $url, $this->request_options);
     }
 
-    private function processResponse($method)
+    private function processResponse($method = null)
     {
         switch ($method) {
           case 'getRequestToken':
