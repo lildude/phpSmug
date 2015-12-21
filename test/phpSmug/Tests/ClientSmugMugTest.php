@@ -73,8 +73,9 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     {
         $this->checkEnvVars();
 
+        $uniqid = uniqid('UnitTesting-');
         $options = [
-            'NiceName' => 'New-Album-From-UnitTesting',
+            'NiceName' => $uniqid,
             'Title' => 'New Album from unit testing phpSmug',
             'Privacy' => 'Private',
         ];
