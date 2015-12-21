@@ -206,6 +206,7 @@ class Client
             case 'put':
             case 'post':
             case 'patch':
+            case 'delete':
             case 'options':
                 if ($options) {
                     $this->request_options['json'] = $options;
