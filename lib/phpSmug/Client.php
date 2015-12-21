@@ -107,7 +107,25 @@ class Client
         # Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
-        $url = $this->buildRequestUrl($method, $args[0]);  # args[0] should always be the API destination
+        # Add '/api/v#' to the method if it doesn't exist
+        if (strpos($args[0], '/api/'.$this->default_options['api_version']) === false) {
+            $url = '/api/'.$this->default_options['api_version'];
+            # Cater for ! queries like !authuser - these don't need a trailing / after the API version.
+            if (strpos($args[0], '!') !== 0) {
+                $url .= '/';
+            }
+            $url .= $args[0];
+        } else {
+            $url = $args[0];
+        }
+        # Cater for any args passed in via `?whatever=foo`
+        if (strpos($url, '?') !== false) {
+            $pairs = explode('&', explode('?', $url)[1]);
+            foreach ($pairs as $pair) {
+                list($key, $value) = explode('=', $pair);
+                $this->request_options['query'][$key] = $value;
+            }
+        }
         $options = (count($args) == 2) ? $args[1] : array();
         switch ($method) {
             case 'get':
@@ -151,35 +169,6 @@ class Client
         }
 
         return $o;
-    }
-
-    private function buildRequestUrl($method, $arg)
-    {
-        switch ($method) {
-            default:
-                # Add '/api/v#' to the method if it doesn't exist
-                if (strpos($arg, '/api/'.$this->default_options['api_version']) === false) {
-                    $url = '/api/'.$this->default_options['api_version'];
-                    # Cater for ! queries like !authuser - these don't need a trailing / after the API version.
-                    if (strpos($arg, '!') !== 0) {
-                        $url .= '/';
-                    }
-                    $url .= $arg;
-                } else {
-                    $url = $arg;
-                }
-                # Cater for any args passed in via `?whatever=foo`
-                if (strpos($url, '?') !== false) {
-                    $pairs = explode('&', explode('?', $url)[1]);
-                    foreach ($pairs as $pair) {
-                        list($key, $value) = explode('=', $pair);
-                        $this->request_options['query'][$key] = $value;
-                    }
-                }
-            break;
-        }
-
-        return $url;
     }
 
     /**
