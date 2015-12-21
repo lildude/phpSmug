@@ -24,6 +24,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->fauxSmugMugResponse = '{"Options":{"foo":"bar"},"Response": {"ano":"bar"},"Code":200,"Message":"OK"}';
         $this->fauxRequestTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}&oauth_callback_confirmed=true";
         $this->fauxAccessTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}";
+        $this->fauxDeleteResponse = '{"Response":{"Uri":"/api/v2/album/rAnD0m","Locator":"Album","LocatorType":"Object"},"Code":200,"Message":"Ok"}';
     }
     /**
      * @test
@@ -595,5 +596,24 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->oauth_token, $query_parts['oauth_token']);
         $this->assertArrayHasKey('oauth_version', $query_parts);
         $this->assertEquals('1.0', $query_parts['oauth_version']);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldDeleteAlbum()
+    {
+        $mock = new MockHandler([
+            # We don't care about headers for this test so we don't set them.
+            new Response(200, [], $this->fauxDeleteResponse),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $response = $client->delete('album/rAnD0m');
+
+        $this->assertTrue(is_object($response));
+        $this->assertEquals('Album', $response->Locator);
+        $this->assertEquals('/api/v2/album/rAnD0m', $response->Uri);
     }
 }
