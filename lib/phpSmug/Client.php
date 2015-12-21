@@ -194,8 +194,8 @@ class Client
         $this->request_options = [];
         $this->client = self::getHttpClient();
 
-        # Unset all default query params - SmugMug's upload endpoint doesn't honor them anyway.
-        unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
+        # Unset all query params - SmugMug's upload endpoint doesn't honor them anyway.
+        $this->request_options['query'] = [];
 
         # Required headers
         $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
@@ -265,9 +265,11 @@ class Client
             $this->stack->unshift($oauth_middleware, 'oauth_middleware'); # Bump OAuth to the bottom of the stack
         }
 
-        # Merge the default and request options
+        # Merge the default and request options for all requests except upload requests.
         # Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
-        $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
+        if (!strpos($url, 'upload')) {
+            $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
+        }
         # Merge the rest of the options.
         $this->request_options = array_merge($this->default_options, $this->request_options);
 
