@@ -149,7 +149,7 @@ class Client
             break;
         }
 
-        $this->performRequest((isset($http_method)) ? strtoupper($http_method) : strtoupper($method), $url);
+        $this->performRequest(strtoupper($method), $url);
 
         return $this->processResponse($method);
     }
