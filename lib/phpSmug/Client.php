@@ -55,6 +55,14 @@ class Client
 
     /**
      * Instantiate a new SmugMug client.
+     *
+     * @param string $APIKey  The API for your application.
+     * @param array  $options Options you wish to apply by default to all requests. Use this to set your application name, provide the OAuthSecret and set any default output filter.
+     *
+     * @see https://api.smugmug.com/api/v2/doc/tutorial/api-key.html
+     * @see https://api.smugmug.com/api/v2/doc/advanced/filters.html
+     *
+     * @return object
      */
     public function __construct($APIKey = null, array $options = array())
     {
@@ -98,6 +106,11 @@ class Client
     /**
      * Dynamic method handler.  This function handles all HTTP method calls
      * not explicitly implemented as separate functions by phpSmug.
+     *
+     * @param string $method HTTP method.
+     * @param array  $args   Array of options for the HTTP method.
+     *
+     * @return object Decoded JSON response from SmugMug.
      */
     public function __call($method, $args)
     {
@@ -174,11 +187,13 @@ class Client
     /**
      * Upload images to SmugMug.
      *
-     * @param string Album URI into which the file should be uploaded.
-     * @param string Path of the local image that is being uploaded.
-     * @param array Optional options for the image being uploaded.
+     * @param string $album   Album URI into which the file should be uploaded.
+     * @param string $file    Path of the local image that is being uploaded.
+     * @param array  $options Optional options for the image being uploaded.
      *
      * @see https://api.smugmug.com/api/v2/doc/reference/upload.html
+     *
+     * @return object Decoded JSON response from SmugMug.
      */
     public function upload($album, $file, $options = null)
     {
@@ -221,6 +236,16 @@ class Client
         return $this->processResponse();
     }
 
+    /**
+     * Get the request token required for the first step in the three legged
+     * OAuth authentication process.
+     *
+     * @param string $callback Callback URI you wish SmugMug to redirect your users to.
+     *
+     * @see https://api.smugmug.com/api/v2/doc/tutorial/authorization.html
+     *
+     * @return array The request oauth_token, oauth_token_secret and oauth_verifier.
+     */
     public function getRequestToken($callback)
     {
         # Ensure the per-request options are empty
@@ -235,6 +260,16 @@ class Client
         return $this->processResponse('getRequestToken');
     }
 
+    /**
+     * Get the access token required for the second step in the three legged
+     * OAuth authentication process.
+     *
+     * @param string $oauth_verifier The oauth verifier from a previous getRequestToken() call.
+     *
+     * @see https://api.smugmug.com/api/v2/doc/tutorial/authorization.html
+     *
+     * @return array The access oauth_token, oauth_token_secret.
+     */
     public function getAccessToken($oauth_verifier)
     {
         # Ensure the per-request options are empty
@@ -249,6 +284,12 @@ class Client
         return $this->processResponse('getAccessToken');
     }
 
+    /**
+     * Private function that performs the actual request to the SmugMug API.
+     *
+     * @param string $method The HTTP method for the request.
+     * @param string $url    The destination URL for the request.
+     */
     private function performRequest($method, $url)
     {
         if ($this->OAuthSecret) {
@@ -277,6 +318,16 @@ class Client
         $this->response = $this->client->request($method, $url, $this->request_options);
     }
 
+    /**
+     * Private function to process the response from SmugMug and return it in a nice
+     * user-friendly manner.
+     *
+     * This is in a single function so we don't repeat the same steps for each method.
+     *
+     * @param string|null $method The method we're expecting the output for.
+     *
+     * @return mixed
+     */
     private function processResponse($method = null)
     {
         switch ($method) {
@@ -333,6 +384,8 @@ class Client
 
     /**
      * Get the OAuth tokens that may have been set using setToken().
+     *
+     * @return array The oauth token and secret that have been set via a previous setToken() call.
      */
     public function getToken()
     {
@@ -341,6 +394,9 @@ class Client
 
     /**
      * Helper function that generates and returns the authorization URL.
+     *
+     * Users need to visit this URL in order to approve your application's access
+     * to there account on SmugMug.
      *
      * If no arguments are passed, we use the default settings and set no
      * callback URL.  This means SmugMug won't redirect your user back to your
@@ -352,6 +408,10 @@ class Client
      * can include the callback URL.  If one of those options happens to be
      * oauth_callback, you're in luck and you don't need to pass it as a
      * separate argument.
+     *
+     * @see https://api.smugmug.com/api/v2/doc/tutorial/authorization.html
+     *
+     * @return string The authorization URL required to authorize your application.
      */
     public function getAuthorizeURL()
     {
@@ -390,6 +450,8 @@ class Client
      * making the requests so I can grab the final URL.
      *
      * I may need to find a better way of doing this, possibly by creating my own middleware.
+     *
+     * @return string A URL with OAuth parameters appended.
      */
     public function signResource($url)
     {
@@ -423,7 +485,7 @@ class Client
     }
 
     /**
-     * @return HttpClient
+     * @return object HttpClient object instantiated with this class.
      */
     public function getHttpClient()
     {
@@ -431,7 +493,7 @@ class Client
     }
 
     /**
-     * @return statusCode Returns the HTTP status code for the last request
+     * @return interval HTTP status code for the last request
      */
     public function getStatusCode()
     {
@@ -439,7 +501,7 @@ class Client
     }
 
     /**
-     * @return headers Returns the HTTP headers as an array for the last request
+     * @return array HTTP headers as an array for the last request
      */
     public function getHeaders()
     {
@@ -447,7 +509,7 @@ class Client
     }
 
     /**
-     * @return ReasonPhrase Returns the HTTP status message for the last request
+     * @return string HTTP status message for the last request
      */
     public function getReasonPhrase()
     {
@@ -455,7 +517,7 @@ class Client
     }
 
     /**
-     * @return options
+     * @return array Default options instantiated with this class.
      */
     public function getDefaultOptions()
     {
@@ -463,7 +525,7 @@ class Client
     }
 
     /**
-     * @return $response Returns the full response without any phpSmug touches.
+     * @return object Full json_decoded response from SmugMug without any phpSmug touches.
      */
     public function getResponse()
     {
@@ -471,7 +533,7 @@ class Client
     }
 
     /**
-     * @return $request_options Returns the request options. These are set just before the request is made and cleared before every request.
+     * @return array Request options that are set just before a request is made and cleared before every request.
      */
     public function getRequestOptions()
     {
