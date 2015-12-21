@@ -102,7 +102,7 @@ class Client
     public function __call($method, $args)
     {
         if (empty($args)) {
-            throw new InvalidArgumentException('All method sneed an argument.');
+            throw new InvalidArgumentException('All methods need an argument.');
         }
         # Ensure the per-request options are empty
         $this->request_options = [];

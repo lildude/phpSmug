@@ -561,7 +561,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException phpSmug\Exception\InvalidArgumentException
-     * @expectedExceptionMessage All method sneed an argument.
+     * @expectedExceptionMessage All methods need an argument.
      */
     public function shouldThrowInvalidArgumentExceptionIfCallMethodWithoutDestination()
     {
