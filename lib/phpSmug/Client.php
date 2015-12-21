@@ -117,13 +117,6 @@ class Client
                     }
                 }
             break;
-            case 'getAccessToken':
-                $http_method = 'GET';
-                $oauth_verifier = $args[0];
-                $this->request_options['query'] = [
-                    'oauth_verifier' => $oauth_verifier,
-                ];
-            break;
             case 'put':
             case 'post':
             case 'patch':
@@ -163,9 +156,6 @@ class Client
     private function buildRequestUrl($method, $arg)
     {
         switch ($method) {
-            case 'getAccessToken':
-                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
-            break;
             default:
                 # Add '/api/v#' to the method if it doesn't exist
                 if (strpos($arg, '/api/'.$this->default_options['api_version']) === false) {
@@ -254,6 +244,20 @@ class Client
         $this->performRequest('GET', $url);
 
         return $this->processResponse('getRequestToken');
+    }
+
+    public function getAccessToken($oauth_verifier)
+    {
+        # Ensure the per-request options are empty
+        $this->request_options = [];
+        $this->client = self::getHttpClient();
+        $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
+        $this->request_options['query'] = [
+            'oauth_verifier' => $oauth_verifier,
+        ];
+        $this->performRequest('GET', $url);
+
+        return $this->processResponse('getAccessToken');
     }
 
     private function performRequest($method, $url)
