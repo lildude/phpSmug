@@ -131,26 +131,6 @@ class Client
                     'oauth_verifier' => $oauth_verifier,
                 ];
             break;
-            case 'upload':
-                $file = $args[1];
-                if (is_file($file)) {
-                    $fp = fopen($file, 'r');
-                    $data = fread($fp, filesize($file));
-                    fclose($fp);
-                } else {
-                    throw new InvalidArgumentException('File not found: '.$file);
-                }
-
-                $http_method = 'POST';
-                $album = $args[0];
-                $options = (count($args) == 3) ? $args[2] : null;
-
-                $this->prepareUpload($album, $options);
-
-                $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
-                $url = 'https://upload.smugmug.com/'.$filename;
-                $this->request_options['body'] = $data;
-            break;
             case 'put':
             case 'post':
             case 'patch':
@@ -222,8 +202,29 @@ class Client
         return $url;
     }
 
-    private function prepareUpload($album, $options)
+    /**
+     * Upload images to SmugMug.
+     *
+     * @param string Album URI into which the file should be uploaded.
+     * @param string Path of the local image that is being uploaded.
+     * @param array Optional options for the image being uploaded. See https://api.smugmug.com/api/v2/doc/reference/upload.html
+     */
+    public function upload($album, $file, $options = null)
     {
+        if (is_file($file)) {
+            $fp = fopen($file, 'r');
+            $data = fread($fp, filesize($file));
+            fclose($fp);
+        } else {
+            throw new InvalidArgumentException('File not found: '.$file);
+        }
+
+        # Ensure the per-request options are empty
+        $this->request_options = [];
+        $this->client = self::getHttpClient();
+
+        $method = 'POST';
+
         # Unset all default query params - SmugMug's upload endpoint doesn't honor them anyway.
         unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
 
@@ -242,6 +243,13 @@ class Client
                 }
             }
         }
+        $filename = (isset($this->request_options['X-Smug-FileName'])) ? $this->request_options['X-Smug-FileName'] : basename($file);
+        $url = 'https://upload.smugmug.com/'.$filename;
+        $this->request_options['body'] = $data;
+
+        $this->performRequest(strtoupper($method), $url);
+
+        return $this->processResponse($method);
     }
 
     private function performRequest($method, $url)
