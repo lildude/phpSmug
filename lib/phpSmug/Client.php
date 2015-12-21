@@ -163,9 +163,6 @@ class Client
     private function buildRequestUrl($method, $arg)
     {
         switch ($method) {
-            case 'getRequestToken':
-                $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
-            break;
             case 'getAccessToken':
                 $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
             break;
