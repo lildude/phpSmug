@@ -96,65 +96,13 @@ class Client
     }
 
     /**
-     * @return HttpClient
+     * Dynamic method handler.  This function handles all HTTP method calls
+     * not explicitly implemented as separate functions by phpSmug.
      */
-    public function getHttpClient()
-    {
-        return $this->httpClient;
-    }
-
-    /**
-     * @return statusCode Returns the HTTP status code for the last request
-     */
-    public function getStatusCode()
-    {
-        return $this->response->getStatusCode();
-    }
-
-    /**
-     * @return headers Returns the HTTP headers as an array for the last request
-     */
-    public function getHeaders()
-    {
-        return $this->response->getHeaders();
-    }
-
-    /**
-     * @return ReasonPhrase Returns the HTTP status message for the last request
-     */
-    public function getReasonPhrase()
-    {
-        return $this->response->getReasonPhrase();
-    }
-
-    /**
-     * @return options
-     */
-    public function getDefaultOptions()
-    {
-        return $this->default_options;
-    }
-
-    /**
-     * @return $response Returns the full response without any phpSmug touches.
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * @return $request_options Returns the request options. These are set just before the request is made and cleared before every request.
-     */
-    public function getRequestOptions()
-    {
-        return $this->request_options;
-    }
-
     public function __call($method, $args)
     {
         if (empty($args)) {
-            throw new InvalidArgumentException('Method needs arguments');
+            throw new InvalidArgumentException('All method sneed an argument.');
         }
         # Ensure the per-request options are empty
         $this->request_options = [];
@@ -313,7 +261,6 @@ class Client
         }
 
         # Merge the default and request options
-
         # Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
         $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
         # Merge the rest of the options.
@@ -466,5 +413,61 @@ class Client
         }
 
         return (string) $url;
+    }
+
+    /**
+     * @return HttpClient
+     */
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
+     * @return statusCode Returns the HTTP status code for the last request
+     */
+    public function getStatusCode()
+    {
+        return $this->response->getStatusCode();
+    }
+
+    /**
+     * @return headers Returns the HTTP headers as an array for the last request
+     */
+    public function getHeaders()
+    {
+        return $this->response->getHeaders();
+    }
+
+    /**
+     * @return ReasonPhrase Returns the HTTP status message for the last request
+     */
+    public function getReasonPhrase()
+    {
+        return $this->response->getReasonPhrase();
+    }
+
+    /**
+     * @return options
+     */
+    public function getDefaultOptions()
+    {
+        return $this->default_options;
+    }
+
+    /**
+     * @return $response Returns the full response without any phpSmug touches.
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @return $request_options Returns the request options. These are set just before the request is made and cleared before every request.
+     */
+    public function getRequestOptions()
+    {
+        return $this->request_options;
     }
 }
