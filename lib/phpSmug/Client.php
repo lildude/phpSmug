@@ -207,7 +207,9 @@ class Client
      *
      * @param string Album URI into which the file should be uploaded.
      * @param string Path of the local image that is being uploaded.
-     * @param array Optional options for the image being uploaded. See https://api.smugmug.com/api/v2/doc/reference/upload.html
+     * @param array Optional options for the image being uploaded.
+     *
+     * @see https://api.smugmug.com/api/v2/doc/reference/upload.html
      */
     public function upload($album, $file, $options = null)
     {
@@ -222,8 +224,6 @@ class Client
         # Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
-
-        $method = 'POST';
 
         # Unset all default query params - SmugMug's upload endpoint doesn't honor them anyway.
         unset($this->default_options['query']['_verbosity'], $this->default_options['query']['_shorturis'], $this->default_options['query']['APIKey']);
@@ -247,7 +247,7 @@ class Client
         $url = 'https://upload.smugmug.com/'.$filename;
         $this->request_options['body'] = $data;
 
-        $this->performRequest(strtoupper($method), $url);
+        $this->performRequest('POST', $url);
 
         return $this->processResponse($method);
     }
