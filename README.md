@@ -5,56 +5,53 @@ phpSmug 4.0 - PHP Wrapper for the SmugMug API
 
 # :construction: Work In Progress :construction: #
 
-phpSmug 4.0 isn't quite finished yet. I'm still writing tests and am still trying to come up with a nice easy method to get the OAuth request and access tokens.  If you already have your OAuth access tokens, then you're all set and can start using phpSmug right away.
-
----
-
-# phpSmug 4.0
+# phpSmug
 
 A simple object orientated wrapper for the new SmugMug API v2, written in PHP.
 
+The intention of this class is to allow PHP application developers quick and easy interaction with the SmugMug API, without having to worry about the finer details of the API.
+
 **Note: Due to significant changes in the SmugMug API, phpSmug 4.0.0 and later is not backwardly compatible with the SmugMug API v1.x.x releases.**
-
-## Features
-
-* Follows PSR-4 conventions and coding standard: autoload friendly.
-* Light and fast thanks to lazy loading of API classes.
-* Uses Guzzle for HTTP requests.
 
 ## Requirements
 
 * PHP >= 5.5.0,
-* [Guzzle 6](https://github.com/guzzle/guzzle) library,
+* [Guzzle 6](https://github.com/guzzle/guzzle) library and the [Guzzle OAuth1 Subscriber](https://github.com/guzzle/oauth-subscriber),
 * (optional) [PHPUnit](https://phpunit.de/) and [php-cs-fixer](http://cs.sensiolabs.org/) to run tests.
 
 ## Installation
 
-The new version of `phpSmug` using [Composer](http://getcomposer.org).
-The first step to use `phpSmug` is to download composer:
+The recommended method of installing phpSmug is using [Composer](http://getcomposer.org) by adding the following to your project's `composer.json`:
+
+```json
+{
+    "require": {
+        "guzzlehttp/oauth-subscriber": "0.3.*"
+    }
+}
+```
+
+If you don't have Composer installed, you can download it using:
 
 ```bash
 $ curl -s http://getcomposer.org/installer | php
 ```
 
-Then we have to install the dependencies using:
+.. and then use it to install phpSmug and all dependencies using:
 
 ```bash
 $ php composer.phar install
 ```
 
-## Autoload
+If you have Composer installed, you can install phpSmug run the following from within your project directory:
 
-Now you can use autoloader from Composer by adding a requirement to your project's composer.json:
-
-```json
-{
-    "require": {
-        "lildude/phpSmug": "~4.0"
-    }
-}
+```bash
+$ composer install
 ```
 
-`phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily integrate `phpSmug` classes loading in your own autoloader.
+## Autoload
+
+`phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily use Composer's [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading) to integrate `phpSmug` into your projects.
 
 ## Basic usage of `phpSmug` client
 
@@ -67,7 +64,6 @@ require_once 'vendor/autoload.php';
 // Optional, but definitely nice to have, options
 $options = [
     'AppName'   => 'My Cool App/1.0 (http://app.com)',
-    'OAuthSecret' => '[YOUR_OAUTH_SECRET]',
 ];
 $client = new phpSmug\Client("[YOUR_API_KEY]", $options));
 $repositories = $client->get('user/[your_username]!albums');
@@ -80,13 +76,10 @@ From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
 See the [`doc` directory](doc/) for more detailed documentation.
 
+## Getting Help
+
+The best way to get help with implementing phpSmug into your projects is to open an [issue](https://github.com/lildude/phpSmug/issues).  This allows you to easily search for other issues where others may have asked to the same questions or hit the same problems and if they haven't, your issue will add to the resources available to others at a later date.
+
 ## License
 
 `phpSmug` is licensed under the MIT License - see the LICENSE file for details
-
-## What's New in phpSmug 4.0?
-
-- Switched to using Guzzle for requests to the API.  This means more reliable and predictable behaviour and allows for easier future improvements in phpSmug without having to worry about maintaining a library that submits requests.
-- All tests are now public and run on Travis CI with every push.
-- phpSmug is now licensed under the MIT license.
-- 
