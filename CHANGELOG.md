@@ -4,6 +4,10 @@ As of 4.0.0, this project adheres to [Semantic Versioning](http://semver.org/) a
 
 ## [4.0.0] - 2015-12-31
 ## Changed
+- Switched to using Guzzle for requests to the API.  This means more reliable and predictable behaviour and allows for easier future improvements in phpSmug without having to worry about maintaining a library that submits requests.
+- All tests are now public and run on Travis CI with every push.
+- phpSmug is now licensed under the MIT license.
+- PSR-1, PSR-2, and PSR-4 coding standards are implemented and enforced by unit testing.
 
 ## [3.5] - 2013-03-02
 ### Added
