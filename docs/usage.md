@@ -77,19 +77,19 @@ The object, referenced by `$object` in this and the next examples, is the user, 
 The object can be specified in a number of ways:
 
 - Long form, as SmugMug documents and returns in all API responses:
--
+
   ```php
   $client->get('/api/v2/user/username!profile');
   ```
 
 - Short form, that is without the `/api/v2/` part:
--
+
   ```php
   $client->get('user/username!profile');
   ```
 
 - Very short form, for the [special `!authuser` and `!siteuser`](https://api.smugmug.com/api/v2/doc/reference/user.html):
--
+
   ```php
   $client->get('!authuser');
   ```
