@@ -12,7 +12,7 @@ require_once 'vendor/autoload.php';
 
 // Optional, but definitely nice to have, options
 $options = [
-    'AppName'   => 'My Cool App/1.0 (http://app.com)',
+    'AppName' => 'My Cool App/1.0 (http://app.com)',
 ];
 $client = new phpSmug\Client('[YOUR_API_KEY]', $options));
 $repositories = $client->get('user/[your_username]!albums');
@@ -77,27 +77,37 @@ The object, referenced by `$object` in this and the next examples, is the user, 
 The object can be specified in a number of ways:
 
 - Long form, as SmugMug documents and returns in all API responses:
+-
   ```php
   $client->get('/api/v2/user/username!profile');
   ```
+
 - Short form, that is without the `/api/v2/` part:
+-
   ```php
   $client->get('user/username!profile');
   ```
+
 - Very short form, for the [special `!authuser` and `!siteuser`](https://api.smugmug.com/api/v2/doc/reference/user.html):
+-
   ```php
   $client->get('!authuser');
   ```
 
 You can additionally pass [filters](https://api.smugmug.com/api/v2/doc/advanced/filters.html) in the `$object` path:
+
   ```php
   $client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');
   ```
+
 ... [expansions](https://api.smugmug.com/api/v2/doc/advanced/expansions.html):
+
   ```php
   $client->get('/api/v2/user/username?_expand=UserProfile')
   ```
+
 ... or perform [multi-get](https://api.smugmug.com/api/v2/doc/advanced/multi-get.html) queries:
+
   ```php
   $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
   ```
