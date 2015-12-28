@@ -60,7 +60,7 @@ Once you've instantiated an instance of the `phpSmug\Client`, you can use the si
 
 **Note:** phpSmug does not currently support asynchronous requests, though now we rely on Guzzle, this shouldn't be too hard to implement in future.
 
-### Getting Information.
+### GETting Information.
 
 To get information about a user, gallery, folder or image, use
 
@@ -114,7 +114,7 @@ You can additionally pass [filters](https://api.smugmug.com/api/v2/doc/advanced/
 
 The filters and expansions can also be passed in the `$options` instead if you prefer.
 
-#### The $options - Optional
+#### The GET $options - Optional
 
 When querying the SmugMug API, you can optionally limit or increase the information SmugMug returns by passing additional optional options to each query.  In the case of `_verbosity` and `_shorturis`, these options overrule those set when instantiating the client.
 
@@ -161,3 +161,27 @@ All changes to objects on SmugMug need to be made using the `POST`, `PUT`, `PATC
   ```
 
 You can find more information about each of these methods at https://api.smugmug.com/api/v2/doc/tutorial/making-changes.html .
+
+#### The $object - Required
+
+The object, referenced by `$object` when making changes, is the user, image, album or folder [object identifier](https://api.smugmug.com/api/v2/doc/pages/concepts.html#object-identifiers) you wish to modify and is accepted in all of the same forms as detailed above.
+
+#### The PATCH, PUT, POST $options - Required
+
+Unlike the GET options, the $options passed to the PATCH, PUT, and POST requests is required as without it, SmugMug won't know what changes you wish to make to the object.
+
+The options you pass are the "Owner-writeable" field for each object type as defined by SmugMug.  For example, these [album fields](https://api.smugmug.com/api/v2/doc/reference/album.html) or these [image fields](https://api.smugmug.com/api/v2/doc/reference/image.html).  The full list of "Owner-writeable" field for each object type can be obtained by querying the `OPTIONS` for the object.
+
+
+### OPTIONS
+
+You can use the OPTIONS HTTP method to find out what other methods an endpoint supports and what parameters those methods accept.
+
+You can query a particular object with:
+
+```php
+$client->options($object);
+```
+
+TODO: phpSmug doesn't actually return this info at the mo. Whoops.
+If you set `_verbosity` to `3` in any query, this information will be returned in the response too.
