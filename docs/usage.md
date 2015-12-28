@@ -1,8 +1,8 @@
-## Autoload
+# Autoload
 
 `phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily use Composer's [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading) to integrate `phpSmug` into your projects.
 
-## Basic usage of the `phpSmug` client
+# Basic Usage of the `phpSmug` Client
 
 ```php
 <?php
@@ -21,7 +21,9 @@ $repositories = $client->get('user/[your_username]!albums');
 
 From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
-### Instantiating the Client
+# More In depth Usage Details
+
+## Instantiating the Client
 
 The `phpSmug\Client()` constructor takes two arguments:
 - Your API key as a string - **Required**.
@@ -52,11 +54,13 @@ The `phpSmug\Client()` constructor takes two arguments:
   Additionally, you can pass any [Guzzle request option](http://docs.guzzlephp.org/en/latest/request-options.html) though `debug` and `proxy` (untested yet) are probably the only options you may need to set.
 
 
-### Interacting with the SmugMug API
+## Interacting with the SmugMug API
 
-Once you've instantiated an instance of the `phpSmug\Client`, you can use standard Guzzle HTTP method calls to interact with the API.
+Once you've instantiated an instance of the `phpSmug\Client`, you can use the simplified [Guzzle HTTP method calls](http://guzzle.readthedocs.org/en/latest/quickstart.html#sending-requests) to interact with the API.
 
-#### Getting Information.
+**Note:** phpSmug does not currently support asynchronous requests, though now we rely on Guzzle, this shouldn't be too hard to implement in future.
+
+### Getting Information.
 
 To get information about a user, gallery, folder or image, use
 
@@ -66,27 +70,59 @@ $client->get($object, $options)
 
 If you are not authenticated, you will only be able to access public information.
 
-##### The $object
+#### The $object - Required
 
-The object, referenced by `$object` in this and the next examples, is the user, image, album or folder object you wish to query or modify.
+The object, referenced by `$object` in this and the next examples, is the user, image, album or folder [object identifier](https://api.smugmug.com/api/v2/doc/pages/concepts.html#object-identifiers) you wish to query or modify.
 
 The object can be specified in a number of ways:
 
-- Long form, as SmugMug documents and returns in all API responses: `$client->get('/api/v2/user/username!profile');`
-- Short form, that is without the `/api/v2/` part: `$client->get('user/username!profile');`
-- Very short form, for the [special `!authuser` and `!siteuser`](https://api.smugmug.com/api/v2/doc/reference/user.html): `$client->get('!authuser');`
+- Long form, as SmugMug documents and returns in all API responses:
+  ```php
+  $client->get('/api/v2/user/username!profile');
+  ```
+- Short form, that is without the `/api/v2/` part:
+  ```php
+  $client->get('user/username!profile');
+  ```
+- Very short form, for the [special `!authuser` and `!siteuser`](https://api.smugmug.com/api/v2/doc/reference/user.html):
+  ```php
+  $client->get('!authuser');
+  ```
 
-You can additionally pass [filters](https://api.smugmug.com/api/v2/doc/advanced/filters.html) in the `$object` path: `$client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');`, [expansions](https://api.smugmug.com/api/v2/doc/advanced/expansions.html): `$client->get('/api/v2/user/username?_expand=UserProfile')` or perform [multi-get](https://api.smugmug.com/api/v2/doc/advanced/multi-get.html) queries: `$client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');`
+You can additionally pass [filters](https://api.smugmug.com/api/v2/doc/advanced/filters.html) in the `$object` path:
+  ```php
+  $client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');
+  ```
+... [expansions](https://api.smugmug.com/api/v2/doc/advanced/expansions.html):
+  ```php
+  $client->get('/api/v2/user/username?_expand=UserProfile')
+  ```
+... or perform [multi-get](https://api.smugmug.com/api/v2/doc/advanced/multi-get.html) queries:
+  ```php
+  $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
+  ```
 
-##### The $options
+The filters and expansions can also be passed in the `$options` instead if you prefer.
 
-When querying the SmugMug API, you can limit or increase the information SmugMug returns by passing additional optional options to each query.  In the case of `_verbosity` and `_shorturis`, these options overrule those set when instantiating the client.
+#### The $options - Optional
 
-You can also use the `$options` array to pass any filters or expansions that use query parameters, like `_filter` or `_expand`.
+When querying the SmugMug API, you can optionally limit or increase the information SmugMug returns by passing additional optional options to each query.  In the case of `_verbosity` and `_shorturis`, these options overrule those set when instantiating the client.
+
+You can also use the `$options` array to pass any filters or expansions that use query parameters, like `_filter` or `_expand`. For example,
+
+```php
+$options = [
+    '_filter' => ['BioText', 'CoverImage'],
+    '_filteruri' => ['User'],
+    '_shorturis' => true,
+    '_verbosity' => 2,
+]
+$client->get('user/username!profile', $options);
+```
 
 `$options` can't use used for any SmugMug option that starts with an exclamation mark, like `!profile`.  In these cases, you need to include this option in the `$object` path.
 
-#### Making Changes
+### Making Changes
 
 All changes to objects on SmugMug need to be made using the `POST`, `PUT`, `PATCH` or `DELETE` HTTP methods and you can do so as follows:
 
