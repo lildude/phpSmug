@@ -49,11 +49,11 @@ If you have Composer installed, you can install phpSmug run the following from w
 $ composer install
 ```
 
-## Autoload
+## Basic Usage of the phpSmug Client
+
+### Autoload
 
 `phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily use Composer's [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading) to integrate `phpSmug` into your projects.
-
-## Basic usage of `phpSmug` client
 
 ```php
 <?php
@@ -74,7 +74,7 @@ From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
 ## Documentation
 
-See the [`doc` directory](doc/) for more detailed documentation.
+See the [`docs` directory](docs/) or http://phpsmug.com/docs/ for more detailed documentation.
 
 ## Getting Help
 
