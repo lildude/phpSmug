@@ -19,6 +19,8 @@ $repositories = $client->get('user/[your_username]!albums');
 ?>
 ```
 
+For convenience, phpSmug only returns the json_decoded `Response` part of the response from SmugMug.  If you wish to access the full json_decoded response, you can do so with `$client->getResponse();`.
+
 From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
 # More In depth Usage Details
@@ -183,5 +185,9 @@ You can query a particular object with:
 $client->options($object);
 ```
 
-TODO: phpSmug doesn't actually return this info at the mo. Whoops.
-If you set `_verbosity` to `3` in any query, this information will be returned in the response too.
+If you set `_verbosity` to `3` in any query, this information will be returned in the response from SmugMug but not made immediately available within the response from that particular call.  You can however grab the information from the raw response using `$client->getResponse()->Options;`. For example:
+
+```php
+$client->get($object, array('_verbosity' => 3));
+$client->getResponse()->Options;
+```
