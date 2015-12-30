@@ -22,13 +22,13 @@ If you don't have Composer installed, you can download it using:
 $ curl -s http://getcomposer.org/installer | php
 ```
 
-.. and then use it to install phpSmug and all dependencies using:
+... and then use it to install phpSmug and all dependencies using:
 
 ```bash
 $ php composer.phar install
 ```
 
-If you have Composer installed, you can install phpSmug run the following from within your project directory:
+If you have Composer installed, you can install phpSmug by running the following from within your project directory:
 
 ```bash
 $ composer install
