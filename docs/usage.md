@@ -1,4 +1,4 @@
-# Basic Usage of the `phpSmug` Client
+# Basic Usage of the phpSmug Client
 
 ### Autoload
 
@@ -53,7 +53,7 @@ The `phpSmug\Client()` constructor takes two arguments:
 
   - `api_version` - The API version you wish to use. This defaults to `v2` as this is the only version of the API this version of phpSmug is compatible with.  This is really only for "future proofing".
 
-  Additionally, you can pass any [Guzzle request option](http://docs.guzzlephp.org/en/latest/request-options.html) though `debug` and `proxy` (untested yet) are probably the only options you may need to set.
+  Additionally, you can pass any [Guzzle request option](http://docs.guzzlephp.org/en/latest/request-options.html) though `debug` and `proxy` are probably the only options you may need to set.
 
 
 ## Interacting with the SmugMug API
