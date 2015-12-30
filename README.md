@@ -66,7 +66,7 @@ $options = [
     'AppName'   => 'My Cool App/1.0 (http://app.com)',
 ];
 $client = new phpSmug\Client("[YOUR_API_KEY]", $options));
-$repositories = $client->get('user/[your_username]!albums');
+$albums = $client->get('user/[your_username]!albums');
 ?>
 ```
 
@@ -76,10 +76,18 @@ From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
 See the [`docs` directory](docs/) or http://phpsmug.com/docs/ for more detailed documentation.
 
+## Examples
+
+phpSmug comes with 3 examples to help get you on your way. All 3 examples perform the same thing, just using differing authentication methods. They all show thumbnails of the first album found for the respective authentication methods:
+
+- `example.php` illustrates anonymous, unauthenticated access.
+- `example-oauth.php` illustrates an OAuth login.
+- `example-external-links.php` illustrates displaying private images.
+
 ## Getting Help
 
 The best way to get help with implementing phpSmug into your projects is to open an [issue](https://github.com/lildude/phpSmug/issues).  This allows you to easily search for other issues where others may have asked to the same questions or hit the same problems and if they haven't, your issue will add to the resources available to others at a later date.
 
 ## License
 
-`phpSmug` is licensed under the MIT License - see the LICENSE file for details
+phpSmug is licensed under the MIT License - see the LICENSE file for details
