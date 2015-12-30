@@ -1,11 +1,9 @@
-phpSmug 4.0 - PHP Wrapper for the SmugMug API
-=============================================
-
-[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master) [![Build Status](https://travis-ci.org/lildude/phpSmug.svg)](https://travis-ci.org/lildude/phpSmug)
 
 # :construction: Work In Progress :construction: #
 
 # phpSmug
+
+[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master) [![Build Status](https://travis-ci.org/lildude/phpSmug.svg)](https://travis-ci.org/lildude/phpSmug)
 
 A simple object orientated wrapper for the new SmugMug API v2, written in PHP.
 
