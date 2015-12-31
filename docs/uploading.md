@@ -51,9 +51,9 @@ $response = $client->post('album/r4nD0m!uploadfromuri', $options);
 `Uri` (the source of the image) and `Cookie` (a string to send as the value of a Cookie header when fetching the source URI) are required options.
 
 
-# Replacing Photos
+# Replacing Images
 
-Replacing photos is identical to uploading. The only difference is you need to specify the _full_ `ImageUri` of the image you wish to replace.
+Replacing images is identical to uploading. The only difference is you need to specify the _full_ `ImageUri` of the image you wish to replace.
 
 For example,
 
