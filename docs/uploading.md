@@ -6,20 +6,22 @@ In order to upload, you will need to have logged into SmugMug and have the album
 
 Then it’s just a matter of calling the method with the various optional parameters.
 
+Whilst Guzzle supports asynchronous requests, phpSmug does not currently take advantage of this functionality so images can only be uploaded synchronously.
+
 ## Upload a Local Image
 
 ```php
 # Optional options providing information about the image you're uploading.
 $options = [
-  'Altitude' => 1085,
-  'Caption' => 'This is a photo from on top of Table Mountain',
-  'FileName' => 'capetown.png',
-  'Hidden' => false,
-  'Keywords' => 'Cape Town; mountain; South Africa',
-  'Latitude' => -34.045034,
-  'Longitude' => 18.386065,
-  'Pretty' => false,
-  'Title' => 'From Table Mountain',
+    'Altitude' => 1085,
+    'Caption' => 'This is a photo from on top of Table Mountain',
+    'FileName' => 'capetown.png',
+    'Hidden' => false,
+    'Keywords' => 'Cape Town; mountain; South Africa',
+    'Latitude' => -34.045034,
+    'Longitude' => 18.386065,
+    'Pretty' => false,
+    'Title' => 'From Table Mountain',
 ];
 
 $response = $client->upload('album/r4nD0m', '/path/to/a/image.png', $options);
@@ -34,13 +36,13 @@ Uploading from a URL is slightly different in that you don't need to use the `up
 
 ```php
 $options = [
-  'Uri' => 'http://example.com/img/image.png',
-  'Cookie' => 'foo',
-  'Title' => 'Example.com Photo',
-  'Caption' => 'This is a photo from example.com',
-  'Hidden' => false,
-  'FileName' => 'example.png',
-  'Keywords' => 'example; photo',
+    'Uri' => 'http://example.com/img/image.png',
+    'Cookie' => 'foo',
+    'Title' => 'Example.com Photo',
+    'Caption' => 'This is a photo from example.com',
+    'Hidden' => false,
+    'FileName' => 'example.png',
+    'Keywords' => 'example; photo',
 ];
 $response = $client->post('album/r4nD0m!uploadfromuri', $options);
 ```
@@ -56,7 +58,7 @@ For example,
 
 ```php
 $options = [
-  'ImageUri' => '/api/v2/image/WxRHNQD-0',
+    'ImageUri' => '/api/v2/image/WxRHNQD-0',
 ];
 
 $response = $client->upload('album/r4nD0m', '/path/to/a/replacement-image.png', $options);
