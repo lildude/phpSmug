@@ -1,8 +1,3 @@
----
-layout: docs
-title: Documentation
----
-
 # Requirements
 
 * PHP >= 5.5.0,
@@ -39,7 +34,7 @@ If you have Composer installed, you can install phpSmug by running the following
 $ composer install
 ```
 
-# Basic Usage of the phpSmug Client
+# Basic Usage
 
 `phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily use Composer's [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading) to integrate `phpSmug` into your projects.
 
@@ -61,7 +56,7 @@ For convenience, phpSmug only returns the json_decoded `Response` part of the re
 
 From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
-# More In depth Usage Details
+# More In-depth Usage Details
 
 ## Instantiating the Client
 
@@ -213,7 +208,7 @@ Unlike the GET options, the $options passed to the PATCH, PUT, and POST requests
 The options you pass are the "Owner-writeable" field for each object type as defined by SmugMug.  For example, these [album fields](https://api.smugmug.com/api/v2/doc/reference/album.html) or these [image fields](https://api.smugmug.com/api/v2/doc/reference/image.html).  The full list of "Owner-writeable" field for each object type can be obtained by querying the `OPTIONS` for the object.
 
 
-### OPTIONS
+### Probing the API
 
 You can use the OPTIONS HTTP method to find out what other methods an endpoint supports and what parameters those methods accept.
 
@@ -300,6 +295,24 @@ $albums = $client->get('user/[YOUR_USERNAME]!albums');
 
 You can see how to implement this three step process into your own application in the `example-oauth.php` example.
 
+# Display Private Images
+
+By default, when you create a new gallery within SmugMug, you will be able to display/embed the images from within this gallery on external websites. If you change the gallery settings and set "Visibility" set to "Private (Only Me)", you will no longer be able to do that.
+
+You can however use OAuth to sign your image URLs with your OAuth credentials using `signResource()` and display those images on an external site.
+
+For example, you can display your private images using:
+
+```php
+foreach ($images->AlbumImage as $image) {
+    printf('<a href="%s"><img src="%s" title="%s" alt="%s" width="150" height="150" /></a>', $image->WebUri, $client->signResource($image->ThumbnailUrl), $image->Title, $image->ImageKey);
+}
+```
+
+See the `example-external-links.php` for a complete implementation example.
+
+Keep in mind, these links are time based so you will need to regenerate the links every time the page is loaded. This may affect the rendering performance of the page containing these signed images.
+
 # Uploading
 
 Uploading is very easy. You can either upload an image from your local system, or from a location on the web.
@@ -352,9 +365,9 @@ $response = $client->post('album/r4nD0m!uploadfromuri', $options);
 `Uri` (the source of the image) and `Cookie` (a string to send as the value of a Cookie header when fetching the source URI) are required options.
 
 
-# Replacing Photos
+# Replacing Images
 
-Replacing photos is identical to uploading. The only difference is you need to specify the _full_ `ImageUri` of the image you wish to replace.
+Replacing images is identical to uploading. The only difference is you need to specify the _full_ `ImageUri` of the image you wish to replace.
 
 For example,
 
