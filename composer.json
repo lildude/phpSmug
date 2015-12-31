@@ -1,10 +1,14 @@
 {
     "name": "lildude/phpsmug",
-    "description": "phpSmug is a PHP wrapper class for the SmugMug API written and maintained by Colin Seymour",
-    "license": "GPL-3.0",
+    "type": "library",
+    "description": "A simple object orientated wrapper for the SmugMug API v2",
+    "homepage": "http://phpsmug.com",
+    "keywords": ["smugmug", "api"],
+    "license": "MIT",
     "authors": [
         {
-            "name": "Colin Seymour"
+            "name": "Colin Seymour",
+            "homepage": "http://lildude.co.uk"
         },
         {
             "name": "phpSmug Contributors",
@@ -12,15 +16,21 @@
         }
     ],
     "require": {
-        "php": ">=5.2",
-        "ext-gd": "*"
+        "php": ">=5.5.0",
+        "guzzlehttp/guzzle": "~6.1",
+        "guzzlehttp/oauth-subscriber": "0.3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "fabpot/php-cs-fixer": "~1.10",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-        "files": ["phpSmug.php"]
+        "psr-4": { "phpSmug\\": "lib/phpSmug/" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.5.x-dev"
+            "dev-master": "4.0.x-dev"
         }
     }
 }

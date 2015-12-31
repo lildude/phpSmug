@@ -1,0 +1,6 @@
+.DS*
+vendor
+composer.lock
+composer.phar
+/build
+_site/
