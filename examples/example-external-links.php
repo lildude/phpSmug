@@ -9,7 +9,7 @@ require_once 'vendor/autoload.php';
  * This example file shows you how authenticate using OAuth and then display
  * images within the first gallery found.  This example is the same as that in
  * example-oauth.php, with the exception that it signs the image URLs with your
- * OAuth credentials using "$f->signResource()". See line 91.
+ * OAuth credentials using "$client->signResource()". See line 87 below.
  *
  * This is how you can display images from galleries that have the
  * gallery "Visibility" set to "Private (Only Me)".
