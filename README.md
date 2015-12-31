@@ -63,7 +63,6 @@ $options = [
 ];
 $client = new phpSmug\Client("[YOUR_API_KEY]", $options));
 $albums = $client->get('user/[your_username]!albums');
-?>
 ```
 
 From the `$client` object, you can access to all the SmugMug 2.0 API methods.

@@ -14,7 +14,6 @@ $options = [
 ];
 $client = new phpSmug\Client('[YOUR_API_KEY]', $options));
 $repositories = $client->get('user/[your_username]!albums');
-?>
 ```
 
 For convenience, phpSmug only returns the json_decoded `Response` part of the response from SmugMug.  If you wish to access the full json_decoded response, you can do so with `$client->getResponse();`.
