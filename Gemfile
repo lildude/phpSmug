@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
-gem 'github-pages'
+gem 'github-pages', '40'
 gem 'jemoji'
+gem 'jekyll-sitemap'

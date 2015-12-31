@@ -19,9 +19,12 @@ Download the latest and greatest revision of {{ site.name }}:
 </div>
 
 
-Previous Versions
-=================
+# Previous Versions
 
-You can find all previous releases on the [releases page]({{ site.github.releases_url }}).
+You can find all previous releases on the [releases page](https://github.com/lildude/{{ site.name }}/releases).
 
 **NOTE:** All older versions have been deprecated by the most recent release. If you encounter any problems with these releases, you will need to test again using a later release to be sure the issue has not already been addressed.
+
+# Changelog
+
+You can find the full history in [CHANGELOG.md](https://github.com/lildude/phpSmug/blob/master/CHANGELOG.md) in the phpSmug repository on GitHub.com.
