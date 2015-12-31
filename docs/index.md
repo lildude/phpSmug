@@ -107,7 +107,7 @@ Once you've instantiated an instance of the `phpSmug\Client`, you can use the si
 
 To get information about a user, gallery, folder or image, use
 
-```php
+```
 $client->get($object, $options)
 ```
 
@@ -140,21 +140,21 @@ The object can be specified in a number of ways:
 
 You can additionally pass [filters](https://api.smugmug.com/api/v2/doc/advanced/filters.html) in the `$object` path:
 
-    ```php
-    $client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');
-    ```
+  ```php
+  $client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');
+  ```
 
 ... [expansions](https://api.smugmug.com/api/v2/doc/advanced/expansions.html):
 
-    ```php
-    $client->get('/api/v2/user/username?_expand=UserProfile')
-    ```
+  ```php
+  $client->get('/api/v2/user/username?_expand=UserProfile')
+  ```
 
 ... or perform [multi-get](https://api.smugmug.com/api/v2/doc/advanced/multi-get.html) queries:
 
-    ```php
-    $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
-    ```
+  ```php
+  $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
+  ```
 
 The filters and expansions can also be passed in the `$options` instead if you prefer.
 
