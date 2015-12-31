@@ -66,32 +66,35 @@ From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 ## Instantiating the Client
 
 The `phpSmug\Client()` constructor takes two arguments:
+
 - Your API key as a string - **Required**.
 
-  This is required for all interaction with the SmugMug API.  [Applying for an API Key here](https://api.smugmug.com/api/developer/apply).
+    This is required for all interaction with the SmugMug API.  [Applying for an API Key here](https://api.smugmug.com/api/developer/apply).
 
 - An array of options - Optional.
 
-  The options you pass here become the default options applied to all requests by default, unless explicitly overwritten elsewhere and can be made up of any combination of the following options:
-  - `AppName` - The name, version and URL of the application you have built using the phpSmug. There is no required format, but something like `My Cool App/1.0 (http://my.url.com)` would be very useful.
+The options you pass here become the default options applied to all requests by default, unless explicitly overwritten elsewhere and can be made up of any combination of the following options:
 
-    Whilst this isn't obligatory, it is recommended as it helps SmugMug identify the application that is calling the API in the event one of your users reporting a problem on the SmugMug forums.
+- `AppName` - The name, version and URL of the application you have built using the phpSmug. There is no required format, but something like `My Cool App/1.0 (http://my.url.com)` would be very useful.
 
-  - `OAuthSecret` - This is the secret assigned to your API key and is displayed in the Settings tab of the SmugMug Control Panel. If no secret is displayed, select "change" next to the API key your application will use and click "save". A secret will be generated for you.
+
+      Whilst this isn't obligatory, it is recommended as it helps SmugMug identify the application that is calling the API in the event one of your users reporting a problem on the SmugMug forums.
+
+- `OAuthSecret` - This is the secret assigned to your API key and is displayed in the Settings tab of the SmugMug Control Panel. If no secret is displayed, select "change" next to the API key your application will use and click "save". A secret will be generated for you.
 
     An OAuthSecret is required for all access to the SmugMug API that requires authentication.
 
-  - `_verbosity` - Determine how much information you'd like to get from SmugMug by increasing or decreasing the verbosity. Defaults to `2`. See [Optimizing response sizes](https://api.smugmug.com/api/v2/doc/advanced/filters.html#verbosity) for more information.
+- `_verbosity` - Determine how much information you'd like to get from SmugMug by increasing or decreasing the verbosity. Defaults to `2`. See [Optimizing response sizes](https://api.smugmug.com/api/v2/doc/advanced/filters.html#verbosity) for more information.
 
     This option can be overruled on a per-request basis too.
 
-  - `_shorturis` - If this parameter is set, the URI section of the response object will be trimmed down so that each entry is just a key-value pair of name to URI. This removes all metadata about the URI from the response. See [Optimizing response sizes](https://api.smugmug.com/api/v2/doc/advanced/filters.html#shorturis) for more information.
+- `_shorturis` - If this parameter is set, the URI section of the response object will be trimmed down so that each entry is just a key-value pair of name to URI. This removes all metadata about the URI from the response. See [Optimizing response sizes](https://api.smugmug.com/api/v2/doc/advanced/filters.html#shorturis) for more information.
 
     This option can be overruled on a per-request basis too.
 
-  - `api_version` - The API version you wish to use. This defaults to `v2` as this is the only version of the API this version of phpSmug is compatible with.  This is really only for "future proofing".
+- `api_version` - The API version you wish to use. This defaults to `v2` as this is the only version of the API this version of phpSmug is compatible with.  This is really only for "future proofing".
 
-  Additionally, you can pass any [Guzzle request option](http://docs.guzzlephp.org/en/latest/request-options.html) though `debug` and `proxy` are probably the only options you may need to set.
+Additionally, you can pass any [Guzzle request option](http://docs.guzzlephp.org/en/latest/request-options.html) though `debug` and `proxy` are probably the only options you may need to set.
 
 
 ## Interacting with the SmugMug API
@@ -110,7 +113,8 @@ $client->get($object, $options)
 
 If you are not authenticated, you will only be able to access public information.
 
-#### The $object - Required
+
+**The $object - Required**
 
 The object, referenced by `$object` in this and the next examples, is the user, image, album or folder [object identifier](https://api.smugmug.com/api/v2/doc/pages/concepts.html#object-identifiers) you wish to query or modify.
 
@@ -118,43 +122,44 @@ The object can be specified in a number of ways:
 
 - Long form, as SmugMug documents and returns in all API responses:
 
-  ```php
-  $client->get('/api/v2/user/username!profile');
-  ```
+    ```php
+    $client->get('/api/v2/user/username!profile');
+    ```
 
 - Short form, that is without the `/api/v2/` part:
 
-  ```php
-  $client->get('user/username!profile');
-  ```
+    ```php
+    $client->get('user/username!profile');
+    ```
 
 - Very short form, for the [special `!authuser` and `!siteuser`](https://api.smugmug.com/api/v2/doc/reference/user.html):
 
-  ```php
-  $client->get('!authuser');
-  ```
+    ```php
+    $client->get('!authuser');
+    ```
 
 You can additionally pass [filters](https://api.smugmug.com/api/v2/doc/advanced/filters.html) in the `$object` path:
 
-  ```php
-  $client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');
-  ```
+    ```php
+    $client->get('user/username!profile?_filter=BioText,Facebook&_filteruri=User');
+    ```
 
 ... [expansions](https://api.smugmug.com/api/v2/doc/advanced/expansions.html):
 
-  ```php
-  $client->get('/api/v2/user/username?_expand=UserProfile')
-  ```
+    ```php
+    $client->get('/api/v2/user/username?_expand=UserProfile')
+    ```
 
 ... or perform [multi-get](https://api.smugmug.com/api/v2/doc/advanced/multi-get.html) queries:
 
-  ```php
-  $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
-  ```
+    ```php
+    $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
+    ```
 
 The filters and expansions can also be passed in the `$options` instead if you prefer.
 
-#### The GET $options - Optional
+
+**The GET $options - Optional**
 
 When querying the SmugMug API, you can optionally limit or increase the information SmugMug returns by passing additional optional options to each query.  In the case of `_verbosity` and `_shorturis`, these options overrule those set when instantiating the client.
 
@@ -178,35 +183,35 @@ All changes to objects on SmugMug need to be made using the `POST`, `PUT`, `PATC
 
 - `PATCH` - Used to modify one or more data fields of an existing object, like changing the title of an image.
 
-  ```php
-  $client->patch($object, $options);
-  ```
+    ```php
+    $client->patch($object, $options);
+    ```
 
 - `PUT` - Used to edit **all** data fields of an existing object. This will replace all field with the information in this request.
 
-  ```php
-  $client->put($object, $options);
-  ```
+    ```php
+    $client->put($object, $options);
+    ```
 
 - `POST` - Used for creating new objects, and for changes that aren't as simple as directly editing a data field, like creating albums and folders, rotating and cropping images, and moving images between galleries.
 
-  ```php
-  $client->post($object, $options);
-  ```
+    ```php
+    $client->post($object, $options);
+    ```
 
 - `DELETE` - Used for deleting objects.
 
-  ```php
-  $client->delete($object);
-  ```
+    ```php
+    $client->delete($object);
+    ```
 
 You can find more information about each of these methods at https://api.smugmug.com/api/v2/doc/tutorial/making-changes.html .
 
-#### The $object - Required
+**The $object - Required**
 
 The object, referenced by `$object` when making changes, is the user, image, album or folder [object identifier](https://api.smugmug.com/api/v2/doc/pages/concepts.html#object-identifiers) you wish to modify and is accepted in all of the same forms as detailed above.
 
-#### The PATCH, PUT, POST $options - Required
+**The PATCH, PUT, POST $options - Required**
 
 Unlike the GET options, the $options passed to the PATCH, PUT, and POST requests is required as without it, SmugMug won't know what changes you wish to make to the object.
 
