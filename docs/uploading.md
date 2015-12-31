@@ -1,3 +1,4 @@
+
 # Uploading
 
 Uploading is very easy. You can either upload an image from your local system, or from a location on the web.

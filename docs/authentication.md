@@ -1,3 +1,4 @@
+
 # Authentication
 
 SmugMug's API allows read-only unauthenticated access to all public information.  If you need to access private information or make changes, you need to authorize your application.

@@ -1,3 +1,4 @@
+
 # Other Notes
 
 ## Access SmugMug via a Proxy
@@ -24,6 +25,6 @@ phpSmug comes with 3 examples to help get you on your way. All 3 examples perfor
 - `example-oauth.php` illustrates an OAuth login.
 - `example-external-links.php` illustrates displaying private images.
 
-And that’s all folks.
+And that's all folks.
 
-Keep up to date on developments and enhancements to phpSmug at http://phpsmug.com/.
+Keep up to date on developments and enhancements to phpSmug at <http://phpsmug.com/>.

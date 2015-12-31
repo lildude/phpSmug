@@ -1,3 +1,4 @@
+
 # Display Private Images
 
 By default, when you create a new gallery within SmugMug, you will be able to display/embed the images from within this gallery on external websites. If you change the gallery settings and set "Visibility" set to "Private (Only Me)", you will no longer be able to do that.
