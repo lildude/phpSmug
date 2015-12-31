@@ -1,7 +1,5 @@
 # Basic Usage of the phpSmug Client
 
-### Autoload
-
 `phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily use Composer's [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading) to integrate `phpSmug` into your projects.
 
 ```php
