@@ -8,12 +8,16 @@ timezone:      Europe/London
 encoding:      UTF-8
 baseurl:       ""
 permalink:     /news/:title/
-latest_version: 3.5
+latest_version: 4.0.0
 gems:
   - jemoji
-markdown:      kramdown
-kramdown:
-  input: GFM
+  - jekyll-sitemap
+#markdown:      kramdown
+#kramdown:
+#  input: GFM
+markdown:     redcarpet
+redcarpet:
+  extensions: ["autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "disable_indented_code_blocks"]
 
 # Hard code our nav here to keep things in order and precisely as we want
 navigation:
