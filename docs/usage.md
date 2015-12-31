@@ -1,5 +1,5 @@
 
-# Basic Usage of the phpSmug Client
+# Basic Usage
 
 `phpSmug` follows the PSR-1, PSR-2 and PSR-4 conventions, which means you can easily use Composer's [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading) to integrate `phpSmug` into your projects.
 
@@ -21,7 +21,7 @@ For convenience, phpSmug only returns the json_decoded `Response` part of the re
 
 From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
-# More In depth Usage Details
+# More In-depth Usage Details
 
 ## Instantiating the Client
 
@@ -173,7 +173,7 @@ Unlike the GET options, the $options passed to the PATCH, PUT, and POST requests
 The options you pass are the "Owner-writeable" field for each object type as defined by SmugMug.  For example, these [album fields](https://api.smugmug.com/api/v2/doc/reference/album.html) or these [image fields](https://api.smugmug.com/api/v2/doc/reference/image.html).  The full list of "Owner-writeable" field for each object type can be obtained by querying the `OPTIONS` for the object.
 
 
-### OPTIONS
+### Probing the API
 
 You can use the OPTIONS HTTP method to find out what other methods an endpoint supports and what parameters those methods accept.
 
