@@ -1,3 +1,8 @@
+---
+layout: docs
+title: Documentation
+---
+
 # Requirements
 
 * PHP >= 5.5.0,
