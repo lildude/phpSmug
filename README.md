@@ -17,32 +17,28 @@ The intention of this class is to allow PHP application developers quick and eas
 
 ## Installation
 
-The recommended method of installing phpSmug is using [Composer](http://getcomposer.org) by adding the following to your project's `composer.json`:
+The recommended method of installing phpSmug is using [Composer](http://getcomposer.org). If you have Composer installed, you can install phpSmug and all its dependencies from within your project directory:
+
+```bash
+$ composer require lildude/phpsmug
+```
+
+Alternatively, you can add the following to your project's `composer.json`:
 
 ```json
 {
     "require": {
-        "guzzlehttp/oauth-subscriber": "0.3.*"
+        "lildude/phpsmug": "^4.0"
     }
 }
 ```
+
+.. and then run `composer update` from within your project directory.
 
 If you don't have Composer installed, you can download it using:
 
 ```bash
 $ curl -s http://getcomposer.org/installer | php
-```
-
-.. and then use it to install phpSmug and all dependencies using:
-
-```bash
-$ php composer.phar install
-```
-
-If you have Composer installed, you can install phpSmug run the following from within your project directory:
-
-```bash
-$ composer install
 ```
 
 ## Basic Usage of the phpSmug Client
