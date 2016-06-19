@@ -25,6 +25,16 @@ phpSmug comes with 3 examples to help get you on your way. All 3 examples perfor
 - `example-oauth.php` illustrates an OAuth login.
 - `example-external-links.php` illustrates displaying private images.
 
-And that's all folks.
+## Getting Help
 
-Keep up to date on developments and enhancements to phpSmug at <http://phpsmug.com/>.
+The best way to get help with implementing phpSmug into your projects is to open an [issue](https://github.com/lildude/phpSmug/issues).  This allows you to easily search for other issues where others may have asked to the same questions or hit the same problems and if they haven't, your issue will add to the resources available to others at a later date.
+
+Please don't be shy. If you've got a question, problem or are just curious about something, there's a very good chance someone else is too, so go ahead and open an issue and ask.
+
+## Contributing
+
+Found a bug or want to make phpSmug even better? Please feel free to open a pull request with your changes, but be sure to check out the [CONTRIBUTING.md](CONTRIBUTING.md) first for some tips and guidelines. No pull request is too small.
+
+## License
+
+phpSmug is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
