@@ -1,7 +1,7 @@
 
 # phpSmug
 
-[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master) [![Build Status](https://travis-ci.org/lildude/phpSmug.svg)](https://travis-ci.org/lildude/phpSmug)
+[![MIT License badge]()]() [![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master) [![Build Status](https://travis-ci.org/lildude/phpSmug.svg)](https://travis-ci.org/lildude/phpSmug)
 
 A simple object orientated wrapper for the new SmugMug API v2, written in PHP.
 
@@ -83,6 +83,10 @@ Please don't be shy. If you've got a question, problem or are just curious about
 
 Found a bug or want to make phpSmug even better? Please feel free to open a pull request with your changes, but be sure to check out the [CONTRIBUTING.md](CONTRIBUTING.md) first for some tips and guidelines. No pull request is too small.
 
+## Changes
+
+All notable changes to this project are documented in [CHANGELOG.md](CHANGELOG.md).
+
 ## License
 
-phpSmug is licensed under the MIT License - see the LICENSE file for details
+[![MIT License badge]()]() phpSmug is licensed under the MIT License - see the LICENSE file for details
