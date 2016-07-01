@@ -357,6 +357,7 @@ Uploading from a URL is slightly different in that you don't need to use the `up
 
 ```php
 $options = [
+    'AllowInsecure' => true,
     'Uri' => 'http://example.com/img/image.png',
     'Cookie' => 'foo',
     'Title' => 'Example.com Photo',
@@ -368,7 +369,7 @@ $options = [
 $response = $client->post('album/r4nD0m!uploadfromuri', $options);
 ```
 
-`Uri` (the source of the image) and `Cookie` (a string to send as the value of a Cookie header when fetching the source URI) are required options.
+`Uri` (the source of the image) and `Cookie` (a string to send as the value of a Cookie header when fetching the source URI) are required options. `AllowInsecure` is required and must be set to _true_ if the `Uri` is insecure.
 
 
 # Replacing Images
