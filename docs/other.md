@@ -1,6 +1,27 @@
 
 # Other Notes
 
+## Caching API Responses
+
+Caching has been removed from phpSmug as the headers in the SmugMug API responses discourage caching and now phpSmug is using Guzzle, you can take advantage of much better Guzzle-friendly middleware implementations, like [guzzle-cache-middleware](https://github.com/Kevinrob/guzzle-cache-middleware), that better tie-in with the various frameworks you may already be using.
+
+In order to use one of these middleware caching mechanisms, you'll need to [create and pass a handler stack](http://docs.guzzlephp.org/en/latest/handlers-and-middleware.html) with the cache middleware you plan to use when instantiating the phpSmug client. For example:
+
+```php
+<?php
+$handler_stack = HandlerStack::create();
+$handler_stack->push(new YourChosenCachingMiddleware(), 'cache');
+// Optional, but definitely nice to have, options
+$options = [
+    'AppName' => 'My Cool App/1.0 (http://app.com)',
+    'handler' => $handler_stack,
+];
+$client = new phpSmug\Client('[YOUR_API_KEY]', $options));
+```
+
+Please refer to your chosen caching implementation documentation for further details on how to use and implement that side of things with Guzzle.
+
+
 ## Access SmugMug via a Proxy
 
 Accessing SmugMug with phpSmug through a proxy is possible by passing the `proxy` option when instantiating the client:
