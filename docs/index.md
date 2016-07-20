@@ -467,12 +467,12 @@ Please don't be shy. If you've got a question, problem or are just curious about
 
 ## Contributing
 
-Found a bug or want to make phpSmug even better? Please feel free to open a pull request with your changes, but be sure to check out the [CONTRIBUTING.md](CONTRIBUTING.md) first for some tips and guidelines. No pull request is too small.
+Found a bug or want to make phpSmug even better? Please feel free to open a pull request with your changes, but be sure to check out the [CONTRIBUTING.md](https://github.com/lildude/phpSmug/blob/master/CONTRIBUTING.md) first for some tips and guidelines. No pull request is too small.
 
 ## Changes
 
-All notable changes to this project are documented in [CHANGELOG.md](CHANGELOG.md).
+All notable changes to this project are documented in [CHANGELOG.md](https://github.com/lildude/phpSmug/blob/master/CHANGELOG.md).
 
 ## License
 
-[![MIT Licence](https://img.shields.io/badge/license-MIT-blue.svg?maxAge=31622400)](https://opensource.org/licenses/MIT) phpSmug is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+[![MIT Licence](https://img.shields.io/badge/license-MIT-blue.svg?maxAge=31622400)](https://opensource.org/licenses/MIT) phpSmug is licensed under the MIT License - see the [LICENSE.md](https://github.com/lildude/phpSmug/blob/master/LICENSE.md) file for details
