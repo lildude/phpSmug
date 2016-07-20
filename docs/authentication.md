@@ -12,6 +12,7 @@ Authenticating using OAuth is a 3 step process.
 First, you need to request a request token:
 
 ```php
+<?php
 $callback_url = "http://example.com/your/cool/app.php";
 $request_token = $client->getRequestToken($callback_url);
 ```
@@ -27,12 +28,14 @@ Once you’ve obtained the request token, you need to use it to direct the user 
 phpSmug provides a simple method `$client->getAuthorizeURL()` that generates the URL you can use for redirection or for the user to click. It also takes care of passing the OAuth token too:
 
 ```php
+<?php
 echo '<a href="'.$client->getAuthorizeURL().'">Authorize</a>';
 ```
 
 If you don't pass any options to this method, SmugMug's [default public read access](https://api.smugmug.com/api/v2/doc/tutorial/authorization.html) is requested.  If you need greater access or permissions, pass an array of the access or permissions you require:
 
 ```php
+<?php
 $perms = [
     'Access' => 'Full',
     'Permissions' => 'Modify',
@@ -47,6 +50,7 @@ Once the user has authorized your application, they will be redirected back to t
 Now you have the request token, `oauth_verifier` and your user has approved the access your application has requested, you need to request the access token using `getAccessToken()`:
 
 ```php
+<?php
 $client->setToken($request_token['oauth_token'], $request_token['oauth_token_secret']);  // Saved somewhere in step 1.
 $oauth_verifier = $_GET['oauth_verifier'];  // This comes back with the callback request.
 $access_token = $client->getAccessToken($oauth_verifier); // The results of this call is what your application needs to store indefinitely.
@@ -59,6 +63,7 @@ Once you’ve saved the token and token secret, you will no longer need to use a
 For example:
 
 ```php
+<?php
 $options = [
     'AppName' => 'My Cool App/1.0 (http://app.com)',
 ];

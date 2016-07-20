@@ -27,6 +27,7 @@ Please refer to your chosen caching implementation documentation for further det
 Accessing SmugMug with phpSmug through a proxy is possible by passing the `proxy` option when instantiating the client:
 
 ```php
+<?php
 $options = [
     'AppName' => 'My Cool App/1.0 (http://app.com)',
     'proxy' => 'http://[proxy_address]:[port]',
@@ -62,4 +63,4 @@ All notable changes to this project are documented in [CHANGELOG.md](CHANGELOG.m
 
 ## License
 
-[![MIT License badge]()]() phpSmug is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+[![MIT Licence](https://img.shields.io/badge/license-MIT-blue.svg?maxAge=31622400)](https://opensource.org/licenses/MIT) phpSmug is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
