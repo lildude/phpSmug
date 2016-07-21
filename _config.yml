@@ -12,12 +12,14 @@ latest_version: 4.0.0
 gems:
   - jemoji
   - jekyll-sitemap
-#markdown:      kramdown
-#kramdown:
-#  input: GFM
-markdown:     redcarpet
-redcarpet:
-  extensions: ["autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "disable_indented_code_blocks"]
+markdown:      kramdown
+highlighter:   rouge
+kramdown:
+  input: GFM
+  
+#markdown:     redcarpet
+#redcarpet:
+#  extensions: ["autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "disable_indented_code_blocks"]
 
 # Hard code our nav here to keep things in order and precisely as we want
 navigation:
