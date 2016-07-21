@@ -8,6 +8,7 @@ You can however use OAuth to sign your image URLs with your OAuth credentials us
 For example, you can display your private images using:
 
 ```php
+<?php
 foreach ($images->AlbumImage as $image) {
     printf('<a href="%s"><img src="%s" title="%s" alt="%s" width="150" height="150" /></a>', $image->WebUri, $client->signResource($image->ThumbnailUrl), $image->Title, $image->ImageKey);
 }

@@ -12,6 +12,7 @@ Whilst Guzzle supports asynchronous requests, phpSmug does not currently take ad
 ## Upload a Local Image
 
 ```php
+<?php
 # Optional options providing information about the image you're uploading.
 $options = [
     'Altitude' => 1085,
@@ -36,6 +37,7 @@ The `$options` you pass are all entirely optional and can be either in the short
 Uploading from a URL is slightly different in that you don't need to use the `upload()` method that uses a dedicated endpoint. Instead, you can POST to an album's `!uploadfromuri` endpoint passing the URL and any additional options:
 
 ```php
+<?php
 $options = [
     'AllowInsecure' => true,
     'Uri' => 'http://example.com/img/image.png',
@@ -59,6 +61,7 @@ Replacing images is identical to uploading. The only difference is you need to s
 For example,
 
 ```php
+<?php
 $options = [
     'ImageUri' => '/api/v2/image/WxRHNQD-0',
 ];
