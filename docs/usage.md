@@ -140,6 +140,7 @@ $options = [
 $client->get('user/username!profile', $options);
 ```
 
+If you use the `_expand` option, without setting `_expandmethod` to `inline`, SmugMug returns the expansions in their own object indexed by the expanded URI. To make things easier, phpSmug appends this object to the response object.
 
 ### Making Changes
 
