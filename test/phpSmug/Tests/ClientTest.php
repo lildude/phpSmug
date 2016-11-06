@@ -21,7 +21,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->OAuthSecret = 'I-am-not-a-valid-OAuthSecret-but-it-does-not-matter-for-this-test';
         $this->oauth_token = 'I-am-an-oauth-token';
         $this->oauth_token_secret = 'I-am-an-oauth-token-secret';
-        $this->fauxSmugMugResponse = '{"Options":{"foo":"bar"},"Response": {"ano":"bar"},"Code":200,"Message":"OK"}';
+        $this->fauxSmugMugResponse = '{"Options":{"foo":"bar"},"Response": {"ano":"bar"},"Code":200,"Message":"OK","Expansions": {"foo":"bar"}}';
         $this->fauxRequestTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}&oauth_callback_confirmed=true";
         $this->fauxAccessTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}";
         $this->fauxDeleteResponse = '{"Response":{"Uri":"/api/v2/album/rAnD0m","Locator":"Album","LocatorType":"Object"},"Code":200,"Message":"Ok"}';
@@ -257,7 +257,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $response = $client->get('user/'.$this->user);
 
         $this->assertObjectHasAttribute('ano', $response);
+        $this->assertObjectHasAttribute('Expansions', $response);
         $this->assertEquals('bar', $response->ano);
+        $this->assertEquals('bar', $response->Expansions->foo);
     }
 
     /**
