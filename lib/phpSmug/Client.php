@@ -56,8 +56,8 @@ class Client
     /**
      * Instantiate a new SmugMug client.
      *
-     * @param string $APIKey  The API for your application.
-     * @param array  $options Options you wish to apply by default to all requests. Use this to set your application name, provide the OAuthSecret and set any default output filter.
+     * @param string $APIKey  The API for your application
+     * @param array  $options Options you wish to apply by default to all requests. Use this to set your application name, provide the OAuthSecret and set any default output filter
      *
      * @see https://api.smugmug.com/api/v2/doc/tutorial/api-key.html
      * @see https://api.smugmug.com/api/v2/doc/advanced/filters.html
@@ -84,7 +84,7 @@ class Client
             $this->default_options['query']['_shorturis'] = $this->_shorturis;
         }
 
-        # SmugMug defaults to a verbosity of 2 so no point adding if it equals 2.
+        // SmugMug defaults to a verbosity of 2 so no point adding if it equals 2.
         if ($this->_verbosity != 2) {
             $this->default_options['query']['_verbosity'] = $this->_verbosity;
         }
@@ -92,11 +92,11 @@ class Client
         $this->default_options['headers']['User-Agent'] = sprintf('%s using %s/%s', $this->AppName, $this->default_options['headers']['User-Agent'], self::VERSION);
 
         if ($this->OAuthSecret) {
-            # Setup the handler stack - we'll need this later.
+            // Setup the handler stack - we'll need this later.
             $this->stack = (isset($options['handler'])) ? $options['handler'] : HandlerStack::create();
             $this->default_options['handler'] = $this->stack;
         } else {
-            # We only need the APIKey query parameter if we're not authenticating
+            // We only need the APIKey query parameter if we're not authenticating
             $this->default_options['query']['APIKey'] = $APIKey;
         }
 
@@ -107,23 +107,23 @@ class Client
      * Dynamic method handler.  This function handles all HTTP method calls
      * not explicitly implemented as separate functions by phpSmug.
      *
-     * @param string $method HTTP method.
-     * @param array  $args   Array of options for the HTTP method.
+     * @param string $method HTTP method
+     * @param array  $args   Array of options for the HTTP method
      *
-     * @return object Decoded JSON response from SmugMug.
+     * @return object Decoded JSON response from SmugMug
      */
     public function __call($method, $args)
     {
         if (empty($args)) {
             throw new InvalidArgumentException('All methods need an argument.');
         }
-        # Ensure the per-request options are empty
+        // Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
-        # Add '/api/v#' to the method if it doesn't exist
+        // Add '/api/v#' to the method if it doesn't exist
         if (strpos($args[0], '/api/'.$this->default_options['api_version']) === false) {
             $url = '/api/'.$this->default_options['api_version'];
-            # Cater for ! queries like !authuser - these don't need a trailing / after the API version.
+            // Cater for ! queries like !authuser - these don't need a trailing / after the API version.
             if (strpos($args[0], '!') !== 0) {
                 $url .= '/';
             }
@@ -131,7 +131,7 @@ class Client
         } else {
             $url = $args[0];
         }
-        # Cater for any args passed in via `?whatever=foo`
+        // Cater for any args passed in via `?whatever=foo`
         if (strpos($url, '?') !== false) {
             $pairs = explode('&', explode('?', $url)[1]);
             foreach ($pairs as $pair) {
@@ -187,13 +187,13 @@ class Client
     /**
      * Upload images to SmugMug.
      *
-     * @param string $album   Album URI into which the file should be uploaded.
-     * @param string $file    Path of the local image that is being uploaded.
-     * @param array  $options Optional options for the image being uploaded.
+     * @param string $album   Album URI into which the file should be uploaded
+     * @param string $file    Path of the local image that is being uploaded
+     * @param array  $options Optional options for the image being uploaded
      *
      * @see https://api.smugmug.com/api/v2/doc/reference/upload.html
      *
-     * @return object Decoded JSON response from SmugMug.
+     * @return object Decoded JSON response from SmugMug
      */
     public function upload($album, $file, $options = null)
     {
@@ -205,19 +205,19 @@ class Client
             throw new InvalidArgumentException('File not found: '.$file);
         }
 
-        # Ensure the per-request options are empty
+        // Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
 
-        # Unset all query params - SmugMug's upload endpoint doesn't honor them anyway.
+        // Unset all query params - SmugMug's upload endpoint doesn't honor them anyway.
         $this->request_options['query'] = [];
 
-        # Required headers
+        // Required headers
         $this->request_options['headers']['X-Smug-ResponseType'] = 'JSON';
         $this->request_options['headers']['X-Smug-Version'] = $this->default_options['api_version'];
         $this->request_options['headers']['X-Smug-AlbumUri'] = (strpos($album, '/api/'.$this->default_options['api_version'].'/') === false) ? '/api/'.$this->default_options['api_version'].'/'.$album : $album;
 
-        # Optional headers:
+        // Optional headers:
         $optional_headers = ['X-Smug-Altitude', 'X-Smug-Caption', 'X-Smug-FileName', 'X-Smug-Hidden', 'X-Smug-ImageUri', 'X-Smug-Keywords', 'X-Smug-Latitude', 'X-Smug-Longitude', 'X-Smug-Pretty', 'X-Smug-Title'];
         if ($options && is_array($options)) {
             foreach ($options as $key => $value) {
@@ -240,15 +240,15 @@ class Client
      * Get the request token required for the first step in the three legged
      * OAuth authentication process.
      *
-     * @param string $callback Callback URI you wish SmugMug to redirect your users to.
+     * @param string $callback Callback URI you wish SmugMug to redirect your users to
      *
      * @see https://api.smugmug.com/api/v2/doc/tutorial/authorization.html
      *
-     * @return array The request oauth_token, oauth_token_secret and oauth_verifier.
+     * @return array The request oauth_token, oauth_token_secret and oauth_verifier
      */
     public function getRequestToken($callback)
     {
-        # Ensure the per-request options are empty
+        // Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
         $url = 'https://secure.smugmug.com/services/oauth/1.0a/getRequestToken';
@@ -264,15 +264,15 @@ class Client
      * Get the access token required for the second step in the three legged
      * OAuth authentication process.
      *
-     * @param string $oauth_verifier The oauth verifier from a previous getRequestToken() call.
+     * @param string $oauth_verifier The oauth verifier from a previous getRequestToken() call
      *
      * @see https://api.smugmug.com/api/v2/doc/tutorial/authorization.html
      *
-     * @return array The access oauth_token, oauth_token_secret.
+     * @return array The access oauth_token, oauth_token_secret
      */
     public function getAccessToken($oauth_verifier)
     {
-        # Ensure the per-request options are empty
+        // Ensure the per-request options are empty
         $this->request_options = [];
         $this->client = self::getHttpClient();
         $url = 'https://secure.smugmug.com/services/oauth/1.0a/getAccessToken';
@@ -287,8 +287,8 @@ class Client
     /**
      * Private function that performs the actual request to the SmugMug API.
      *
-     * @param string $method The HTTP method for the request.
-     * @param string $url    The destination URL for the request.
+     * @param string $method The HTTP method for the request
+     * @param string $url    The destination URL for the request
      */
     private function performRequest($method, $url)
     {
@@ -303,18 +303,18 @@ class Client
 
             $oauth_middleware = new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauth_middleware_config);
 
-            $this->stack->unshift($oauth_middleware, 'oauth_middleware'); # Bump OAuth to the bottom of the stack
+            $this->stack->unshift($oauth_middleware, 'oauth_middleware'); // Bump OAuth to the bottom of the stack
         }
 
-        # Merge the default and request options for all requests except upload requests.
-        # Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
+        // Merge the default and request options for all requests except upload requests.
+        // Merge query params first - we do this manually as array_merge_recursive doesn't play nicely.
         if (!strpos($url, 'upload')) {
             $this->request_options['query'] = (isset($this->request_options['query'])) ? array_merge($this->default_options['query'], $this->request_options['query']) : $this->default_options['query'];
         }
-        # Merge the rest of the options.
+        // Merge the rest of the options.
         $this->request_options = array_merge($this->default_options, $this->request_options);
 
-        # Perform the API request
+        // Perform the API request
         $this->response = $this->client->request($method, $url, $this->request_options);
     }
 
@@ -324,7 +324,7 @@ class Client
      *
      * This is in a single function so we don't repeat the same steps for each method.
      *
-     * @param string|null $method The method we're expecting the output for.
+     * @param string|null $method The method we're expecting the output for
      *
      * @return mixed
      */
@@ -335,7 +335,7 @@ class Client
           case 'getAccessToken':
               parse_str($this->response->getBody(), $token);
               $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
-              # Remove the middleware so it is re-added with the updated credentials on subsequent requests.
+              // Remove the middleware so it is re-added with the updated credentials on subsequent requests.
               $this->stack->remove('oauth_middleware');
 
               return $token;
@@ -385,7 +385,7 @@ class Client
     /**
      * Get the OAuth tokens that may have been set using setToken().
      *
-     * @return array The oauth token and secret that have been set via a previous setToken() call.
+     * @return array The oauth token and secret that have been set via a previous setToken() call
      */
     public function getToken()
     {
@@ -411,7 +411,7 @@ class Client
      *
      * @see https://api.smugmug.com/api/v2/doc/tutorial/authorization.html
      *
-     * @return string The authorization URL required to authorize your application.
+     * @return string The authorization URL required to authorize your application
      */
     public function getAuthorizeURL()
     {
@@ -451,7 +451,7 @@ class Client
      *
      * I may need to find a better way of doing this, possibly by creating my own middleware.
      *
-     * @return string A URL with OAuth parameters appended.
+     * @return string A URL with OAuth parameters appended
      */
     public function signResource($url)
     {
@@ -469,9 +469,9 @@ class Client
         $container = [];
         $handler = HandlerStack::create($mock);
 
-        # Add OAuth to the stack
+        // Add OAuth to the stack
         $handler->push($oauth);
-        # Add history to the stack
+        // Add history to the stack
         $history = \GuzzleHttp\Middleware::history($container);
         $handler->push($history);
 
@@ -485,7 +485,7 @@ class Client
     }
 
     /**
-     * @return object HttpClient object instantiated with this class.
+     * @return object HttpClient object instantiated with this class
      */
     public function getHttpClient()
     {
@@ -517,7 +517,7 @@ class Client
     }
 
     /**
-     * @return array Default options instantiated with this class.
+     * @return array Default options instantiated with this class
      */
     public function getDefaultOptions()
     {
@@ -525,7 +525,7 @@ class Client
     }
 
     /**
-     * @return object Full json_decoded response from SmugMug without any phpSmug touches.
+     * @return object Full json_decoded response from SmugMug without any phpSmug touches
      */
     public function getResponse()
     {
@@ -533,7 +533,7 @@ class Client
     }
 
     /**
-     * @return array Request options that are set just before a request is made and cleared before every request.
+     * @return array Request options that are set just before a request is made and cleared before every request
      */
     public function getRequestOptions()
     {

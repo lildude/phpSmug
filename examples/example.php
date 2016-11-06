@@ -40,7 +40,7 @@ require_once 'vendor/autoload.php';
 try {
     $options = [
       'AppName' => $AppName,
-      '_verbosity' => 1, # Reduce verbosity to reduce the amount of data in the response and to make using it easier.
+      '_verbosity' => 1, // Reduce verbosity to reduce the amount of data in the response and to make using it easier.
     ];
 
     $client = new phpSmug\Client($APIKey, $options);
