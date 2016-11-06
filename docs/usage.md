@@ -123,7 +123,6 @@ $client->get('/api/v2/user/username1,username2?_filteruri=UserProfile');
 
 The filters and expansions can also be passed in the `$options` instead if you prefer.
 
-
 **The GET $options - Optional**
 
 When querying the SmugMug API, you can optionally limit or increase the information SmugMug returns by passing additional optional options to each query.  In the case of `_verbosity` and `_shorturis`, these options overrule those set when instantiating the client.
@@ -141,7 +140,6 @@ $options = [
 $client->get('user/username!profile', $options);
 ```
 
-`$options` can't use used for any SmugMug option that starts with an exclamation mark, like `!profile`.  In these cases, you need to include this option in the `$object` path.
 
 ### Making Changes
 
