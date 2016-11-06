@@ -44,8 +44,8 @@ $AppName = 'YOUR_APP_NAME/VER (URL)';
 try {
     $options = [
         'AppName' => $AppName,
-        '_verbosity' => 1, # Reduce verbosity to reduce the amount of data in the response and to make using it easier.
-        'OAuthSecret' => $OAuthSecret, # You need to pass your OAuthSecret in order to authenticate with OAuth.
+        '_verbosity' => 1, // Reduce verbosity to reduce the amount of data in the response and to make using it easier.
+        'OAuthSecret' => $OAuthSecret, // You need to pass your OAuthSecret in order to authenticate with OAuth.
     ];
 
     $client = new phpSmug\Client($APIKey, $options);

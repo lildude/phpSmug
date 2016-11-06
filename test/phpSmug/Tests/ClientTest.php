@@ -105,7 +105,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldGetReasonPhrase()
     {
         $mock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar']),  # We don't need a body so we don't set one.
+            new Response(200, ['X-Foo' => 'Bar']),  // We don't need a body so we don't set one.
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -122,7 +122,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldGetHeaders()
     {
         $mock = new MockHandler([
-            # We don't care about the body for this test, so we don't set it.
+            // We don't care about the body for this test, so we don't set it.
             new Response(200, ['X-Foo' => 'Bar']),
         ]);
 
@@ -140,7 +140,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldGetStatusCode()
     {
         $mock = new MockHandler([
-            # We don't care about headers or body for this test so we don't set them.
+            // We don't care about headers or body for this test so we don't set them.
             new Response(200),
         ]);
 
@@ -158,7 +158,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnUntouchedResponse()
     {
         $mock = new MockHandler([
-            # We don't care about headers for this test so we don't set them.
+            // We don't care about headers for this test so we don't set them.
             new Response(200, [], $this->fauxSmugMugResponse),
         ]);
 
@@ -180,7 +180,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldGetSmugMugMethodOptions()
     {
         $mock = new MockHandler([
-            # We don't care about headers for this test so we don't set them.
+            // We don't care about headers for this test so we don't set them.
             new Response(200, [], $this->fauxSmugMugResponse),
         ]);
 
@@ -200,7 +200,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldExtractQueryFromURLAndSetQueryInRequest()
     {
         $mock = new MockHandler([
-            new Response(200), # We don't care about headers or body for this test so we don't set them.
+            new Response(200), // We don't care about headers or body for this test so we don't set them.
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -221,13 +221,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldSetQueryFromOptionsPassedOnRequestAndOverWriteDefaults()
     {
         $mock = new MockHandler([
-            new Response(200), # We don't care about headers or body for this test so we don't set them.
+            new Response(200), // We don't care about headers or body for this test so we don't set them.
         ]);
 
         $handler = HandlerStack::create($mock);
         $client = new Client($this->APIKey, ['handler' => $handler]);
         $options = [
-            '_filter' => ['BioText', 'CoverImage'],  # TODO: Ensure default options are over-written and none are lost.
+            '_filter' => ['BioText', 'CoverImage'],  // TODO: Ensure default options are over-written and none are lost.
             '_filteruri' => ['User'],
             '_shorturis' => true,
             '_verbosity' => 2,
@@ -235,7 +235,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $response = $client->get('user/'.$this->user, $options);
 
         $request_options = $client->getRequestOptions();
-        # We're not testing Guzzle, so we assume it does the right thing with these options.
+        // We're not testing Guzzle, so we assume it does the right thing with these options.
         foreach ($options as $key => $value) {
             $this->assertArrayHasKey($key, $request_options['query']);
             $this->assertEquals((is_array($value)) ? implode(',', $value) : $value, $request_options['query'][$key]);
@@ -248,7 +248,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnReponseObject()
     {
         $mock = new MockHandler([
-            new Response(200, [], $this->fauxSmugMugResponse), # We don't care about headers for this test so we don't set them.
+            new Response(200, [], $this->fauxSmugMugResponse), // We don't care about headers for this test so we don't set them.
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -329,7 +329,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldSetAndUnSetHeadersEtcForUploadAndAssumeUploadWorkedWithOptionsThatMatchHeaders()
     {
         $mock = new MockHandler([
-            new Response(200), # TODO: Do we care about headers or body for this test so we don't set them?
+            new Response(200), // TODO: Do we care about headers or body for this test so we don't set them?
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -348,13 +348,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'X-Smug-Title' => 'I am a test image',
         ];
 
-        $client->upload('album/rAnD0m', './examples/phpSmug-logo.png', $options); # TODO: Make this a bit more resiliant and make the pic nice ;-)
-        $request_options = $client->getRequestOptions();  # TODO: This assumes Guzzle sets the headers correctly.  We can sort of test this from the response we get from SmugMug, but maybe not in testing.
+        $client->upload('album/rAnD0m', './examples/phpSmug-logo.png', $options); // TODO: Make this a bit more resiliant and make the pic nice ;-)
+        $request_options = $client->getRequestOptions();  // TODO: This assumes Guzzle sets the headers correctly.  We can sort of test this from the response we get from SmugMug, but maybe not in testing.
         foreach ($options as $header => $value) {
             $this->assertArrayHasKey($header, $request_options['headers']);
             $this->assertEquals($value, $request_options['headers'][$header]);
         }
-        # There should be no query params.
+        // There should be no query params.
         $this->assertEmpty($request_options['query']);
     }
 
@@ -364,7 +364,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldSetAndUnSetHeadersEtcForUploadAndAssumeUploadWorkedWithOptionsThatDontHaveXSmugInTheirName()
     {
         $mock = new MockHandler([
-            new Response(200), # TODO: Do we care about headers or body for this test so we don't set them?
+            new Response(200), // TODO: Do we care about headers or body for this test so we don't set them?
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -383,13 +383,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'Title' => 'I am a test image',
         ];
 
-        $client->upload('album/rAnD0m', './examples/phpSmug-logo.png', $options); # TODO: Make this a bit more resiliant by getting the full path.
-        $request_options = $client->getRequestOptions();  # TODO: This assumes Guzzle sets the headers correctly.  We can sort of test this from the response we get from SmugMug, but maybe not in testing.
+        $client->upload('album/rAnD0m', './examples/phpSmug-logo.png', $options); // TODO: Make this a bit more resiliant by getting the full path.
+        $request_options = $client->getRequestOptions();  // TODO: This assumes Guzzle sets the headers correctly.  We can sort of test this from the response we get from SmugMug, but maybe not in testing.
         foreach ($options as $header => $value) {
             $this->assertArrayHasKey('X-Smug-'.$header, $request_options['headers']);
             $this->assertEquals($value, $request_options['headers']['X-Smug-'.$header]);
         }
-        # There should be no query params.
+        // There should be no query params.
         $this->assertEmpty($request_options['query']);
     }
 
@@ -410,7 +410,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldSetJsonOptionOnPutAndPatchRequests()
     {
         $mock = new MockHandler([
-            new Response(200), # TODO: Do we care about headers or body for this test so we don't set them?
+            new Response(200), // TODO: Do we care about headers or body for this test so we don't set them?
         ]);
 
         $handler = HandlerStack::create($mock);
@@ -485,7 +485,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldGetRequestToken()
     {
         $mock = new MockHandler([
-            # We don't care about headers for this test so we don't set them.
+            // We don't care about headers for this test so we don't set them.
             new Response(200, [], $this->fauxRequestTokenResponse),
         ]);
 
@@ -509,14 +509,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldGetAccessToken()
     {
         $mock = new MockHandler([
-            # We don't care about headers for this test so we don't set them.
+            // We don't care about headers for this test so we don't set them.
             new Response(200, [], $this->fauxAccessTokenResponse),
         ]);
 
         $handler = HandlerStack::create($mock);
         $client = new Client($this->APIKey, ['OAuthSecret' => $this->OAuthSecret, 'handler' => $handler]);
 
-        $oauth_verifier = '12345678'; # This isn't important
+        $oauth_verifier = '12345678'; // This isn't important
         $request_token = $client->getAccessToken($oauth_verifier);
 
         $this->assertArrayHasKey('oauth_token', $request_token);
@@ -611,7 +611,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function shouldDeleteAlbum()
     {
         $mock = new MockHandler([
-            # We don't care about headers for this test so we don't set them.
+            // We don't care about headers for this test so we don't set them.
             new Response(200, [], $this->fauxDeleteResponse),
         ]);
 
