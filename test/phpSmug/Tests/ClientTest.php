@@ -43,7 +43,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException phpSmug\Exception\InvalidArgumentException
+     * @expectedException \phpSmug\Exception\InvalidArgumentException
      * @expectedExceptionMessage An API key is required for all SmugMug interactions.
      */
     public function shouldThrowExceptionIfNoApikey()
@@ -395,7 +395,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException phpSmug\Exception\InvalidArgumentException
+     * @expectedException \phpSmug\Exception\InvalidArgumentException
      * @expectedExceptionMessage File not found: /path/to/non/existant/file.jpg
      */
     public function shouldThrowExceptionIfUploadFileNotFound()
@@ -470,7 +470,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException phpSmug\Exception\InvalidArgumentException
+     * @expectedException \phpSmug\Exception\InvalidArgumentException
      * @expectedExceptionMessage An OAuthSecret is required for all SmugMug OAuth interactions.
      */
     public function shouldThrowExcetionIfNoOAuthSecret()
@@ -562,7 +562,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException phpSmug\Exception\InvalidArgumentException
+     * @expectedException \phpSmug\Exception\InvalidArgumentException
      * @expectedExceptionMessage All methods need an argument.
      */
     public function shouldThrowInvalidArgumentExceptionIfCallMethodWithoutDestination()
@@ -573,7 +573,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException phpSmug\Exception\BadMethodCallException
+     * @expectedException \phpSmug\Exception\BadMethodCallException
      * @expectedExceptionMessage Invalid method: badmethod
      */
     public function shouldThrowBadMethodCallException()

@@ -137,7 +137,7 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @depends shouldUploadPictureToNewlyCreatedAlbum
-     * @expectedException GuzzleHttp\Exception\ClientException
+     * @expectedException \GuzzleHttp\Exception\ClientException
      * @expectedExceptionMessage 404 Not Found
      *
      * Tests that we really can't access the private image
