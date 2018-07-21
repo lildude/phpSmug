@@ -178,11 +178,7 @@ class Client
     {
         $o = [];
         foreach ($optimizers as $key => $value) {
-            if ($key == '_config' && is_array($value)) {
-                $o[$key] = json_encode($value);
-            } else {
-                $o[$key] = (is_array($value)) ? implode(',', $value) : $value;
-            }
+            $o[$key] = (is_array($value)) ? implode(',', $value) : $value;
         }
 
         return $o;
