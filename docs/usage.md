@@ -143,6 +143,8 @@ $client->get('user/username!profile', $options);
 
 `$options` can't use used for any SmugMug option that starts with an exclamation mark, like `!profile`.  In these cases, you need to include this option in the `$object` path.
 
+You can configure expansions using the `_config` option. You can pass this to phpSmug as part of the `$options` array as an array or JSON encoded string. If an array is received, phpSmug will JSON encode it for you else it'll assume it has already been JSON encoded.
+
 ### Making Changes
 
 All changes to objects on SmugMug need to be made using the `POST`, `PUT`, `PATCH` or `DELETE` HTTP methods and you can do so as follows:
