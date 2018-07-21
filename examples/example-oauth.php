@@ -62,7 +62,7 @@ try {
 
         // Step 2: Get the User to login to SmugMug and authorise this demo
         echo '<p>Click <a href="'.$client->getAuthorizeURL().'"><strong>HERE</strong></a> to Authorize This Demo.</p>';
-        // Alternatively, automatically direct your visitor by commenting out the above line in favour of this:
+    // Alternatively, automatically direct your visitor by commenting out the above line in favour of this:
         //header("Location:".$client->getAuthorizeURL());
     } else {
         $reqToken = unserialize($_SESSION['SmugGalReqToken']);
