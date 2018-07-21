@@ -134,6 +134,8 @@ class Client
         // Cater for any args passed in via `?whatever=foo`
         if (strpos($url, '?') !== false) {
             $pairs = explode('&', explode('?', $url)[1]);
+            // remove empty args caused by adjacent &s in $url
+            $pairs = array_diff($pairs, ['']);
             foreach ($pairs as $pair) {
                 list($key, $value) = explode('=', $pair);
                 $this->request_options['query'][$key] = $value;

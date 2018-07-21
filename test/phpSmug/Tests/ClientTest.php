@@ -218,6 +218,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function shouldStripOutEmptyQueryArgs()
+    {
+        $mock = new MockHandler([
+            new Response(200), // We don't care about headers or body for this test so we don't set them.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $response = $client->get('user/'.$this->user.'?_expand=UserProfile&&_verbosity=2');
+        // We don't really need this assertion as the phpunit config `convertNoticesToExceptions="true"`
+        // means this test will fail before now, but it's nice to have an assertion to be sure.
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @test
+     */
     public function shouldSetQueryFromOptionsPassedOnRequestAndOverWriteDefaults()
     {
         $mock = new MockHandler([
