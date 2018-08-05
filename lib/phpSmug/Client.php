@@ -350,6 +350,10 @@ class Client
           default:
               $body = json_decode((string) $this->response->getBody());
               if (isset($body->Response)) {
+                  if (isset($body->Expansions)) {
+                      $body->Response->Expansions = $body->Expansions;
+                  }
+
                   return $body->Response;
               } else {
                   return $body;
