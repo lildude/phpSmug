@@ -244,7 +244,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $handler = HandlerStack::create($mock);
         $client = new Client($this->APIKey, ['handler' => $handler]);
         $options = [
-            '_filter' => ['BioText', 'CoverImage'],  // TODO: Ensure default options are over-written and none are lost.
+            '_filter' => ['BioText', 'CoverImage'],
             '_filteruri' => ['User'],
             '_shorturis' => true,
             '_verbosity' => 2,
@@ -257,6 +257,75 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $this->assertArrayHasKey($key, $request_options['query']);
             $this->assertEquals((is_array($value)) ? implode(',', $value) : $value, $request_options['query'][$key]);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function shouldEncodeConfigOption()
+    {
+        $mock = new MockHandler([
+            new Response(200), // We don't care about headers or body for this test so we don't set them.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $options = [
+            '_verbosity' => 1,
+            '_config' => [
+                'filter' => ['NickName'],
+                'filteruri' => ['UserProfile'],
+                'expand' => [
+                    'UserProfile' => [
+                        'filter' => ['BioText'],
+                        'filteruri' => ['BioImage'],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $client->get('user/'.$this->user, $options);
+        $request_options = $client->getRequestOptions();
+
+        $this->assertArrayHasKey('_config', $request_options['query']);
+        $this->assertEquals('{"filter":["NickName"],"filteruri":["UserProfile"],"expand":{"UserProfile":{"filter":["BioText"],"filteruri":["BioImage"]}}}', $request_options['query']['_config']);
+        json_decode($request_options['query']['_config']);
+        $this->assertEquals(JSON_ERROR_NONE, json_last_error());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotDoubleEncodeEncodedConfigOption()
+    {
+        $mock = new MockHandler([
+            new Response(200), // We don't care about headers or body for this test so we don't set them.
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new Client($this->APIKey, ['handler' => $handler]);
+        $config = [
+            'filter' => ['NickName'],
+            'filteruri' => ['UserProfile'],
+            'expand' => [
+                'UserProfile' => [
+                    'filter' => ['BioText'],
+                    'filteruri' => ['BioImage'],
+                ],
+            ],
+        ];
+        $options = [
+            '_verbosity' => 1,
+            '_config' => json_encode($config),
+        ];
+
+        $response = $client->get('user/'.$this->user, $options);
+        $request_options = $client->getRequestOptions();
+
+        $this->assertArrayHasKey('_config', $request_options['query']);
+        $this->assertEquals('{"filter":["NickName"],"filteruri":["UserProfile"],"expand":{"UserProfile":{"filter":["BioText"],"filteruri":["BioImage"]}}}', $request_options['query']['_config']);
+        json_decode($request_options['query']['_config']);
+        $this->assertEquals(JSON_ERROR_NONE, json_last_error());
     }
 
     /**

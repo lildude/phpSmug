@@ -142,6 +142,8 @@ $client->get('user/username!profile', $options);
 
 If you use the `_expand` option without setting `_expandmethod` to `inline`, SmugMug returns the expansions in their own object indexed by the expanded URI. To make things easier, phpSmug appends this object to the response object.
 
+You can configure expansions using the `_config` option. You can pass this to phpSmug as part of the `$options` array as an array or JSON encoded string. If an array is received, phpSmug will JSON encode it for you else it'll assume it has already been JSON encoded.
+
 ### Making Changes
 
 All changes to objects on SmugMug need to be made using the `POST`, `PUT`, `PATCH` or `DELETE` HTTP methods and you can do so as follows:
