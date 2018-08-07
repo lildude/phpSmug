@@ -2,21 +2,24 @@
 
 - [Requirements & Installation](installation.md)
 - [Usage](usage.md)
-  - Basic Usage
-  - More In-depth Usage Details
-    - Instantiating the Client
-    - Interacting with the SmugMug API
-      - GETting Information
-      - Making Changes
-      - Probing the API
+  - [Basic Usage](usage.md#basic-usage)
+  - [More In-depth Usage Details](usage.md#more-in-depth-usage-details)
+    - [Instantiating the Client](usage.md#instantiating-the-client)
+    - [Interacting with the SmugMug API](usage.md#interacting-with-the-smugmug-api)
+      - [GETting Information](usage.md#getting-information)
+      - [Making Changes](usage.md#making-changes)
+      - [Probing the API](usage.md#probing-the-api)
 - [Authentication](authentication.md)
 - [Display Private Images](private-images.md)
 - [Uploading & Replacing Images](uploading.md)
-  - Upload a Local Image
-  - Upload an Image from a URL
-  - Replacing Images
+  - [Upload a Local Image](uploading.md#upload-a-local-image)
+  - [Upload an Image from a URL](uploading.md#upload-an-image-from-a-url)
+  - [Replacing Images](uploading.md#replacing-images)
 - [Other Notes](other.md)
-  - Access SmugMug via a Proxy
-  - Examples
+  - [Caching API Responses](other.md#caching-api-responses)
+  - [Access SmugMug via a Proxy](other.md#)
+  - [Examples](other.md#examples)
+  - [Getting Help](other#getting-help)
+  - [Contributing](other#contributing)
 
-You can also view all of the documentation in this repository at http://phpsmug.com/docs/.
+You can also view all of the documentation in this repository at <http://phpsmug.com/>.
