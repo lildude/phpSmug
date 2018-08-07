@@ -39,7 +39,7 @@ All your requests will pass through the specified proxy on the specified port.
 
 If you need a username and password to access your proxy, you can include them in the URL in the form: `http://[username]:[password]@[proxy_address]:[port]`.
 
-# Examples
+## Examples
 
 phpSmug comes with 3 examples to help get you on your way. All 3 examples perform the same thing, just using differing authentication methods. They all show thumbnails of the first album found for the respective authentication methods:
 
@@ -47,11 +47,17 @@ phpSmug comes with 3 examples to help get you on your way. All 3 examples perfor
 - `example-oauth.php` illustrates an OAuth login.
 - `example-external-links.php` illustrates displaying private images.
 
+## Reporting Issues
+
+If you encounter a problem with phpSmug, please feel free to raise an [issue](https://github.com/lildude/phpSmug/issues).  Please state which version of phpSmug you are using and ideally provide a small code snippet or link to a gist that can be used to reproduce the issue.
+
 ## Getting Help
 
-The best way to get help with implementing phpSmug into your projects is to open an [issue](https://github.com/lildude/phpSmug/issues).  This allows you to easily search for other issues where others may have asked to the same questions or hit the same problems and if they haven't, your issue will add to the resources available to others at a later date.
+The best way to get help with implementing phpSmug into your projects is to open an [issue](https://github.com/lildude/phpSmug/issues). This allows you to easily search for other issues where others may have asked to the same questions or hit the same problems and if they haven't, your issue will add to the resources available to others at a later date.
 
 Please don't be shy. If you've got a question, problem or are just curious about something, there's a very good chance someone else is too, so go ahead and open an issue and ask.
+
+If you need a quick bit of help or just want to say "Hi and thanks", please use Twitter with the #phpSmug hashtag or tweet me directly @lildude.
 
 ## Contributing
 
