@@ -63,7 +63,7 @@ From the `$client` object, you can access to all the SmugMug 2.0 API methods.
 
 ## Documentation
 
-See the [`docs` directory](docs/) or http://phpsmug.com/docs/ for more detailed documentation.
+See the [`docs` directory](docs/) or <http://phpsmug.com/> for more detailed documentation.
 
 ## Examples
 
