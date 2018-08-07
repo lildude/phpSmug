@@ -31,6 +31,7 @@ The development of phpSmug takes place in my free time. If you find phpSmug usef
   - [Caching API Responses](other.md#caching-api-responses)
   - [Access SmugMug via a Proxy](other.md#)
   - [Examples](other.md#examples)
+  - [Reporting Issues](other.md#reporting-issues)
   - [Getting Help](other#getting-help)
   - [Contributing](other#contributing)
 
