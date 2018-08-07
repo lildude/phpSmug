@@ -10,6 +10,7 @@ license:
   docs: CC BY 3.0
   docs_url: http://creativecommons.org/licenses/by/3.0/
 ui:
+  favicon: favicon.png
   brand_color: "#669900"
   header:
     color1: "#669900"
