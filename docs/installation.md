@@ -8,9 +8,8 @@
 
 The recommended method of installing phpSmug is using [Composer](http://getcomposer.org). If you have Composer installed, you can install phpSmug and all its dependencies from within your project directory:
 
-```bash
-$ composer require lildude/phpsmug
-```
+    $ composer require lildude/phpsmug
+
 
 Alternatively, you can add the following to your project's `composer.json`:
 
@@ -26,6 +25,4 @@ Alternatively, you can add the following to your project's `composer.json`:
 
 If you don't have Composer installed, you can download it using:
 
-```bash
-$ curl -s http://getcomposer.org/installer | php
-```
+    $ curl -s http://getcomposer.org/installer | php

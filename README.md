@@ -7,7 +7,9 @@ phpSmug is a simple object orientated wrapper for the new SmugMug API v2, writte
 
 The intention of this class is to allow PHP application developers quick and easy interaction with the SmugMug API, without having to worry about the finer details of the API.
 
-Not already a SmugMug user? Here, have a $5 discount off your first year on me by [registering](https://secure.smugmug.com/signup.mg?Coupon=2ZxFXMC19qOxU) using this code: **[2ZxFXMC19qOxU](https://secure.smugmug.com/signup.mg?Coupon=2ZxFXMC19qOxU)**
+Not already a SmugMug user? Here, have a **$5 discount** off your first year on me by [registering](https://secure.smugmug.com/signup.mg?Coupon=2ZxFXMC19qOxU) using this code:
+
+**[2ZxFXMC19qOxU](https://secure.smugmug.com/signup.mg?Coupon=2ZxFXMC19qOxU)**
 
 The development of phpSmug takes place in my free time. If you find phpSmug useful and found it has saved you a lot of time, I’d really appreciate it if you bought me a coffee or two.
 
