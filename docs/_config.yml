@@ -1,0 +1,25 @@
+title: phpSmug
+description: A PHP wrapper class for the SmugMug API.
+remote_theme: lildude/jekyll-docs-theme
+license:
+  software: MIT License
+  software_url: http://opensource.org/licenses/MIT
+  docs: CC BY 3.0
+  docs_url: http://creativecommons.org/licenses/by/3.0/
+ui:
+  favicon: favicon.png
+  brand_color: "#669900"
+  header:
+    color1: "#669900"
+    color2: "#365100"
+    trianglify: true
+    hide_nav: true
+links:
+  header:
+    - title: GitHub
+      url: https://github.com/lildude/phpsmug
+  footer:
+    - title: GitHub
+      url: https://github.com/lildude/phpsmug
+    - title: Issues
+      url: https://github.com/lildude/phpsmug/issues?state=open

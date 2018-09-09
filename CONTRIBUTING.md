@@ -2,7 +2,9 @@
 
 ## The Get Going Quick Guide
 
-1. Fork the phpSmug repository on GitHub.
+If you would like to contribute to the development of phpSmug by offering enhancements or bug fixes, please feel free.  I'm a big fan of GitHub's ["Fork & Pull" development methodology](https://help.github.com/articles/using-pull-requests) so...
+
+1. Fork the [phpSmug repository](https://github.com/lildude/phpSmug) on GitHub.
 2. If you're submitting a fix or improvement to the phpSmug code or submitting a new example, create a new branch from the `master` branch, for example: `your-fork/some-cool-feature` or `your-fork/fixing-something-broken` branch.
 3. If you're submitting a fix or improvement to the phpSmug website or documentation, create a new branch from the `gh-pages` branch.
 4. If you're submitting code changes, as opposed to documentation, write tests that fail without your changes and pass with them.
@@ -22,6 +24,8 @@ To try and keep things looking :sparkles:, please ensure your changes comply wit
 All contributions are automatically checked against these standards using [php-cs-fixer](http://cs.sensiolabs.org/).
 
 # Licensing
+
+This is the boring part, so I've put it right at the end, phpSmug is released under the [MIT license](https://opensource.org/licenses/MIT).
 
 By contributing code you agree to license your contribution under the MIT license.
 

@@ -28,7 +28,7 @@ The `phpSmug\Client()` constructor takes two arguments:
 
 - Your API key as a string - **Required**.
 
-    This is required for all interaction with the SmugMug API.  [Applying for an API Key here](https://api.smugmug.com/api/developer/apply).
+    This is required for all interaction with the SmugMug API.  [Apply for an API Key here](https://api.smugmug.com/api/developer/apply).
 
 - An array of options - Optional.
 
