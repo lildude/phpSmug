@@ -1,9 +1,6 @@
 title: phpSmug
 description: A PHP wrapper class for the SmugMug API.
 remote_theme: lildude/jekyll-docs-theme
-#project:
-#  version: 4.0.0
-#  download_url: https://github.com/lildude/phpsmug/releases
 license:
   software: MIT License
   software_url: http://opensource.org/licenses/MIT
