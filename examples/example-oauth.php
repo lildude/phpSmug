@@ -37,7 +37,7 @@ $AppName = 'YOUR_APP_NAME/VER (URL)';
 </head>
 <body>
     <div>
-        <a href="http://phpsmug.com"><img src="phpSmug-logo.svg" /></a>
+        <a href="https://lildude.github.io/phpSmug/"><img src="phpSmug-logo.svg" /></a>
         <h1>OAuth Login Example</h1>
 <?php
 
