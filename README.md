@@ -1,7 +1,7 @@
 
 # phpSmug
 
-[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=master&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=master) [![Build Status](https://travis-ci.org/lildude/phpSmug.svg)](https://travis-ci.org/lildude/phpSmug)
+[![Coverage Status](https://coveralls.io/repos/lildude/phpSmug/badge.svg?branch=main&service=github)](https://coveralls.io/github/lildude/phpSmug?branch=main) ![Test Status](https://github.com/lildude/phpSmug/workflows/Run%20Tests/badge.svg)
 
 phpSmug is a simple object orientated wrapper for the new SmugMug API v2, written in PHP.
 
@@ -11,9 +11,7 @@ Not already a SmugMug user? Here, have a **$5 discount** off your first year on 
 
 **[2ZxFXMC19qOxU](https://secure.smugmug.com/signup.mg?Coupon=2ZxFXMC19qOxU)**
 
-The development of phpSmug takes place in my free time. If you find phpSmug useful and found it has saved you a lot of time, I'd really appreciate it if you bought me a coffee or two.
-
-[![Buy me a Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/lildude)
+The development of phpSmug takes place in my free time. If you find phpSmug useful and found it has saved you a lot of time, consider sponsoring this project.
 
 ---
 
