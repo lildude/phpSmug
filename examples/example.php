@@ -31,7 +31,7 @@ $username = 'A_USERNAME';
 </head>
 <body>
     <div>
-        <a href="http://phpsmug.com"><img src="phpSmug-logo.svg" /></a>
+        <a href="https://lildude.github.io/phpSmug/"><img src="phpSmug-logo.svg" /></a>
         <h2>phpSmug First Album Example</h2>
 <?php
 
@@ -47,11 +47,15 @@ try {
 
     // Get the first public album
     $albums = $client->get("user/{$username}!albums", array('count' => 1));
-    // Get the first 25 photos in the album
-    $images = $client->get($albums->Album[0]->Uris->AlbumImages, array('count' => 25));
-    // Display the image thumbnails.
-    foreach ($images->AlbumImage as $image) {
-        printf('<a href="%s"><img src="%s" title="%s" alt="%s" width="150" height="150" /></a>', $image->WebUri, $image->ThumbnailUrl, $image->Title, $image->ImageKey);
+    if ($albums->Album) {
+        // Get the first 25 photos in the album
+        $images = $client->get($albums->Album[0]->Uris->AlbumImages, array('count' => 25));
+        // Display the image thumbnails.
+        foreach ($images->AlbumImage as $image) {
+            printf('<a href="%s"><img src="%s" title="%s" alt="%s" width="150" height="150" /></a>', $image->WebUri, $image->ThumbnailUrl, $image->Title, $image->ImageKey);
+        }
+    } else {
+        echo '<b>No public albums found!</b>';
     }
 } catch (Exception $e) {
     printf('%s (Error Code: %d)', $e->getMessage(), $e->getCode());

@@ -37,4 +37,4 @@ The development of phpSmug takes place in my free time. If you find phpSmug usef
   - [Getting Help](other#getting-help)
   - [Contributing](other#contributing)
 
-You can also view all of the documentation in this repository at <http://phpsmug.com/>.
+You can also view all of the documentation in this repository at <https://lildude.github.io/phpSmug//>.

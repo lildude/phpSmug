@@ -2,7 +2,7 @@
     "name": "lildude/phpsmug",
     "type": "library",
     "description": "A simple object orientated wrapper for the SmugMug API v2",
-    "homepage": "http://phpsmug.com",
+    "homepage": "https://lildude.github.io/phpSmug/",
     "keywords": ["smugmug", "api"],
     "license": "MIT",
     "authors": [
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.3.0",
         "guzzlehttp/guzzle": "~6.2",
         "guzzlehttp/oauth-subscriber": "0.3.*"
     },
