@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of 4.0.0, this project adheres to [Semantic Versioning](http://semver.org/) and the format is based on the suggestions a <http://keepachangelog.com/>.
 
 ## [Unreleased]
-- PHP 5.6 will become completely unsupported and unmaintained on [31 December 2018](http://php.net/supported-versions.php). At this time, phpSmug will drop all support for PHP 5 and jump straight to only supporting PHP 7.1 and later.
+- The minimum required and tested version of PHP is now 7.3.
+- `example.php` clearly indicates when a public album can't be found.
 
 ## [4.1.0] - 2018-08-24
 ### Added

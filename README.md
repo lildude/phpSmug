@@ -21,7 +21,7 @@ The development of phpSmug takes place in my free time. If you find phpSmug usef
 
 ## Requirements
 
-* PHP >= 5.6.0,
+* PHP >= 7.3.0,
 * [Guzzle 6](https://github.com/guzzle/guzzle) library and the [Guzzle OAuth1 Subscriber](https://github.com/guzzle/oauth-subscriber),
 * (optional) [PHPUnit](https://phpunit.de/) and [php-cs-fixer](http://cs.sensiolabs.org/) to run tests.
 
