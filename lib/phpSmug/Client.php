@@ -309,7 +309,7 @@ class Client
 
             $oauth_middleware = new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauth_middleware_config);
 
-            $this->stack->unshift($oauth_middleware, 'oauth_middleware'); // Bump OAuth to the bottom of the stack
+            $this->stack->after('allow_redirects', $oauth_middleware, 'oauth_middleware'); // Bump OAuth to the bottom of the stack
         }
 
         // Merge the default and request options for all requests except upload requests.
