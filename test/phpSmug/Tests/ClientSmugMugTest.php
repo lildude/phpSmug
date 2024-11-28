@@ -4,13 +4,26 @@ namespace phpSmug\Tests;
 
 use phpSmug\Client;
 use GuzzleHttp\Client as GuzzleClient;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\Depends;
 
-class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
+class ClientSmugMugTest extends TestCase
 {
-    public function setup()
+    protected const DEFAULT_NICKNAME = 'colinseymour';
+    protected const DEFAULT_FOLDER = 'Other';
+    protected const APP_NAME = 'phpSmug Unit Testing';
+
+    protected string $nickname;
+    protected string $folder;
+
+    public function setUp(): void
     {
+        $this->nickname = getenv('NICKNAME') ?? self::DEFAULT_NICKNAME;
+        $this->folder = getenv('FOLDER') ?? self::DEFAULT_FOLDER;
+
         $options = [
-            'AppName' => 'phpSmug Unit Testing',
+            'AppName' => self::APP_NAME,
             'OAuthSecret' => getenv('OAUTH_SECRET'),
             '_verbosity' => 1,
             '_shorturis' => true,
@@ -36,39 +49,36 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     *
      * Test unauthenticated GET
      */
+    #[Test]
     public function shouldGetPublicUserInfo()
     {
         $this->checkEnvVars();
-        $client = new \phpSmug\Client(getenv('APIKEY'), ['AppName' => 'phpSmug Unit Testing']);
-        $response = $client->get('user/colinseymour');
+        $client = new \phpSmug\Client(getenv('APIKEY'), ['AppName' => self::APP_NAME]);
+        $response = $client->get('user/' . $this->nickname);
         $this->assertTrue(is_object($response));
         $this->assertEquals('Public', $response->User->ResponseLevel);
-        $this->assertEquals('colinseymour', $response->User->NickName);
+        $this->assertEquals($this->nickname, $response->User->NickName);
     }
 
     /**
-     * @test
-     *
      * Test authenticated GET
      */
+    #[Test]
     public function shouldGetFullUserInfo()
     {
         $this->checkEnvVars();
         $response = $this->client->get('!authuser');
         $this->assertTrue(is_object($response));
         $this->assertEquals('Full', $response->User->ResponseLevel);
-        $this->assertEquals('colinseymour', $response->User->NickName);
+        $this->assertEquals($this->nickname, $response->User->NickName);
     }
 
     /**
-     * @test
-     *
      * Tests POST by creating a new album
      */
+    #[Test]
     public function shouldCreateNewAlbum()
     {
         $this->checkEnvVars();
@@ -79,7 +89,7 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
             'Title' => 'New Album from unit testing phpSmug',
             'Privacy' => 'Private',
         ];
-        $response = $this->client->post('folder/user/colinseymour/Other!albums', $options);
+        $response = $this->client->post('folder/user/' . $this->nickname . '/' . $this->folder . '/!albums', $options);
         $this->assertTrue(is_object($response));
         $this->assertEquals($options['NiceName'], $response->Album->NiceName);
         $this->assertEquals($options['Title'], $response->Album->Title);
@@ -89,11 +99,10 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     * @depends shouldCreateNewAlbum
-     *
      * Tests PATCH by modifying the previously created album.
      */
+    #[Test]
+    #[Depends('shouldCreateNewAlbum')]
     public function shouldModifyNewlyCreatedAlbum($album_uri)
     {
         $this->checkEnvVars();
@@ -111,11 +120,10 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     * @depends shouldModifyNewlyCreatedAlbum
-     *
      * Tests upload()
      */
+    #[Test]
+    #[Depends('shouldModifyNewlyCreatedAlbum')]
     public function shouldUploadPictureToNewlyCreatedAlbum($album_uri)
     {
         $this->checkEnvVars();
@@ -129,38 +137,40 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
         ];
         $response = $this->client->upload($album_uri, 'examples/phpSmug-logo.png', $options);
         $this->assertTrue(is_object($response));
-        $this->assertObjectHasAttribute('Image', $response);
+        $this->assertObjectHasProperty('Image', $response);
 
         return $album_uri;
     }
 
     /**
-     * @test
-     * @depends shouldUploadPictureToNewlyCreatedAlbum
-     * @expectedException \GuzzleHttp\Exception\ClientException
-     * @expectedExceptionMessage 404 Not Found
-     *
      * Tests that we really can't access the private image
      */
+    #[Test]
+    #[Depends('shouldUploadPictureToNewlyCreatedAlbum')]
     public function shouldFailToGetPrivateImage($album_uri)
     {
         $this->checkEnvVars();
-        $thumbnail_url = $this->client->get($album_uri.'!images')->AlbumImage[0]->ThumbnailUrl;
+        $thumbnail_url = $this->client->get($album_uri . '!images')->AlbumImage[0]->ThumbnailUrl;
+        $this->assertSame('', $thumbnail_url);
         $client = new GuzzleClient();
+
+        $this->expectException(\GuzzleHttp\Exception\ClientException::class);
+        $this->expectExceptionMessage('404 Not Found');
         $client->get($thumbnail_url);
     }
 
     /**
-     * @test
-     * @depends shouldUploadPictureToNewlyCreatedAlbum
-     *
      * Tests signResource()
      */
+    #[Test]
+    #[Depends('shouldUploadPictureToNewlyCreatedAlbum')]
     public function shouldGetPrivateImageWithSignedUrl($album_uri)
     {
         $this->checkEnvVars();
         $thumbnail_url = $this->client->get($album_uri.'!images')->AlbumImage[0]->ThumbnailUrl;
         $signed_thumbnail_url = $this->client->signResource($thumbnail_url);
+        $this->assertSame('', $signed_thumbnail_url);
+
         $client = new GuzzleClient();
         $client->get($signed_thumbnail_url);
 
@@ -168,11 +178,10 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     * @depends shouldGetPrivateImageWithSignedUrl
-     *
      * Tests DELETE
      */
+    #[Test]
+    #[Depends('shouldGetPrivateImageWithSignedUrl')]
     public function shouldDeleteNewlyCreatedAlbumWithUploadedPicture($album_uri)
     {
         $this->checkEnvVars();
@@ -183,16 +192,15 @@ class ClientSmugMugTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     *
      * Tests OPTIONS
      */
+    #[Test]
     public function shouldGetInfoAboutMethod()
     {
         $this->checkEnvVars();
-        $options = $this->client->options('user/colinseymour');
-        $this->assertObjectHasAttribute('Output', $options);
+        $options = $this->client->options('user/' . $this->nickname);
+        $this->assertObjectHasProperty('Output', $options);
         $this->assertTrue(is_array($options->Output));
-        $this->assertObjectNotHasAttribute('Response', $options);
+        $this->assertObjectNotHasProperty('Response', $options);
     }
 }

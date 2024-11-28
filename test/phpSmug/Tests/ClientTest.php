@@ -7,14 +7,18 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Header;
 use GuzzleHttp\Middleware;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\Depends;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     /**
      * Setup a few variables for use in later tests.
      */
-    public function setup()
+    public function setUp(): void
     {
         $this->APIKey = 'I-am-not-a-valid-APIKey-but-it-does-not-matter-for-this-test';
         $this->user = 'random-user';
@@ -26,9 +30,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->fauxAccessTokenResponse = "oauth_token={$this->oauth_token}&oauth_token_secret={$this->oauth_token_secret}";
         $this->fauxDeleteResponse = '{"Response":{"Uri":"/api/v2/album/rAnD0m","Locator":"Album","LocatorType":"Object"},"Code":200,"Message":"Ok"}';
     }
-    /**
-     * @test
-     */
+
+    #[Test]
     public function shouldNotHaveToPassHttpClientToConstructorWithDefaultOptionsSet()
     {
         $client = new Client($this->APIKey);
@@ -41,19 +44,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(30, $options['timeout']);
     }
 
-    /**
-     * @test
-     * @expectedException \phpSmug\Exception\InvalidArgumentException
-     * @expectedExceptionMessage An API key is required for all SmugMug interactions.
-     */
+    #[Test]
     public function shouldThrowExceptionIfNoApikey()
     {
+        $this->expectException(\phpSmug\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('An API key is required for all SmugMug interactions.');
         $client = new Client();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldHaveOptionsSetInInstance()
     {
         $options = [
@@ -72,9 +71,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(sprintf('Testing phpSmug using phpSmug/%s', $client::VERSION), $client->getDefaultOptions()['headers']['User-Agent']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetAndGetOAuthTokens()
     {
         $options = ['OAuthSecret' => $this->OAuthSecret];
@@ -87,9 +84,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->oauth_token_secret, $oauth_token_secret);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldHaveAPIKeyInQuery()
     {
         $client = new Client($this->APIKey);
@@ -99,9 +94,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->APIKey, $options['query']['APIKey']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetReasonPhrase()
     {
         $mock = new MockHandler([
@@ -116,9 +109,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('OK', $client->getReasonPhrase());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetHeaders()
     {
         $mock = new MockHandler([
@@ -134,9 +125,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('X-Foo', $client->getHeaders());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetStatusCode()
     {
         $mock = new MockHandler([
@@ -152,9 +141,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', $client->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldReturnUntouchedResponse()
     {
         $mock = new MockHandler([
@@ -174,9 +161,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('OK', $decoded_response->Message);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetSmugMugMethodOptions()
     {
         $mock = new MockHandler([
@@ -189,14 +174,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $options = $client->options('user/'.$this->user);
 
-        $this->assertObjectHasAttribute('foo', $options);
+        $this->assertObjectHasProperty('foo', $options);
         $this->assertEquals('bar', $options->foo);
-        $this->assertObjectNotHasAttribute('Response', $options);
+        $this->assertObjectNotHasProperty('Response', $options);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldExtractQueryFromURLAndSetQueryInRequest()
     {
         $mock = new MockHandler([
@@ -215,9 +198,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $request_options['query']['_verbosity']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldStripOutEmptyQueryArgs()
     {
         $mock = new MockHandler([
@@ -232,9 +213,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetQueryFromOptionsPassedOnRequestAndOverWriteDefaults()
     {
         $mock = new MockHandler([
@@ -259,9 +238,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldEncodeConfigOption()
     {
         $mock = new MockHandler([
@@ -293,9 +270,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(JSON_ERROR_NONE, json_last_error());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldNotDoubleEncodeEncodedConfigOption()
     {
         $mock = new MockHandler([
@@ -328,9 +303,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(JSON_ERROR_NONE, json_last_error());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldReturnReponseObject()
     {
         $mock = new MockHandler([
@@ -342,15 +315,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $response = $client->get('user/'.$this->user);
 
-        $this->assertObjectHasAttribute('ano', $response);
-        $this->assertObjectHasAttribute('Expansions', $response);
+        $this->assertObjectHasProperty('ano', $response);
+        $this->assertObjectHasProperty('Expansions', $response);
         $this->assertEquals('bar', $response->ano);
         $this->assertEquals('bar', $response->Expansions->foo);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetOAuthParamsInQuery()
     {
         $mock = new MockHandler([
@@ -372,9 +343,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetCorrectQueryUrl()
     {
         $mock = new MockHandler([
@@ -409,9 +378,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetAndUnSetHeadersEtcForUploadAndAssumeUploadWorkedWithOptionsThatMatchHeaders()
     {
         $mock = new MockHandler([
@@ -444,9 +411,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($request_options['query']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetAndUnSetHeadersEtcForUploadAndAssumeUploadWorkedWithOptionsThatDontHaveXSmugInTheirName()
     {
         $mock = new MockHandler([
@@ -479,20 +444,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($request_options['query']);
     }
 
-    /**
-     * @test
-     * @expectedException \phpSmug\Exception\InvalidArgumentException
-     * @expectedExceptionMessage File not found: /path/to/non/existant/file.jpg
-     */
+    #[Test]
     public function shouldThrowExceptionIfUploadFileNotFound()
     {
+        $this->expectException(\phpSmug\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('File not found: /path/to/non/existant/file.jpg');
         $client = new Client($this->APIKey);
         $client->upload('album/rAnD0m', '/path/to/non/existant/file.jpg');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetJsonOptionOnPutAndPatchRequests()
     {
         $mock = new MockHandler([
@@ -513,9 +474,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($options, $request_options['json']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetOAuthParamsInAuthorizationHeader()
     {
         $mock = new MockHandler([
@@ -533,7 +492,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client->setToken($this->oauth_token, $this->oauth_token_secret);
         $client->get('album/rAnD0m');
         foreach ($container as $transaction) {
-            $auth_header = Psr7\parse_header($transaction['request']->getHeader('Authorization'));
+            $auth_header = Header::parse($transaction['request']->getHeader('Authorization'));
             // Asserts the header is set and populated
             $this->assertNotEmpty($auth_header);
 
@@ -554,20 +513,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @test
-     * @expectedException \phpSmug\Exception\InvalidArgumentException
-     * @expectedExceptionMessage An OAuthSecret is required for all SmugMug OAuth interactions.
-     */
+    #[Test]
     public function shouldThrowExcetionIfNoOAuthSecret()
     {
+        $this->expectException(\phpSmug\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('An OAuthSecret is required for all SmugMug OAuth interactions.');
         $client = new Client($this->APIKey);
         $client->setToken($this->oauth_token, $this->oauth_token_secret);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetRequestToken()
     {
         $mock = new MockHandler([
@@ -589,9 +544,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('true', $request_token['oauth_callback_confirmed']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetAccessToken()
     {
         $mock = new MockHandler([
@@ -611,9 +564,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->oauth_token_secret, $request_token['oauth_token_secret']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGenerateAuthorizationUrl()
     {
         $options = ['OAuthSecret' => $this->OAuthSecret];
@@ -646,31 +597,25 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("https://secure.smugmug.com/services/oauth/1.0a/authorize?oauth_token={$this->oauth_token}&oauth_callback=".urlencode($callback).'&'.\http_build_query($options), $authorize_url);
     }
 
-    /**
-     * @test
-     * @expectedException \phpSmug\Exception\InvalidArgumentException
-     * @expectedExceptionMessage All methods need an argument.
-     */
+    #[Test]
     public function shouldThrowInvalidArgumentExceptionIfCallMethodWithoutDestination()
     {
+        $this->expectException(\phpSmug\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('All methods need an argument.');
         $client = new Client($this->APIKey);
         $client->get();
     }
 
-    /**
-     * @test
-     * @expectedException \phpSmug\Exception\BadMethodCallException
-     * @expectedExceptionMessage Invalid method: badmethod
-     */
+    #[Test]
     public function shouldThrowBadMethodCallException()
     {
+        $this->expectException(\phpSmug\Exception\BadMethodCallException::class);
+        $this->expectExceptionMessage('Invalid method: badmethod');
         $client = new Client($this->APIKey);
         $client->badmethod('album/r4nD0m');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSignRequestUrlWithOAuthParams()
     {
         $client = new Client($this->APIKey, ['OAuthSecret' => $this->OAuthSecret]);
@@ -691,9 +636,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1.0', $query_parts['oauth_version']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldDeleteAlbum()
     {
         $mock = new MockHandler([
