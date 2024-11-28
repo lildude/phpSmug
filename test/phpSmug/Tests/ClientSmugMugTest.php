@@ -151,7 +151,7 @@ class ClientSmugMugTest extends TestCase
     {
         $this->checkEnvVars();
         $thumbnail_url = $this->client->get($album_uri . '!images')->AlbumImage[0]->ThumbnailUrl;
-        $this->assertSame('', $thumbnail_url);
+
         $client = new GuzzleClient();
 
         $this->expectException(\GuzzleHttp\Exception\ClientException::class);
@@ -169,7 +169,6 @@ class ClientSmugMugTest extends TestCase
         $this->checkEnvVars();
         $thumbnail_url = $this->client->get($album_uri.'!images')->AlbumImage[0]->ThumbnailUrl;
         $signed_thumbnail_url = $this->client->signResource($thumbnail_url);
-        $this->assertSame('', $signed_thumbnail_url);
 
         $client = new GuzzleClient();
         $client->get($signed_thumbnail_url);
