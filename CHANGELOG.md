@@ -2,9 +2,12 @@
 All notable changes to this project will be documented in this file.
 As of 4.0.0, this project adheres to [Semantic Versioning](http://semver.org/) and the format is based on the suggestions a <http://keepachangelog.com/>.
 
-## [Unreleased]
-- The minimum required and tested version of PHP is now 7.3.
+## [4.2.0] - 2025-01-22
+- The minimum required and tested version of PHP is now 8.1.
 - `example.php` clearly indicates when a public album can't be found.
+
+### Changed
+- Updated dependencies for PHP 8.1 and later and to address security notices.
 
 ## [4.1.0] - 2018-08-24
 ### Added
