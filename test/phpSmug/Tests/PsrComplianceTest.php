@@ -2,15 +2,15 @@
 
 namespace phpSmug\Tests;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Attributes\Test;
+
 /**
- * @class
  * Test properties of our codebase rather than the actual code.
  */
-class PsrComplianceTest extends \PHPUnit_Framework_TestCase
+class PsrComplianceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testPsrCompliance()
     {
         // If we can't find the command-line tool, we mark the test as skipped
