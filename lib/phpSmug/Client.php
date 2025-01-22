@@ -12,7 +12,7 @@ class Client
     /**
      * A few default variables.
      */
-    const VERSION = '4.0.0';
+    public const VERSION = '4.0.0';
     public $AppName = 'Unknown Application';
     public $APIKey;
     public $OAuthSecret;
@@ -149,7 +149,7 @@ class Client
                         $this->request_options['query'][$key] = $value;
                     }
                 }
-            break;
+                break;
             case 'put':
             case 'post':
             case 'patch':
@@ -158,10 +158,10 @@ class Client
                 if ($options) {
                     $this->request_options['json'] = $options;
                 }
-            break;
+                break;
             default:
                 throw new BadMethodCallException('Invalid method: '.$method);
-            break;
+                break;
         }
 
         $this->performRequest(strtoupper($method), $url);
@@ -337,32 +337,32 @@ class Client
     private function processResponse($method = null)
     {
         switch ($method) {
-          case 'getRequestToken':
-          case 'getAccessToken':
-              parse_str($this->response->getBody(), $token);
-              $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
-              // Remove the middleware so it is re-added with the updated credentials on subsequent requests.
-              $this->stack->remove('oauth_middleware');
+            case 'getRequestToken':
+            case 'getAccessToken':
+                parse_str($this->response->getBody(), $token);
+                $this->setToken($token['oauth_token'], $token['oauth_token_secret']);
+                // Remove the middleware so it is re-added with the updated credentials on subsequent requests.
+                $this->stack->remove('oauth_middleware');
 
-              return $token;
-          break;
-          case 'options':
-              $body = json_decode((string) $this->response->getBody());
+                return $token;
+                break;
+            case 'options':
+                $body = json_decode((string) $this->response->getBody());
 
-              return $body->Options;
-          break;
-          default:
-              $body = json_decode((string) $this->response->getBody());
-              if (isset($body->Response)) {
-                  if (isset($body->Expansions)) {
-                      $body->Response->Expansions = $body->Expansions;
-                  }
+                return $body->Options;
+                break;
+            default:
+                $body = json_decode((string) $this->response->getBody());
+                if (isset($body->Response)) {
+                    if (isset($body->Expansions)) {
+                        $body->Response->Expansions = $body->Expansions;
+                    }
 
-                  return $body->Response;
-              } else {
-                  return $body;
-              }
-          break;
+                    return $body->Response;
+                } else {
+                    return $body;
+                }
+                break;
         }
     }
 
