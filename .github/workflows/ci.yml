@@ -43,4 +43,5 @@ jobs:
     - name: Run tests
       if: ${{matrix.php}} == '8.1'
       run: vendor/bin/phpunit --configuration phpunit-8.1.xml
+      if: ${{matrix.php}} != '8.1'
       run: vendor/bin/phpunit
