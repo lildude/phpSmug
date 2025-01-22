@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/*'
+      - '!*.md'
   pull_request:
     branches:
       - main
-
+    paths:
+      - '**/*'
+      - '!*.md'
 jobs:
   run:
     name: PHP ${{ matrix.php }}
