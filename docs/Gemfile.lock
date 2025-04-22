@@ -232,7 +232,7 @@ GEM
       jekyll-seo-tag (~> 2.1)
     minitest (5.25.4)
     multipart-post (2.1.1)
-    nokogiri (1.18.3)
+    nokogiri (1.18.8)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     octokit (4.22.0)
